@@ -1,18 +1,17 @@
-﻿using Microsoft.Maui.Controls.PlatformConfiguration;
-using SkiaSharp;
+﻿using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
-namespace ParticleSimulator;
+namespace SimulatorUI;
 
 public partial class MainPage : ContentPage
 {
     private static readonly (int Width, int Height) CanvasSize = (1200, 600);
     private readonly SKPaint CursorPaint = new()
     {
-        Color = SKColors.GhostWhite,
+        StrokeWidth = 2,
         IsAntialias = true,
+        Color = SKColors.GhostWhite,
         Style = SKPaintStyle.Stroke,
-        StrokeWidth = 2
     };
     private readonly SKBitmap ParticlesBitmap = new(CanvasSize.Width, CanvasSize.Height);
     private readonly System.Timers.Timer PaintTimer = new(20); // 1000ms / 20 = 50fps
@@ -57,7 +56,7 @@ public partial class MainPage : ContentPage
             var radius = (int)(2 * (Cursor.R + args.WheelDelta / 10) / (CanvasScale.X + CanvasScale.Y));
             Cursor.R = Math.Clamp(radius, 1, 100);
         }
-        if ((args.ActionType == SKTouchAction.Pressed || args.ActionType == SKTouchAction.Moved))
+        if (args.ActionType == SKTouchAction.Pressed || args.ActionType == SKTouchAction.Moved)
         {
             var centerX = (int)(args.Location.X / CanvasScale.X);
             var centerY = (int)(args.Location.Y / CanvasScale.Y);

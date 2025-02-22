@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
-namespace ParticleSimulator
+namespace SimulatorUI
 {
     public static class MauiProgram
     {

@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace ParticleSimulator
+namespace SimulatorUI
 {
     [Application]
     public class MainApplication : MauiApplication

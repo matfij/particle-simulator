@@ -2,21 +2,21 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
-             x:Class="ParticleSimulator.MainPage">
+             x:Class="SimulatorUI.MainPage">
 
     <ScrollView>
         <VerticalStackLayout
             Padding="25"
             Spacing="25">
 
-            <skia:SKCanvasView 
+            <skia:SKCanvasView
                 x:Name="ParticleCanvas"
                 PaintSurface="OnPaintSurface"
                 EnableTouchEvents="True"
                 Touch="OnTouch"
                 WidthRequest="1200"
                 HeightRequest="600"
-                Margin="25" />
+                Margin="25"/>
 
         </VerticalStackLayout>
     </ScrollView>

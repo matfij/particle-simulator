@@ -1,4 +1,4 @@
-﻿namespace ParticleSimulator
+﻿namespace SimulatorUI
 {
     public partial class AppShell : Shell
     {
