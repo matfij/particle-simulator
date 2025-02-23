@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace SimulatorEngine;
+﻿namespace SimulatorEngine;
 
 public enum ParticleBody
 {
