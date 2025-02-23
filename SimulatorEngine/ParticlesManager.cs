@@ -14,7 +14,7 @@ public class ParticlesManager
 
         for (int i = 0; i < 100; i++)
         {
-            Particles.Add(new Particle(gen.Next(0, 1200), gen.Next(0, 600)));
+            Particles.Add(new SandParticle(gen.Next(0, 1200), gen.Next(0, 600)));
         }
     }
 }

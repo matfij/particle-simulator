@@ -40,7 +40,7 @@ public partial class MainPage : ContentPage
             int index = particle.X + particle.Y * CanvasSize.Width;
             if (index >= 0 && index < maxIndex)
             {
-                pixels[index] = Particle.Color;
+                pixels[index] = particle.GetColor();
             }
         }
     }
