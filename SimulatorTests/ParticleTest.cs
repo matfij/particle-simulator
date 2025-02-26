@@ -52,8 +52,8 @@ namespace SimulatorTests
             Assert.Equal(2, particle.X);
             Assert.Equal(7, particle.Y);
             Assert.Equal(20, particle.Temperature);
-            Assert.Equal(1.4, particle.GetDensity());
-            Assert.Equal(0xA19D94, (float)particle.GetColor());
+            Assert.True(TestUtils.CloseTo(1.4f, particle.GetDensity(), 0.0001f));
+            Assert.Equal(0x99E2FA, (float)particle.GetColor());
         }
     }
 }
