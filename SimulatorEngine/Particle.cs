@@ -17,12 +17,12 @@ public abstract class Particle(int x, int y)
 
     public abstract uint GetColor();
 
-    public abstract uint GetDensity();
+    public abstract float GetDensity();
 }
 
 public class SandParticle : Particle
 {
-    private static readonly uint Density = 1442;
+    private static readonly float Density = 1442f;
     private static readonly uint Color = 0xEFEBF01;
 
     public SandParticle(int x, int y) : base(x, y)
@@ -33,5 +33,53 @@ public class SandParticle : Particle
 
     public override uint GetColor() => Color;
 
-    public override uint GetDensity() => Density;
+    public override float GetDensity() => Density;
+}
+
+public class WaterParticle : Particle
+{
+    private static readonly float Density = 1000f;
+    private static readonly uint Color = 0x1CA3EC;
+
+    public WaterParticle(int x, int y) : base(x, y)
+    {
+        Temperature = 20;
+        Body = ParticleBody.Liquid;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+}
+
+public class IronParticle : Particle
+{
+    private static readonly float Density = 7800f;
+    private static readonly uint Color = 0xA19D94;
+
+    public IronParticle(int x, int y) : base(x, y)
+    {
+        Temperature = 20;
+        Body = ParticleBody.Solid;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+}
+
+public class OxygenParticle : Particle
+{
+    private static readonly float Density = 1.4f;
+    private static readonly uint Color = 0x99E2FA;
+
+    public OxygenParticle(int x, int y) : base(x, y)
+    {
+        Temperature = 20;
+        Body = ParticleBody.Solid;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
 }
