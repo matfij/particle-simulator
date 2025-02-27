@@ -6,7 +6,7 @@ namespace SimulatorUI;
 
 public partial class MainPage : ContentPage
 {
-    private static readonly (int Width, int Height) CanvasSize = (1200, 600);
+    private static readonly (int Width, int Height) CanvasSize = (1800, 900);
     private static readonly SKPaint CursorPaint = new()
     {
         StrokeWidth = 2,
@@ -20,6 +20,7 @@ public partial class MainPage : ContentPage
     private readonly SKBitmap ParticlesBitmap = new(CanvasSize.Width, CanvasSize.Height);
 
     private (float X, float Y, float R) Cursor = (0, 0, 10);
+    private ParticleKind ParticleToAdd = ParticleKind.Oxygen;
 
     public MainPage()
     {
@@ -52,8 +53,7 @@ public partial class MainPage : ContentPage
         var canvas = args.Surface.Canvas;
         canvas.Clear(SKColors.Black);
 
-        var targetRect = new SKRect(0, 0, args.Info.Width, args.Info.Height);
-        canvas.DrawBitmap(ParticlesBitmap, targetRect);
+        canvas.DrawBitmap(ParticlesBitmap, 0, 0);
         canvas.DrawCircle(Cursor.X, Cursor.Y, Cursor.R, CursorPaint);
     }
 
@@ -71,8 +71,14 @@ public partial class MainPage : ContentPage
         }
         if (args.ActionType == SKTouchAction.Pressed || args.ActionType == SKTouchAction.Moved)
         {
-            var centerX = (int)args.Location.X;
-            var centerY = (int)args.Location.Y;
+            if (args.MouseButton == SKMouseButton.Left)
+            {
+                ParticlesManager.AddParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R, ParticleToAdd);
+            }
+            if (args.MouseButton == SKMouseButton.Right)
+            {
+                // TODO - erase particles
+            }
         }
     }
 

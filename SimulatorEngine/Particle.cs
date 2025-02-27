@@ -1,5 +1,14 @@
 ﻿namespace SimulatorEngine;
 
+public enum ParticleKind
+{
+    None,
+    Sand,
+    Water,
+    Iron,
+    Oxygen,
+}
+
 public enum ParticleBody
 {
     Solid,
