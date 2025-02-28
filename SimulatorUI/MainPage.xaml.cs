@@ -1,4 +1,5 @@
-﻿using SimulatorEngine;
+﻿using Microsoft.Maui.Controls.Compatibility;
+using SimulatorEngine;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -14,11 +15,9 @@ public partial class MainPage : ContentPage
         Color = SKColors.GhostWhite,
         Style = SKPaintStyle.Stroke,
     };
-
     private readonly ParticlesManager ParticlesManager;
     private readonly System.Timers.Timer PaintTimer = new(20); // 1000ms / 20 = 50fps
     private readonly SKBitmap ParticlesBitmap = new(CanvasSize.Width, CanvasSize.Height);
-
     private (float X, float Y, float R) Cursor = (0, 0, 10);
     private ParticleKind ParticleToAdd = ParticleKind.Sand;
 
@@ -28,6 +27,31 @@ public partial class MainPage : ContentPage
         ParticlesManager = new ParticlesManager();
         PaintTimer.Elapsed += (sender, args) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         PaintTimer.Start();
+    }
+
+    private void SetParticleKind(object sender, EventArgs e)
+    {
+        if (sender is Button selectedButton && selectedButton.CommandParameter is ParticleKind kind)
+        {
+            ParticleToAdd = kind;
+
+            if (selectedButton.Parent is HorizontalStackLayout parentLayout)
+            {
+                foreach (var child in parentLayout.Children)
+                {
+                    if (child is Button button)
+                    {
+                        button.Opacity = 0.9;
+                        button.BorderWidth = 1;
+                        selectedButton.FontAttributes = FontAttributes.None;
+                    }
+                }
+            }
+
+            selectedButton.Opacity = 1;
+            selectedButton.BorderWidth = 2;
+            selectedButton.FontAttributes = FontAttributes.Bold;
+        }
     }
 
     private unsafe void UpdateBitmap()
@@ -74,6 +98,7 @@ public partial class MainPage : ContentPage
             if (args.MouseButton == SKMouseButton.Left)
             {
                 ParticlesManager.AddParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R, ParticleToAdd);
+                ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
             }
             if (args.MouseButton == SKMouseButton.Right)
             {
