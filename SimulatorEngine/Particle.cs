@@ -35,7 +35,7 @@ public class SandParticle : Particle
 {
     private static readonly ParticleKind Kind = ParticleKind.Sand;
     private static readonly float Density = 1442f;
-    private static readonly uint Color = 0xEFEBF01;
+    private static readonly uint Color = 0xF6D7B0;
 
     public SandParticle(int x, int y) : base(x, y)
     {
@@ -97,7 +97,7 @@ public class OxygenParticle : Particle
     public OxygenParticle(int x, int y) : base(x, y)
     {
         Temperature = 20;
-        Body = ParticleBody.Solid;
+        Body = ParticleBody.Gas;
     }
 
     public override uint GetColor() => Color;

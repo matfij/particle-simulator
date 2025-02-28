@@ -20,7 +20,7 @@ public partial class MainPage : ContentPage
     private readonly SKBitmap ParticlesBitmap = new(CanvasSize.Width, CanvasSize.Height);
 
     private (float X, float Y, float R) Cursor = (0, 0, 10);
-    private ParticleKind ParticleToAdd = ParticleKind.Oxygen;
+    private ParticleKind ParticleToAdd = ParticleKind.Sand;
 
     public MainPage()
     {
