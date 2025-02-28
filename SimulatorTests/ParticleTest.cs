@@ -1,59 +1,66 @@
 using SimulatorEngine;
 
-namespace SimulatorTests
+namespace SimulatorTests;
+
+public class ParticleTest
 {
-    public class ParticleTest
+    [Fact]
+    public void Should_Create_SandParticle()
     {
-        [Fact]
-        public void Should_Create_SandParticle()
-        {
-            var particle = new SandParticle(10, 40);
+        var particle = new SandParticle(10, 40);
 
-            Assert.NotNull(particle);
-            Assert.Equal(10, particle.X);
-            Assert.Equal(40, particle.Y);
-            Assert.Equal(20, particle.Temperature);
-            Assert.Equal(1442, particle.GetDensity());
-            Assert.Equal(0xEFEBF01, (float)particle.GetColor());
-        }
+        Assert.NotNull(particle);
+        Assert.Equal(10, particle.X);
+        Assert.Equal(40, particle.Y);
+        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(ParticleBody.Powder, particle.Body);
+        Assert.Equal(1442, particle.GetDensity());
+        Assert.Equal(0xF6D7B0, (float)particle.GetColor());
+        Assert.Equal(ParticleKind.Sand, particle.GetKind());
+    }
 
-        [Fact]
-        public void Should_Create_WaterParticle()
-        {
-            var particle = new WaterParticle(30, 50);
+    [Fact]
+    public void Should_Create_WaterParticle()
+    {
+        var particle = new WaterParticle(30, 50);
 
-            Assert.NotNull(particle);
-            Assert.Equal(30, particle.X);
-            Assert.Equal(50, particle.Y);
-            Assert.Equal(20, particle.Temperature);
-            Assert.Equal(1000, particle.GetDensity());
-            Assert.Equal(0x1CA3EC, (float)particle.GetColor());
-        }
+        Assert.NotNull(particle);
+        Assert.Equal(30, particle.X);
+        Assert.Equal(50, particle.Y);
+        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(ParticleBody.Liquid, particle.Body);
+        Assert.Equal(1000, particle.GetDensity());
+        Assert.Equal(0x1CA3EC, (float)particle.GetColor());
+        Assert.Equal(ParticleKind.Water, particle.GetKind());
+    }
 
-        [Fact]
-        public void Should_Create_IronParticle()
-        {
-            var particle = new IronParticle(500, 300);
+    [Fact]
+    public void Should_Create_IronParticle()
+    {
+        var particle = new IronParticle(500, 300);
 
-            Assert.NotNull(particle);
-            Assert.Equal(500, particle.X);
-            Assert.Equal(300, particle.Y);
-            Assert.Equal(20, particle.Temperature);
-            Assert.Equal(7800, particle.GetDensity());
-            Assert.Equal(0xA19D94, (float)particle.GetColor());
-        }
+        Assert.NotNull(particle);
+        Assert.Equal(500, particle.X);
+        Assert.Equal(300, particle.Y);
+        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(ParticleBody.Solid, particle.Body);
+        Assert.Equal(7800, particle.GetDensity());
+        Assert.Equal(0xA19D94, (float)particle.GetColor());
+        Assert.Equal(ParticleKind.Iron, particle.GetKind());
+    }
 
-        [Fact]
-        public void Should_Create_OxygenParticle()
-        {
-            var particle = new OxygenParticle(2, 7);
+    [Fact]
+    public void Should_Create_OxygenParticle()
+    {
+        var particle = new OxygenParticle(2, 7);
 
-            Assert.NotNull(particle);
-            Assert.Equal(2, particle.X);
-            Assert.Equal(7, particle.Y);
-            Assert.Equal(20, particle.Temperature);
-            Assert.True(TestUtils.CloseTo(1.4f, particle.GetDensity(), 0.0001f));
-            Assert.Equal(0x99E2FA, (float)particle.GetColor());
-        }
+        Assert.NotNull(particle);
+        Assert.Equal(2, particle.X);
+        Assert.Equal(7, particle.Y);
+        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(ParticleBody.Gas, particle.Body);
+        Assert.True(TestUtils.CloseTo(1.4f, particle.GetDensity(), 0.0001f));
+        Assert.Equal(0x99E2FA, (float)particle.GetColor());
+        Assert.Equal(ParticleKind.Oxygen, particle.GetKind());
     }
 }

@@ -3,18 +3,23 @@
 public class ParticlesManager
 {
     private HashSet<Particle> Particles = [];
-
+    private readonly ParticlePool ParticlePool = new();
 
     public IEnumerable<Particle> GetParticles => Particles;
 
-
-    public ParticlesManager()
+    public void AddParticles((int x, int y) center, int radius, ParticleKind kind)
     {
-        var gen = new Random();
-
-        for (int i = 0; i < 100; i++)
+        int radiusSquare = radius * radius;
+        for (int dx = -radius; dx <= radius; dx++)
         {
-            Particles.Add(new SandParticle(gen.Next(0, 1200), gen.Next(0, 600)));
+            for (int dy = -radius; dy <= radius; dy++)
+            {
+                if (dx * dx + dy * dy <= radiusSquare)
+                {
+                    var particle = ParticlePool.GetParticle(center.x + dx, center.y + dy, kind);
+                    Particles.Add(particle);
+                }
+            }
         }
     }
 }
