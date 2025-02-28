@@ -17,13 +17,9 @@ public class ParticlesManager
         {
             for (int dy = -radius; dy <= radius; dy++)
             {
-                if (dx * dx + dy * dy <= radiusSquare)
+                var particle = ParticlesPool.GetParticle(center.x + dx, center.y + dy, kind);
+                if (!Particles.Contains(particle) && dx * dx + dy * dy <= radiusSquare)
                 {
-                    var particle = ParticlesPool.GetParticle(center.x + dx, center.y + dy, kind);
-                    if (Particles.Contains(particle))
-                    {
-                        continue;
-                    }
                     Particles.Add(particle);
                     ParticlesCount++;
                 }
@@ -31,4 +27,3 @@ public class ParticlesManager
         }
     }
 }
-

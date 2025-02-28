@@ -51,4 +51,19 @@ public class ParticlesManagerTest
         Assert.Single(manager.GetParticles.Where(p => p.X == 99 && p.Y == 100));
         Assert.Single(manager.GetParticles.Where(p => p.X == 98 && p.Y == 100));
     }
+
+    [Fact]
+    public void Should_Not_Add_Particles_To_Same_Coordinates()
+    {
+        var manager = new ParticlesManager();
+
+        manager.AddParticles((100, 100), 5, ParticleKind.Sand);
+
+        Assert.Equal(81, manager.GetParticles.Count());
+
+        manager.AddParticles((100, 100), 5, ParticleKind.Sand);
+        manager.AddParticles((100, 100), 5, ParticleKind.Water);
+
+        Assert.Equal(81, manager.GetParticles.Count());
+    }
 }
