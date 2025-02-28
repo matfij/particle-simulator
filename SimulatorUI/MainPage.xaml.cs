@@ -43,7 +43,7 @@ public partial class MainPage : ContentPage
                     {
                         button.Opacity = 0.9;
                         button.BorderWidth = 1;
-                        selectedButton.FontAttributes = FontAttributes.None;
+                        button.FontAttributes = FontAttributes.None;
                     }
                 }
             }
