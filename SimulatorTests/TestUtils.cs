@@ -1,10 +1,9 @@
-﻿namespace SimulatorTests
+﻿namespace SimulatorTests;
+
+internal class TestUtils
 {
-    internal class TestUtils
+    public static bool CloseTo(float target, float value, float delta)
     {
-        public static bool CloseTo(float target, float value, float delta)
-        {
-            return Math.Abs(target - value) < delta;
-        }
+        return Math.Abs(target - value) < delta;
     }
 }

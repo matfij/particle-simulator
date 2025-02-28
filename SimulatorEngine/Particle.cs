@@ -24,6 +24,8 @@ public abstract class Particle(int x, int y)
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
 
+    public abstract ParticleKind GetKind();
+
     public abstract uint GetColor();
 
     public abstract float GetDensity();
@@ -31,6 +33,7 @@ public abstract class Particle(int x, int y)
 
 public class SandParticle : Particle
 {
+    private static readonly ParticleKind Kind = ParticleKind.Sand;
     private static readonly float Density = 1442f;
     private static readonly uint Color = 0xEFEBF01;
 
@@ -38,15 +41,18 @@ public class SandParticle : Particle
     {
         Temperature = 20;
         Body = ParticleBody.Powder;
+
     }
 
     public override uint GetColor() => Color;
 
     public override float GetDensity() => Density;
+    public override ParticleKind GetKind() => Kind;
 }
 
 public class WaterParticle : Particle
 {
+    private static readonly ParticleKind Kind = ParticleKind.Water;
     private static readonly float Density = 1000f;
     private static readonly uint Color = 0x1CA3EC;
 
@@ -59,10 +65,13 @@ public class WaterParticle : Particle
     public override uint GetColor() => Color;
 
     public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
 }
 
 public class IronParticle : Particle
 {
+    private static readonly ParticleKind Kind = ParticleKind.Iron;
     private static readonly float Density = 7800f;
     private static readonly uint Color = 0xA19D94;
 
@@ -75,10 +84,13 @@ public class IronParticle : Particle
     public override uint GetColor() => Color;
 
     public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
 }
 
 public class OxygenParticle : Particle
 {
+    private static readonly ParticleKind Kind = ParticleKind.Oxygen;
     private static readonly float Density = 1.4f;
     private static readonly uint Color = 0x99E2FA;
 
@@ -91,4 +103,6 @@ public class OxygenParticle : Particle
     public override uint GetColor() => Color;
 
     public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
 }
