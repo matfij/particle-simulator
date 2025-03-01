@@ -40,7 +40,7 @@ public class ParticlePool
             case ParticleKind.Oxygen:
                 return new OxygenParticle(x, y);
             default:
-                throw new InvalidEnumArgumentException();
+                throw new InvalidEnumArgumentException("Unsupported particle kind");
         }
     }
 }

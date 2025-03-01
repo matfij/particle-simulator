@@ -102,7 +102,8 @@ public partial class MainPage : ContentPage
             }
             if (args.MouseButton == SKMouseButton.Right)
             {
-                // TODO - erase particles
+                ParticlesManager.RemoveParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R);
+                ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
             }
         }
     }

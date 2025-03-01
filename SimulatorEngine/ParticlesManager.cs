@@ -26,4 +26,21 @@ public class ParticlesManager
             }
         }
     }
+
+    public void RemoveParticles((int x, int y) center, int radius)
+    {
+        int radiusSquare = radius * radius;
+        for (int dx = -radius; dx <= radius; dx ++)
+        {
+            for (int dy = -radius; dy <= radius; dy++)
+            {
+                var particle = ParticlesPool.GetParticle(center.x + dx, center.y + dy, ParticleKind.Sand);
+                if (Particles.Contains(particle) && dx * dx + dy * dy <= radiusSquare)
+                {
+                    Particles.Remove(particle);
+                    ParticlesCount--;
+                }
+            }
+        }
+    }
 }
