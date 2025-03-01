@@ -29,6 +29,10 @@ public abstract class Particle(int x, int y)
     public abstract uint GetColor();
 
     public abstract float GetDensity();
+
+    public override bool Equals(object? obj) => obj is Particle p && p.X == X && p.Y == Y;
+
+    public override int GetHashCode() => HashCode.Combine(X, Y);
 }
 
 public class SandParticle : Particle
