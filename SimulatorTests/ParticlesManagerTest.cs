@@ -66,4 +66,42 @@ public class ParticlesManagerTest
 
         Assert.Equal(81, manager.GetParticles.Count());
     }
+
+    [Fact]
+    public void Should_Remove_Any_Particle_Kind()
+    {
+        var manager = new ParticlesManager();
+
+        manager.AddParticles((10, 10), 3, ParticleKind.Sand);
+        manager.AddParticles((10, 100), 5, ParticleKind.Water);
+        manager.AddParticles((500, 100), 10, ParticleKind.Oxygen);
+
+        Assert.Equal(427, manager.GetParticles.Count());
+
+        manager.RemoveParticles((10, 10), 3);
+
+        Assert.Equal(398, manager.GetParticles.Count());
+        
+        manager.RemoveParticles((10, 100), 5);
+
+        Assert.Equal(317, manager.GetParticles.Count());
+        
+        manager.RemoveParticles((500, 100), 10);
+
+        Assert.Empty(manager.GetParticles);
+    }
+
+    [Fact]
+    public void Should_Not_Remove_Particle_Outside_Of_Radius()
+    {
+        var manager = new ParticlesManager();
+
+        manager.AddParticles((100, 100), 10, ParticleKind.Sand);
+
+        Assert.Equal(317, manager.GetParticles.Count());
+
+        manager.RemoveParticles((100, 100), 9);
+
+        Assert.Equal(64, manager.GetParticles.Count());
+    }
 }
