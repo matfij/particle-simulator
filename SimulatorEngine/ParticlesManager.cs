@@ -59,9 +59,7 @@ public class ParticlesManager
 
         foreach (var particle in Particles)
         {
-            var deltaFromCenter =
-                (particle.Position.X - center.X) * (particle.Position.X - center.X)
-                + (particle.Position.Y - center.Y) * (particle.Position.Y - center.Y);
+            var deltaFromCenter = Vector2.DistanceSquared(particle.Position, center);
             if (deltaFromCenter > radiusSquare)
             {
                 remainingParticles.Add(particle);
