@@ -1,5 +1,4 @@
-﻿using System;
-using System.Timers;
+﻿using System.Numerics;
 
 namespace SimulatorEngine;
 
@@ -10,7 +9,6 @@ public class ParticlesManager
     private int ParticlesCount = 0;
     private readonly System.Timers.Timer TickTimer = new(20);
     private bool ParticlesLock = false;
-    private Random RandomFactory = new();
 
     public ParticlesManager()
     {
@@ -22,7 +20,7 @@ public class ParticlesManager
 
     public int GetParticlesCount => ParticlesCount;
 
-    public void AddParticles((int x, int y) center, int radius, ParticleKind kind)
+    public void AddParticles(Vector2 center, int radius, ParticleKind kind)
     {
         if (ParticlesLock)
         {
@@ -35,7 +33,7 @@ public class ParticlesManager
         {
             for (int dy = -radius; dy <= radius; dy++)
             {
-                var particle = ParticlesPool.GetParticle(center.x + dx, center.y + dy, kind);
+                var particle = ParticlesPool.GetParticle(new(center.X + dx, center.Y + dy), kind);
                 if (!Particles.Contains(particle) && dx * dx + dy * dy <= radiusSquare)
                 {
                     Particles.Add(particle);
@@ -47,7 +45,7 @@ public class ParticlesManager
         ParticlesLock = false;
     }
 
-    public void RemoveParticles((int x, int y) center, int radius, ParticleKind kind)
+    public void RemoveParticles(Vector2 center, int radius, ParticleKind kind)
     {
         if (ParticlesLock)
         {
@@ -61,7 +59,9 @@ public class ParticlesManager
 
         foreach (var particle in Particles)
         {
-            int deltaFromCenter = (particle.X - center.x) * (particle.X - center.x) + (particle.Y - center.y) * (particle.Y - center.y);
+            var deltaFromCenter =
+                (particle.Position.X - center.X) * (particle.Position.X - center.X)
+                + (particle.Position.Y - center.Y) * (particle.Position.Y - center.Y);
             if (deltaFromCenter > radiusSquare)
             {
                 remainingParticles.Add(particle);
@@ -90,22 +90,7 @@ public class ParticlesManager
                     // TODO
                     break;
                 case ParticleBody.Liquid:
-                    int dx = RandomFactory.Next(0, 2) == 0 ? -1 : 1;
-                    int dy = 3;
-
-                    if (!Particles.Contains(ParticlesPool.GetParticle(particle.X, particle.Y + dy, particle.GetKind())))
-                    {
-                        particle.Y += dy;
-                    }
-                    else if (!Particles.Contains(ParticlesPool.GetParticle(particle.X + dx, particle.Y, particle.GetKind())))
-                    {
-                        particle.X += dx;
-                    }
-                    else if (!Particles.Contains(ParticlesPool.GetParticle(particle.X - dx, particle.Y, particle.GetKind())))
-                    {
-                        particle.X -= dx;
-                    }
-
+                    MoveLiquid(particle);
                     break;
                 case ParticleBody.Powder:
                     // TODO
@@ -117,5 +102,23 @@ public class ParticlesManager
         }
 
         ParticlesLock = false;
+    }
+
+    private void MoveLiquid(Particle particle)
+    {
+        particle.LastPosition = particle.Position;
+        particle.Position += particle.Velocity;
+
+        var velocity = particle.Position - particle.LastPosition;
+        particle.Velocity = velocity;
+
+        if (Particles.Contains(ParticlesPool.GetParticle(new(particle.Position.X + particle.Velocity.X, particle.Position.Y), particle.GetKind())))
+        {
+            particle.Velocity.X *= -1;
+        }
+        if (Particles.Contains(ParticlesPool.GetParticle(new(particle.Position.X, particle.Position.Y + particle.Velocity.Y), particle.GetKind())))
+        {
+            particle.Velocity.Y *= -1;
+        }
     }
 }

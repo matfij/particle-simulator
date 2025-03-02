@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Numerics;
 
 namespace SimulatorEngine;
 
@@ -6,18 +7,17 @@ public class ParticlesPool
 {
     private readonly Stack<Particle> ParticlesFactory = new();
 
-    public Particle GetParticle(int x, int y, ParticleKind kind)
+    public Particle GetParticle(Vector2 position, ParticleKind kind)
     {
         if (ParticlesFactory.Count > 0)
         {
             var particle = ParticlesFactory.Pop();
-            particle.X = x;
-            particle.Y = y;
+            particle.Position = position;
             return particle;
         }
         else
         {
-            return CreateNewParticle(x, y, kind);
+            return CreateNewParticle(position, kind);
         }
     }
 
@@ -26,18 +26,18 @@ public class ParticlesPool
         ParticlesFactory.Push(particle);
     }
 
-    private Particle CreateNewParticle(int x, int y, ParticleKind kind)
+    private Particle CreateNewParticle(Vector2 position, ParticleKind kind)
     {
         switch (kind)
         {
             case ParticleKind.Sand:
-                return new SandParticle(x, y);
+                return new SandParticle(position);
             case ParticleKind.Water:
-                return new WaterParticle(x, y);
+                return new WaterParticle(position);
             case ParticleKind.Iron:
-                return new IronParticle(x, y);
+                return new IronParticle(position);
             case ParticleKind.Oxygen:
-                return new OxygenParticle(x, y);
+                return new OxygenParticle(position);
             default:
                 throw new InvalidEnumArgumentException("Unsupported particle kind");
         }

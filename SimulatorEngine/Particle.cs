@@ -1,4 +1,6 @@
-﻿namespace SimulatorEngine;
+﻿using System.Numerics;
+
+namespace SimulatorEngine;
 
 public enum ParticleKind
 {
@@ -17,10 +19,11 @@ public enum ParticleBody
     Gas,
 }
 
-public abstract class Particle(int x, int y)
+public abstract class Particle(Vector2 position)
 {
-    public int X { get; set; } = x;
-    public int Y { get; set; } = y;
+    public Vector2 Position = position;
+    public Vector2 LastPosition = position;
+    public Vector2 Velocity = new(0, 0);
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
 
@@ -30,9 +33,9 @@ public abstract class Particle(int x, int y)
 
     public abstract float GetDensity();
 
-    public override bool Equals(object? obj) => obj is Particle p && p.X == X && p.Y == Y;
+    public override bool Equals(object? obj) => obj is Particle p && p.Position == Position;
 
-    public override int GetHashCode() => HashCode.Combine(X, Y);
+    public override int GetHashCode() => HashCode.Combine(Position);
 }
 
 public class SandParticle : Particle
@@ -41,11 +44,10 @@ public class SandParticle : Particle
     private static readonly float Density = 1442f;
     private static readonly uint Color = 0xF6D7B0;
 
-    public SandParticle(int x, int y) : base(x, y)
+    public SandParticle(Vector2 position) : base(position)
     {
         Temperature = 20;
         Body = ParticleBody.Powder;
-
     }
 
     public override uint GetColor() => Color;
@@ -60,10 +62,11 @@ public class WaterParticle : Particle
     private static readonly float Density = 1000f;
     private static readonly uint Color = 0x1CA3EC;
 
-    public WaterParticle(int x, int y) : base(x, y)
+    public WaterParticle(Vector2 position) : base(position)
     {
         Temperature = 20;
         Body = ParticleBody.Liquid;
+        Velocity = new Vector2(1 * Utils.RandRange(-1, 1), 1 * Utils.RandRange(1, 3));
     }
 
     public override uint GetColor() => Color;
@@ -79,7 +82,7 @@ public class IronParticle : Particle
     private static readonly float Density = 7800f;
     private static readonly uint Color = 0xA19D94;
 
-    public IronParticle(int x, int y) : base(x, y)
+    public IronParticle(Vector2 position) : base(position)
     {
         Temperature = 20;
         Body = ParticleBody.Solid;
@@ -98,7 +101,7 @@ public class OxygenParticle : Particle
     private static readonly float Density = 1.4f;
     private static readonly uint Color = 0x99E2FA;
 
-    public OxygenParticle(int x, int y) : base(x, y)
+    public OxygenParticle(Vector2 position) : base(position)
     {
         Temperature = 20;
         Body = ParticleBody.Gas;

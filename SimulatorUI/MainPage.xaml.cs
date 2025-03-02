@@ -61,7 +61,7 @@ public partial class MainPage : ContentPage
 
         foreach (var particle in ParticlesManager.GetParticles)
         {
-            int index = particle.X + particle.Y * CanvasSize.Width;
+            int index = (int)particle.Position.X + (int)particle.Position.Y * CanvasSize.Width;
             if (index >= 0 && index < maxIndex)
             {
                 pixels[index] = particle.GetColor();
@@ -96,12 +96,12 @@ public partial class MainPage : ContentPage
         {
             if (args.MouseButton == SKMouseButton.Left)
             {
-                ParticlesManager.AddParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R, CurrentParticleKind);
+                ParticlesManager.AddParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R, CurrentParticleKind);
                 ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
             }
             if (args.MouseButton == SKMouseButton.Right)
             {
-                ParticlesManager.RemoveParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R, CurrentParticleKind);
+                ParticlesManager.RemoveParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R, CurrentParticleKind);
                 ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
             }
         }
@@ -112,5 +112,3 @@ public partial class MainPage : ContentPage
         MainThread.BeginInvokeOnMainThread(() => ParticleCanvas.InvalidateSurface());
     }
 }
-
-
