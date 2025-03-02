@@ -1,17 +1,16 @@
 ﻿using System.ComponentModel;
-using SimulatorEngine;
 
 namespace SimulatorEngine;
 
-public class ParticlePool
+public class ParticlesPool
 {
-    private readonly Stack<Particle> _pool = new();
+    private readonly Stack<Particle> ParticlesFactory = new();
 
     public Particle GetParticle(int x, int y, ParticleKind kind)
     {
-        if (_pool.Count > 0)
+        if (ParticlesFactory.Count > 0)
         {
-            var particle = _pool.Pop();
+            var particle = ParticlesFactory.Pop();
             particle.X = x;
             particle.Y = y;
             return particle;
@@ -24,7 +23,7 @@ public class ParticlePool
 
     public void ReturnParticle(Particle particle)
     {
-        _pool.Push(particle);
+        ParticlesFactory.Push(particle);
     }
 
     private Particle CreateNewParticle(int x, int y, ParticleKind kind)

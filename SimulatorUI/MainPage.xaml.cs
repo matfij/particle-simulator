@@ -1,5 +1,4 @@
-﻿using Microsoft.Maui.Controls.Compatibility;
-using SimulatorEngine;
+﻿using SimulatorEngine;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -19,7 +18,7 @@ public partial class MainPage : ContentPage
     private readonly System.Timers.Timer PaintTimer = new(20); // 1000ms / 20 = 50fps
     private readonly SKBitmap ParticlesBitmap = new(CanvasSize.Width, CanvasSize.Height);
     private (float X, float Y, float R) Cursor = (0, 0, 10);
-    private ParticleKind ParticleToAdd = ParticleKind.Sand;
+    private ParticleKind CurrentParticleKind = ParticleKind.Sand;
 
     public MainPage()
     {
@@ -33,7 +32,7 @@ public partial class MainPage : ContentPage
     {
         if (sender is Button selectedButton && selectedButton.CommandParameter is ParticleKind kind)
         {
-            ParticleToAdd = kind;
+            CurrentParticleKind = kind;
 
             if (selectedButton.Parent is HorizontalStackLayout parentLayout)
             {
@@ -97,12 +96,12 @@ public partial class MainPage : ContentPage
         {
             if (args.MouseButton == SKMouseButton.Left)
             {
-                ParticlesManager.AddParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R, ParticleToAdd);
+                ParticlesManager.AddParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R, CurrentParticleKind);
                 ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
             }
             if (args.MouseButton == SKMouseButton.Right)
             {
-                ParticlesManager.RemoveParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R);
+                ParticlesManager.RemoveParticles(((int)Cursor.X, (int)Cursor.Y), (int)Cursor.R, CurrentParticleKind);
                 ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
             }
         }
