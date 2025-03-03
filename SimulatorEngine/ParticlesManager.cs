@@ -4,9 +4,9 @@ namespace SimulatorEngine;
 
 public class ParticlesManager
 {
-    private HashSet<Particle> Particles = [];
+    private readonly (int Width, int Height) CanvasSize = (1200, 600);
     private readonly ParticlesPool ParticlesPool = new();
-    private int ParticlesCount = 0;
+    private HashSet<Particle> Particles = [];
     private readonly System.Timers.Timer TickTimer = new(20);
     private bool ParticlesLock = false;
 
@@ -18,7 +18,7 @@ public class ParticlesManager
 
     public IEnumerable<Particle> GetParticles => Particles;
 
-    public int GetParticlesCount => ParticlesCount;
+    public int GetParticlesCount => Particles.Count;
 
     public void AddParticles(Vector2 center, int radius, ParticleKind kind)
     {
@@ -31,13 +31,20 @@ public class ParticlesManager
         int radiusSquare = radius * radius;
         for (int dx = -radius; dx <= radius; dx++)
         {
+            if (center.X + dx > CanvasSize.Width || center.X + dx < 0)
+            {
+                continue;
+            }
             for (int dy = -radius; dy <= radius; dy++)
             {
-                var particle = ParticlesPool.GetParticle(new(center.X + dx, center.Y + dy), kind);
-                if (!Particles.Contains(particle) && dx * dx + dy * dy <= radiusSquare)
+                if (center.Y + dy > CanvasSize.Height || center.Y + dy < 0)
                 {
-                    Particles.Add(particle);
-                    ParticlesCount++;
+                    continue;
+                }
+                Vector2 position = new(center.X + dx, center.Y + dy);
+                if (!Particles.Contains(ParticlesPool.GetParticle(position, kind)) && dx * dx + dy * dy <= radiusSquare)
+                {
+                    Particles.Add(ParticlesPool.GetParticle(position, kind));
                 }
             }
         }
@@ -53,21 +60,22 @@ public class ParticlesManager
         }
         ParticlesLock = true;
 
-        HashSet<Particle> remainingParticles = [];
-        ParticlesCount = 0;
+        List<Particle> particlesToRemove = [];
         int radiusSquare = radius * radius;
 
         foreach (var particle in Particles)
         {
             var deltaFromCenter = Vector2.DistanceSquared(particle.Position, center);
-            if (deltaFromCenter > radiusSquare)
+            if (deltaFromCenter < radiusSquare)
             {
-                remainingParticles.Add(particle);
-                ParticlesCount++;
+                particlesToRemove.Add(particle);
             }
         }
 
-        Particles = remainingParticles;
+        foreach (var particle in particlesToRemove)
+        {
+            Particles.Remove(particle);
+        }
 
         ParticlesLock = false;
     }
@@ -79,6 +87,8 @@ public class ParticlesManager
             return;
         }
         ParticlesLock = true;
+
+        List<Particle> particlesToRemove = [];
 
         foreach (var particle in Particles)
         {
@@ -97,6 +107,16 @@ public class ParticlesManager
                     // TODO
                     break;
             }
+
+            if (particle.Position.X < 0 || particle.Position.X > CanvasSize.Width || particle.Position.Y < 0 || particle.Position.Y > CanvasSize.Height)
+            {
+                particlesToRemove.Add(particle);
+            }
+        }
+
+        foreach (var particle in particlesToRemove)
+        {
+            Particles.Remove(particle);
         }
 
         ParticlesLock = false;
