@@ -23,11 +23,11 @@ public class ParticlesManagerTest
         manager.AddParticles(new(50, 500), 15, ParticleKind.Iron);
         manager.AddParticles(new(5, 5), 10, ParticleKind.Oxygen);
 
-        Assert.Equal(1112, manager.GetParticlesCount);
+        Assert.Equal(1008, manager.GetParticlesCount);
         Assert.Equal(5, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Sand).Count());
         Assert.Equal(81, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Water).Count());
         Assert.Equal(709, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Iron).Count());
-        Assert.Equal(317, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Oxygen).Count());
+        Assert.Equal(213, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Oxygen).Count());
     }
 
     [Fact]
@@ -74,20 +74,20 @@ public class ParticlesManagerTest
         var manager = new ParticlesManager();
 
         manager.AddParticles(new(10, 10), 3, ParticleKind.Sand);
-        manager.AddParticles(new(10, 100), 5, ParticleKind.Water);
+        manager.AddParticles(new(10, 100), 5, ParticleKind.Iron);
         manager.AddParticles(new(500, 100), 10, ParticleKind.Oxygen);
 
         Assert.Equal(427, manager.GetParticlesCount);
 
-        manager.RemoveParticles(new(10, 10), 3, ParticleKind.Sand);
+        manager.RemoveParticles(new(10, 10), 4, ParticleKind.Sand);
 
         Assert.Equal(398, manager.GetParticlesCount);
         
-        manager.RemoveParticles(new(10, 100), 5, ParticleKind.Water);
+        manager.RemoveParticles(new(10, 100), 6, ParticleKind.Iron);
 
         Assert.Equal(317, manager.GetParticlesCount);
         
-        manager.RemoveParticles(new(500, 100), 10, ParticleKind.Oxygen);
+        manager.RemoveParticles(new(500, 100), 11, ParticleKind.Oxygen);
 
         Assert.Equal(0, manager.GetParticlesCount);
     }
@@ -103,6 +103,6 @@ public class ParticlesManagerTest
 
         manager.RemoveParticles(new(100, 100), 9, ParticleKind.Sand);
 
-        Assert.Equal(64, manager.GetParticlesCount);
+        Assert.Equal(68, manager.GetParticlesCount);
     }
 }
