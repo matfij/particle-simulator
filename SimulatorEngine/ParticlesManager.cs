@@ -6,7 +6,8 @@ public class ParticlesManager
 {
     private readonly (int Width, int Height) CanvasSize = (1200, 600);
     private readonly ParticlesPool ParticlesPool = new();
-    private HashSet<Particle> Particles = [];
+    private readonly ParticlesGrid ParticlesGrid = new();
+    private List<Particle> Particles = [];
     private readonly System.Timers.Timer TickTimer = new(20);
     private bool ParticlesLock = false;
 
@@ -49,6 +50,8 @@ public class ParticlesManager
             }
         }
 
+        ParticlesGrid.SetParticles(Particles);
+
         ParticlesLock = false;
     }
 
@@ -76,6 +79,8 @@ public class ParticlesManager
         {
             Particles.Remove(particle);
         }
+
+        ParticlesGrid.SetParticles(Particles);
 
         ParticlesLock = false;
     }
@@ -138,5 +143,13 @@ public class ParticlesManager
         {
             particle.Velocity.Y *= -1;
         }
+    }
+
+    public void GetNeighbors(Vector2 position)
+    {
+        ParticlesGrid.ClearGrid();
+        ParticlesGrid.MapParticlesToCell();
+
+        var cellParticles = ParticlesGrid.GetNeighborOfParticleIndex(0);
     }
 }
