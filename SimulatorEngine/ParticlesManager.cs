@@ -4,6 +4,7 @@ namespace SimulatorEngine;
 
 public class ParticlesManager
 {
+    private static readonly float Gravity = 0.0001f;
     private readonly (int Width, int Height) CanvasSize = (1200, 600);
     private readonly ParticlesPool ParticlesPool = new();
     private readonly ParticlesGrid ParticlesGrid = new();
@@ -133,7 +134,7 @@ public class ParticlesManager
     private void MoveLiquid(Particle particle)
     {
         // gravity
-        particle.Velocity = Vector2.Add(particle.Velocity, new(0, particle.GetDensity() * 0.0001f));
+        particle.Velocity = Vector2.Add(particle.Velocity, new(0, particle.GetDensity() * Gravity));
 
         // position prediction
         particle.LastPosition = particle.Position;

@@ -7,7 +7,7 @@ public class ParticlesGridTest
 {
     private readonly List<Particle> TestParticles = new() {
         new SandParticle(new(0, 0)),
-        new SandParticle(new(5, 5)),
+        new SandParticle(new(1, 1)),
         new WaterParticle(new(45, 90)),
     };
 

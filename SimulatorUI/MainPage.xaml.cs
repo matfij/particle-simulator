@@ -49,19 +49,14 @@ public partial class MainPage : ContentPage
         var pixels = (uint*)ParticlesBitmap.GetPixels();
         var maxIndex = CanvasSize.Width * CanvasSize.Height;
 
-        try
+        foreach (var particle in ParticlesManager.GetParticles)
         {
-
-            foreach (var particle in ParticlesManager.GetParticles)
+            int index = (int)particle.Position.X + (int)particle.Position.Y * CanvasSize.Width;
+            if (index >= 0 && index < maxIndex)
             {
-                int index = (int)particle.Position.X + (int)particle.Position.Y * CanvasSize.Width;
-                if (index >= 0 && index < maxIndex)
-                {
-                    pixels[index] = particle.GetColor();
-                }
+                pixels[index] = particle.GetColor();
             }
         }
-        catch { }
     }
 
     private void OnTouch(object sender, SKTouchEventArgs args)
