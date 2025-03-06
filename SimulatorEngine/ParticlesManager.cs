@@ -4,6 +4,8 @@ namespace SimulatorEngine;
 
 public class ParticlesManager
 {
+    private static readonly float Gravity = 0.0001f;
+    private static readonly float ReflectionDamping = 0.8f;
     private readonly (int Width, int Height) CanvasSize = (1200, 600);
     private readonly ParticlesPool ParticlesPool = new();
     private readonly ParticlesGrid ParticlesGrid = new();
@@ -55,7 +57,7 @@ public class ParticlesManager
         ParticlesLock = false;
     }
 
-    public void RemoveParticles(Vector2 center, int radius, ParticleKind kind)
+    public void RemoveParticles(Vector2 center, int radius)
     {
         if (ParticlesLock)
         {
@@ -95,6 +97,9 @@ public class ParticlesManager
 
         List<Particle> particlesToRemove = [];
 
+        ParticlesGrid.ClearGrid();
+        ParticlesGrid.MapParticlesToCell();
+
         foreach (var particle in Particles)
         {
             switch (particle.Body)
@@ -129,27 +134,31 @@ public class ParticlesManager
 
     private void MoveLiquid(Particle particle)
     {
+        // gravity
+        particle.Velocity.Y += particle.GetDensity() * Gravity;
+
+        // position prediction
         particle.LastPosition = particle.Position;
         particle.Position += particle.Velocity;
 
+        // neighbor search
+
+        // TODO - double density relaxation
+
+        // update velocity
         var velocity = particle.Position - particle.LastPosition;
         particle.Velocity = velocity;
 
-        if (Particles.Contains(ParticlesPool.GetParticle(new(particle.Position.X + particle.Velocity.X, particle.Position.Y), particle.GetKind())))
+        // boundary
+        if (particle.Position.X > CanvasSize.Width - 1 || particle.Position.X < 1)
         {
-            particle.Velocity.X *= -1;
+            particle.Position.X = Math.Clamp(particle.Position.X, 1, CanvasSize.Width - 1);
+            particle.Velocity.X *= -ReflectionDamping;
         }
-        if (Particles.Contains(ParticlesPool.GetParticle(new(particle.Position.X, particle.Position.Y + particle.Velocity.Y), particle.GetKind())))
+        if (particle.Position.Y > CanvasSize.Height - 1 || particle.Position.Y < 1)
         {
-            particle.Velocity.Y *= -1;
+            particle.Position.Y = Math.Clamp(particle.Position.Y, 1, CanvasSize.Height - 1);
+            particle.Velocity.Y *= -ReflectionDamping;
         }
-    }
-
-    public void GetNeighbors(Vector2 position)
-    {
-        ParticlesGrid.ClearGrid();
-        ParticlesGrid.MapParticlesToCell();
-
-        var cellParticles = ParticlesGrid.GetNeighborOfParticleIndex(0);
     }
 }

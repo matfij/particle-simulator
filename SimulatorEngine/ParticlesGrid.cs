@@ -39,13 +39,14 @@ public class ParticlesGrid
             int y = (int)(position.Y / cellSize);
             long hash = CellIndexToHash(x, y);
 
-            if (!hashMap.TryGetValue(hash, out var particles))
+            if (hashMap.TryGetValue(hash, out var particles))
             {
-                particles = [];
-                hashMap[hash] = particles;
+                particles.Add(particle);
             }
-
-            particles.Add(particle);
+            else
+            {
+                hashMap[hash] = [particle];
+            }
         }
     }
 
