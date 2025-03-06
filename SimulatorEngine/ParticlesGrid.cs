@@ -49,12 +49,12 @@ public class ParticlesGrid
 
     public List<Particle> GetNeighborOfParticleIndex(int index)
     {
-        if (Particles.Count < index)
+        if (Particles.Count < index || index < 0)
         {
             return [];
         }
 
-        var neighbors = new HashSet<Particle>();
+        var neighbors = new List<Particle>();
         var position = Particles[index].Position;
 
         int particleGridX = (int)(position.X / cellSize);
@@ -75,8 +75,10 @@ public class ParticlesGrid
             }
         }
 
-        return neighbors.ToList();
+        return neighbors;
     }
 
+    // TODO - cash hash
+    // private readonly Dictionary<Vector2, long> hashCache = new();
     private long CellIndexToHash(int x, int y) => (x * PrimeX + y * PrimeY) % HashMapSize;
 }
