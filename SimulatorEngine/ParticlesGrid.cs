@@ -39,17 +39,19 @@ public class ParticlesGrid
             int y = (int)(position.Y / cellSize);
             long hash = CellIndexToHash(x, y);
 
-            if (hashMap.TryGetValue(hash, out var cellParticles))
+            if (!hashMap.TryGetValue(hash, out var particles))
             {
-                cellParticles.Add(particle);
+                particles = [];
+                hashMap[hash] = particles;
             }
-            hashMap[hash] = [];
+
+            particles.Add(particle);
         }
     }
 
     public List<Particle> GetNeighborOfParticleIndex(int index)
     {
-        if (Particles.Count < index || index < 0)
+        if (Particles.Count < index)
         {
             return [];
         }
@@ -66,7 +68,7 @@ public class ParticlesGrid
             {
                 var gridX = particleGridX + x;
                 var gridY = particleGridY + y;
-                var hash = GetHashFromPosition(new(gridX, gridY));
+                var hash = CellIndexToHash(gridX, gridY);
                 var content = GetContentOfCell(hash);
                 foreach (var particle in content)
                 {
@@ -78,7 +80,5 @@ public class ParticlesGrid
         return neighbors;
     }
 
-    // TODO - cash hash
-    // private readonly Dictionary<Vector2, long> hashCache = new();
     private static long CellIndexToHash(int x, int y) => (x * PrimeX + y * PrimeY) % HashMapSize;
 }
