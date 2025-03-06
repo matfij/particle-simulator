@@ -8,10 +8,10 @@ public class ParticlesGrid
     private const long PrimeX = 6614058611;
     private const long PrimeY = 7528850467;
     private const long HashMapSize = 1000000;
-    private readonly Dictionary<long, List<Particle>> hashMap = new();
-    private List<Particle> Particles = new();
+    private readonly Dictionary<long, List<Particle>> hashMap = [];
+    private List<Particle> Particles = [];
 
-    public List<Particle> GetContentOfCell(long id) => hashMap.ContainsKey(id) ? hashMap[id] : [];
+    public List<Particle> GetContentOfCell(long id) => hashMap.TryGetValue(id, out var particles) ? particles : [];
 
     public void SetParticles(List<Particle> particles)
     {
@@ -39,11 +39,11 @@ public class ParticlesGrid
             int y = (int)(position.Y / cellSize);
             long hash = CellIndexToHash(x, y);
 
-            if (!hashMap.ContainsKey(hash))
+            if (hashMap.TryGetValue(hash, out var cellParticles))
             {
-                hashMap[hash] = new List<Particle>();
+                cellParticles.Add(particle);
             }
-            hashMap[hash].Add(particle);
+            hashMap[hash] = [];
         }
     }
 
@@ -80,5 +80,5 @@ public class ParticlesGrid
 
     // TODO - cash hash
     // private readonly Dictionary<Vector2, long> hashCache = new();
-    private long CellIndexToHash(int x, int y) => (x * PrimeX + y * PrimeY) % HashMapSize;
+    private static long CellIndexToHash(int x, int y) => (x * PrimeX + y * PrimeY) % HashMapSize;
 }
