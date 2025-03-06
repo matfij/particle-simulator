@@ -79,7 +79,8 @@ public partial class MainPage : ContentPage
             }
             if (args.MouseButton == SKMouseButton.Right)
             {
-                ParticlesManager.RemoveParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R, CurrentParticleKind);
+                //ParticlesManager.RemoveParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R, CurrentParticleKind);
+                ParticlesManager.GetNeighbors(new(Cursor.X, Cursor.Y));
             }
         }
     }
