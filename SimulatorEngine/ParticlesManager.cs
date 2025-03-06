@@ -5,6 +5,7 @@ namespace SimulatorEngine;
 public class ParticlesManager
 {
     private static readonly float Gravity = 0.0001f;
+    private static readonly float ReflectionDamping = 0.8f;
     private readonly (int Width, int Height) CanvasSize = (1200, 600);
     private readonly ParticlesPool ParticlesPool = new();
     private readonly ParticlesGrid ParticlesGrid = new();
@@ -56,7 +57,7 @@ public class ParticlesManager
         ParticlesLock = false;
     }
 
-    public void RemoveParticles(Vector2 center, int radius, ParticleKind kind)
+    public void RemoveParticles(Vector2 center, int radius)
     {
         if (ParticlesLock)
         {
@@ -134,7 +135,7 @@ public class ParticlesManager
     private void MoveLiquid(Particle particle)
     {
         // gravity
-        particle.Velocity = Vector2.Add(particle.Velocity, new(0, particle.GetDensity() * Gravity));
+        particle.Velocity.Y += particle.GetDensity() * Gravity;
 
         // position prediction
         particle.LastPosition = particle.Position;
@@ -152,12 +153,12 @@ public class ParticlesManager
         if (particle.Position.X > CanvasSize.Width - 1 || particle.Position.X < 1)
         {
             particle.Position.X = Math.Clamp(particle.Position.X, 1, CanvasSize.Width - 1);
-            particle.Velocity.X *= -0.8f;
+            particle.Velocity.X *= -ReflectionDamping;
         }
         if (particle.Position.Y > CanvasSize.Height - 1 || particle.Position.Y < 1)
         {
             particle.Position.Y = Math.Clamp(particle.Position.Y, 1, CanvasSize.Height - 1);
-            particle.Velocity.Y *= -0.8f;
+            particle.Velocity.Y *= -ReflectionDamping;
         }
     }
 }
