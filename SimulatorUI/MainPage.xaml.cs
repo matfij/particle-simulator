@@ -49,14 +49,19 @@ public partial class MainPage : ContentPage
         var pixels = (uint*)ParticlesBitmap.GetPixels();
         var maxIndex = CanvasSize.Width * CanvasSize.Height;
 
-        foreach (var particle in ParticlesManager.GetParticles)
+        try
         {
-            int index = (int)particle.Position.X + (int)particle.Position.Y * CanvasSize.Width;
-            if (index >= 0 && index < maxIndex)
+
+            foreach (var particle in ParticlesManager.GetParticles)
             {
-                pixels[index] = particle.GetColor();
+                int index = (int)particle.Position.X + (int)particle.Position.Y * CanvasSize.Width;
+                if (index >= 0 && index < maxIndex)
+                {
+                    pixels[index] = particle.GetColor();
+                }
             }
         }
+        catch { }
     }
 
     private void OnTouch(object sender, SKTouchEventArgs args)
@@ -79,8 +84,7 @@ public partial class MainPage : ContentPage
             }
             if (args.MouseButton == SKMouseButton.Right)
             {
-                //ParticlesManager.RemoveParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R, CurrentParticleKind);
-                ParticlesManager.GetNeighbors(new(Cursor.X, Cursor.Y));
+                ParticlesManager.RemoveParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R, CurrentParticleKind);
             }
         }
     }

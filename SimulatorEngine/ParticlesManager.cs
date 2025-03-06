@@ -95,6 +95,9 @@ public class ParticlesManager
 
         List<Particle> particlesToRemove = [];
 
+        ParticlesGrid.ClearGrid();
+        ParticlesGrid.MapParticlesToCell();
+
         foreach (var particle in Particles)
         {
             switch (particle.Body)
@@ -129,27 +132,31 @@ public class ParticlesManager
 
     private void MoveLiquid(Particle particle)
     {
+        // gravity
+        particle.Velocity = Vector2.Add(particle.Velocity, new(0, particle.GetDensity() * 0.0001f));
+
+        // position prediction
         particle.LastPosition = particle.Position;
         particle.Position += particle.Velocity;
 
+        // neighbor search
+
+        // TODO - double density relaxation
+
+        // update velocity
         var velocity = particle.Position - particle.LastPosition;
         particle.Velocity = velocity;
 
-        if (Particles.Contains(ParticlesPool.GetParticle(new(particle.Position.X + particle.Velocity.X, particle.Position.Y), particle.GetKind())))
+        // boundary
+        if (particle.Position.X > CanvasSize.Width - 1 || particle.Position.X < 1)
         {
-            particle.Velocity.X *= -1;
+            particle.Position.X = Math.Clamp(particle.Position.X, 1, CanvasSize.Width - 1);
+            particle.Velocity.X *= -0.8f;
         }
-        if (Particles.Contains(ParticlesPool.GetParticle(new(particle.Position.X, particle.Position.Y + particle.Velocity.Y), particle.GetKind())))
+        if (particle.Position.Y > CanvasSize.Height - 1 || particle.Position.Y < 1)
         {
-            particle.Velocity.Y *= -1;
+            particle.Position.Y = Math.Clamp(particle.Position.Y, 1, CanvasSize.Height - 1);
+            particle.Velocity.Y *= -0.8f;
         }
-    }
-
-    public void GetNeighbors(Vector2 position)
-    {
-        ParticlesGrid.ClearGrid();
-        ParticlesGrid.MapParticlesToCell();
-
-        var cellParticles = ParticlesGrid.GetNeighborOfParticleIndex(0);
     }
 }
