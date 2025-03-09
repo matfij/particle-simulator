@@ -4,7 +4,7 @@ namespace SimulatorEngine;
 
 public class ParticlesGrid
 {
-    private const int cellSize = 10;
+    private const int cellSize = 20;
     private const long PrimeX = 6614058611;
     private const long PrimeY = 7528850467;
     private const long HashMapSize = 1000000;

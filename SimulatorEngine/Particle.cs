@@ -53,6 +53,7 @@ public class SandParticle : Particle
     public override uint GetColor() => Color;
 
     public override float GetDensity() => Density;
+    
     public override ParticleKind GetKind() => Kind;
 }
 
@@ -66,7 +67,6 @@ public class WaterParticle : Particle
     {
         Temperature = 20;
         Body = ParticleBody.Liquid;
-        Velocity = new Vector2(1 * Utils.RandRange(-1, 1), 1 * Utils.RandRange(1, 3));
     }
 
     public override uint GetColor() => Color;
