@@ -79,15 +79,15 @@ public class ParticlesManagerTest
 
         Assert.Equal(427, manager.GetParticlesCount);
 
-        manager.RemoveParticles(new(10, 10), 4, ParticleKind.Sand);
+        manager.RemoveParticles(new(10, 10), 4);
 
         Assert.Equal(398, manager.GetParticlesCount);
         
-        manager.RemoveParticles(new(10, 100), 6, ParticleKind.Iron);
+        manager.RemoveParticles(new(100, 100), 6);
 
         Assert.Equal(317, manager.GetParticlesCount);
         
-        manager.RemoveParticles(new(500, 100), 11, ParticleKind.Oxygen);
+        manager.RemoveParticles(new(100, 100), 11);
 
         Assert.Equal(0, manager.GetParticlesCount);
     }
@@ -101,7 +101,7 @@ public class ParticlesManagerTest
 
         Assert.Equal(317, manager.GetParticlesCount);
 
-        manager.RemoveParticles(new(100, 100), 9, ParticleKind.Sand);
+        manager.RemoveParticles(new(100, 100), 9);
 
         Assert.Equal(68, manager.GetParticlesCount);
     }

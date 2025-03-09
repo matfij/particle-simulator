@@ -6,7 +6,7 @@ namespace SimulatorUI;
 
 public partial class MainPage : ContentPage
 {
-    private static readonly (int Width, int Height) CanvasSize = (1200, 600);
+    private static readonly (int Width, int Height) CanvasSize = (600, 300);
     private static readonly SKPaint CursorPaint = new()
     {
         StrokeWidth = 2,

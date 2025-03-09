@@ -53,6 +53,7 @@ public class SandParticle : Particle
     public override uint GetColor() => Color;
 
     public override float GetDensity() => Density;
+    
     public override ParticleKind GetKind() => Kind;
 }
 

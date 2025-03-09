@@ -8,10 +8,10 @@ public class ParticlesManager
     private static readonly float ReflectionDamping = 0.1f;
     private static readonly float VelocityDamping = 0.3f;
     private static readonly float RestDensity = 20f;
-    private static readonly float KNear = 0.001f;
-    private static readonly float K = 0.0005f;
-    private static readonly float InteractionRadius = 8;
-    private readonly (int Width, int Height) CanvasSize = (1200, 600);
+    private static readonly float KNear = 0.0005f;
+    private static readonly float K = 0.00005f;
+    private static readonly float InteractionRadius = 10;
+    private readonly (int Width, int Height) CanvasSize = (600, 300);
     private readonly ParticlesPool ParticlesPool = new();
     private readonly ParticlesGrid ParticlesGrid = new();
     private List<Particle> Particles = [];
@@ -115,7 +115,7 @@ public class ParticlesManager
                     // TODO
                     break;
                 case ParticleBody.Liquid:
-                    MoveLiquid(particle, i, 4f);
+                    MoveLiquid(particle, i, 3f);
                     break;
                 case ParticleBody.Powder:
                     // TODO
@@ -191,20 +191,20 @@ public class ParticlesManager
         }
         particle.Position += particleDisplacement;
 
-        // update velocity
-        var velocity = (particle.Position - particle.LastPosition) / dt;
-        particle.Velocity = velocity;
-
         // boundary
         if (particle.Position.X > CanvasSize.Width - 1 || particle.Position.X < 1)
         {
-            particle.Position.X = Math.Clamp(particle.Position.X, 1, CanvasSize.Width - 1);
+            particle.Position.X = Math.Clamp(particle.Position.X, 0, CanvasSize.Width);
             particle.Velocity.X *= -ReflectionDamping;
         }
         if (particle.Position.Y > CanvasSize.Height - 1 || particle.Position.Y < 1)
         {
-            particle.Position.Y = Math.Clamp(particle.Position.Y, 1, CanvasSize.Height - 1);
+            particle.Position.Y = Math.Clamp(particle.Position.Y, 0, CanvasSize.Height);
             particle.Velocity.Y *= -ReflectionDamping;
         }
+
+        // update velocity
+        var velocity = (particle.Position - particle.LastPosition) / dt;
+        particle.Velocity = velocity;
     }
 }
