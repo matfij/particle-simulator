@@ -43,7 +43,10 @@ public partial class MainPage : ContentPage
             canvas.DrawCircle(Cursor.X, Cursor.Y, Cursor.R, CursorPaint);
             ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Rendering error: {ex.Message}");
+        }
 
     }
 
