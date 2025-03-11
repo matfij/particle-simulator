@@ -20,7 +20,7 @@ public class ParticlesGridTest
 
         var hash = grid.GetHashFromPosition(new(45, 90));
 
-        Assert.Equal(648192, hash);
+        Assert.Equal(560457, hash);
     }
 
     [Fact]

@@ -22,8 +22,6 @@ public enum ParticleBody
 public abstract class Particle(Vector2 position)
 {
     public Vector2 Position = position;
-    public Vector2 LastPosition = position;
-    public Vector2 Velocity = new(0, 0);
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
 

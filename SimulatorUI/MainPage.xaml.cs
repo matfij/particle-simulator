@@ -6,7 +6,7 @@ namespace SimulatorUI;
 
 public partial class MainPage : ContentPage
 {
-    private static readonly (int Width, int Height) CanvasSize = (600, 300);
+    private static readonly (int Width, int Height) CanvasSize = (1200, 600);
     private static readonly SKPaint CursorPaint = new()
     {
         StrokeWidth = 2,
@@ -19,7 +19,7 @@ public partial class MainPage : ContentPage
     private readonly SKBitmap ParticlesBitmap = new(CanvasSize.Width, CanvasSize.Height);
     private (float X, float Y) CanvasScale = (1, 1);
     private (float X, float Y, float R) Cursor = (0, 0, 10);
-    private ParticleKind CurrentParticleKind = ParticleKind.Sand;
+    private ParticleKind CurrentParticleKind = ParticleKind.Water;
 
     public MainPage()
     {
@@ -31,16 +31,20 @@ public partial class MainPage : ContentPage
 
     private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
     {
-        CanvasScale = (args.Info.Width / (float)CanvasSize.Width, args.Info.Height / (float)CanvasSize.Height);
-        UpdateBitmap();
+        try
+        {
+            CanvasScale = (args.Info.Width / (float)CanvasSize.Width, args.Info.Height / (float)CanvasSize.Height);
+            UpdateBitmap();
+            var canvas = args.Surface.Canvas;
+            canvas.Clear(SKColors.Black);
+            canvas.Scale(CanvasScale.X, CanvasScale.Y);
 
-        var canvas = args.Surface.Canvas;
-        canvas.Clear(SKColors.Black);
-        canvas.Scale(CanvasScale.X, CanvasScale.Y);
+            canvas.DrawBitmap(ParticlesBitmap, 0, 0);
+            canvas.DrawCircle(Cursor.X, Cursor.Y, Cursor.R, CursorPaint);
+            ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
+        }
+        catch { }
 
-        canvas.DrawBitmap(ParticlesBitmap, 0, 0);
-        canvas.DrawCircle(Cursor.X, Cursor.Y, Cursor.R, CursorPaint);
-        ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
     }
 
     private unsafe void UpdateBitmap()
@@ -68,7 +72,7 @@ public partial class MainPage : ContentPage
         }
         if (args.ActionType == SKTouchAction.WheelChanged)
         {
-            var radius = (int)(Cursor.R + args.WheelDelta / 10);
+            var radius = (int)(Cursor.R + args.WheelDelta / 25);
             Cursor.R = Math.Clamp(radius, 1, 100);
         }
         if (args.ActionType == SKTouchAction.Pressed || args.ActionType == SKTouchAction.Moved)

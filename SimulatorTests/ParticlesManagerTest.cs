@@ -83,11 +83,11 @@ public class ParticlesManagerTest
 
         Assert.Equal(398, manager.GetParticlesCount);
         
-        manager.RemoveParticles(new(100, 100), 6);
+        manager.RemoveParticles(new(10, 100), 6);
 
         Assert.Equal(317, manager.GetParticlesCount);
         
-        manager.RemoveParticles(new(100, 100), 11);
+        manager.RemoveParticles(new(500, 100), 11);
 
         Assert.Equal(0, manager.GetParticlesCount);
     }

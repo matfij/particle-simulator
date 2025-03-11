@@ -4,17 +4,10 @@ namespace SimulatorEngine;
 
 public class ParticlesManager
 {
-    private static readonly float Gravity = 0.001f;
-    private static readonly float ReflectionDamping = 0.1f;
-    private static readonly float VelocityDamping = 0.3f;
-    private static readonly float RestDensity = 20f;
-    private static readonly float KNear = 0.0005f;
-    private static readonly float K = 0.00005f;
-    private static readonly float InteractionRadius = 10;
-    private readonly (int Width, int Height) CanvasSize = (600, 300);
+    private static readonly float Gravity = 0.05f;
+    private readonly (int Width, int Height) CanvasSize = (1200, 600);
     private readonly ParticlesPool ParticlesPool = new();
-    private readonly ParticlesGrid ParticlesGrid = new();
-    private List<Particle> Particles = [];
+    private HashSet<Particle> Particles = [];
     private readonly System.Timers.Timer TickTimer = new(20);
     private bool ParticlesLock = false;
 
@@ -57,8 +50,6 @@ public class ParticlesManager
             }
         }
 
-        ParticlesGrid.SetParticles(Particles);
-
         ParticlesLock = false;
     }
 
@@ -87,8 +78,6 @@ public class ParticlesManager
             Particles.Remove(particle);
         }
 
-        ParticlesGrid.SetParticles(Particles);
-
         ParticlesLock = false;
     }
 
@@ -101,27 +90,24 @@ public class ParticlesManager
         ParticlesLock = true;
 
         List<Particle> particlesToRemove = [];
-
-        ParticlesGrid.ClearGrid();
-        ParticlesGrid.MapParticlesToCell();
+        List<(Particle, Vector2)> movedParticles = [];
+        HashSet<Vector2> occupiedPositions = [];
 
         var particlesCount = Particles.Count;
-        for (var i = 0; i < particlesCount; i++)
+        foreach (var particle in Particles)
         {
-            var particle = Particles[i];
+            Vector2 newPosition = particle.Position;
+
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
-                    // TODO
                     break;
                 case ParticleBody.Liquid:
-                    MoveLiquid(particle, i, 3f);
+                    newPosition = MoveLiquid(particle, occupiedPositions, 0.2f);
                     break;
                 case ParticleBody.Powder:
-                    // TODO
                     break;
                 case ParticleBody.Solid:
-                    // TODO
                     break;
             }
 
@@ -129,8 +115,19 @@ public class ParticlesManager
             {
                 particlesToRemove.Add(particle);
             }
+            if (newPosition != particle.Position)
+            {
+                movedParticles.Add((particle, newPosition));
+                occupiedPositions.Add(newPosition);
+            }
         }
 
+        foreach (var (particle, newPosition) in movedParticles)
+        {
+            Particles.Remove(particle);
+            particle.Position = newPosition;
+            Particles.Add(particle);
+        }
         foreach (var particle in particlesToRemove)
         {
             Particles.Remove(particle);
@@ -139,72 +136,64 @@ public class ParticlesManager
         ParticlesLock = false;
     }
 
-    private void MoveLiquid(Particle particle, int index, float dt)
+    private Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, float dt)
     {
-        // gravity
-        particle.Velocity.Y += dt * particle.GetDensity() * Gravity;
+        var lastPosition = particle.Position;
 
-        // position prediction
-        particle.LastPosition = particle.Position;
-        var positionDelta = Vector2.Multiply(particle.Velocity, dt * VelocityDamping);
-        particle.Position = Vector2.Add(particle.Position, positionDelta);
+        var gravityDisplacement = (int)(dt * particle.GetDensity() * Gravity);
 
-        // neighbor search
-        var density = 0f;
-        var densityNear = 0f;
-        var neighbors = ParticlesGrid.GetNeighborOfParticleIndex(index);
-        for (var i = 0; i < neighbors.Count; i++)
+        for (int i = gravityDisplacement; i > 0; i--)
         {
-            var neighbor = neighbors[i];
-            if (particle.Position == neighbor.Position)
+            Vector2 newPosition = new(lastPosition.X, lastPosition.Y + i);
+            if (
+                !Particles.Contains(ParticlesPool.GetParticle(newPosition, particle.GetKind()))
+                && !occupiedPositions.Contains(newPosition)
+                )
             {
-                continue;
-            }
-            var positionGradient = Vector2.Subtract(neighbor.Position, particle.Position);
-            var distance = positionGradient.Length() / InteractionRadius;
-            if (distance < 1)
-            {
-                density += (float)Math.Pow(1 - distance, 2);
-                densityNear += (float)Math.Pow(1 - distance, 3);
+                return newPosition;
             }
         }
-        var pressure = K * (density - RestDensity);
-        var pressureNear = KNear * densityNear;
-        var particleDisplacement = Vector2.Zero;
-        for (var i = 0; i < neighbors.Count; i++)
-        {
-            var neighbor = neighbors[i];
-            if (particle.Position == neighbor.Position)
-            {
-                continue;
-            }
-            var positionGradient = Vector2.Subtract(neighbor.Position, particle.Position);
-            var distance = positionGradient.Length() / InteractionRadius;
-            if (distance < 1)
-            {
-                positionGradient = Vector2.Normalize(positionGradient);
-                var displacement = dt * dt * (pressure * (1 - distance) + pressureNear * (float)Math.Pow(1 - distance, 2));
-                var dxy = new Vector2(displacement * positionGradient.X, displacement * positionGradient.Y);
-                particleDisplacement -= Vector2.Multiply(dxy, 0.5f);
-                neighbor.Position += Vector2.Multiply(dxy, 0.5f);
-            }
-        }
-        particle.Position += particleDisplacement;
 
-        // boundary
-        if (particle.Position.X > CanvasSize.Width - 1 || particle.Position.X < 1)
+
+        int[] displacements = [-5, 5];
+        Random.Shared.Shuffle(displacements);
+
+        foreach (var displacement in displacements)
         {
-            particle.Position.X = Math.Clamp(particle.Position.X, 0, CanvasSize.Width);
-            particle.Velocity.X *= -ReflectionDamping;
-        }
-        if (particle.Position.Y > CanvasSize.Height - 1 || particle.Position.Y < 1)
-        {
-            particle.Position.Y = Math.Clamp(particle.Position.Y, 0, CanvasSize.Height);
-            particle.Velocity.Y *= -ReflectionDamping;
+            for (int dx = displacement; Math.Abs(dx) > 0;)
+            {
+                for (int dy = Math.Abs(displacement); dy > 0; dy--)
+                {
+                    Vector2 newPosition = new(lastPosition.X + dx, lastPosition.Y + dy);
+                    if (
+                   !Particles.Contains(ParticlesPool.GetParticle(newPosition, particle.GetKind()))
+                    && !occupiedPositions.Contains(newPosition)
+                   )
+                    {
+                        return newPosition;
+                    }
+                }
+                if (displacement > 0) { dx--; } else { dx++; }
+            }
         }
 
-        // update velocity
-        var velocity = (particle.Position - particle.LastPosition) / dt;
-        particle.Velocity = velocity;
+        foreach (var displacement
+            in displacements)
+        {
+            for (int dx = displacement; Math.Abs(dx) > 0;)
+            {
+                Vector2 newPosition = new(lastPosition.X + dx, lastPosition.Y);
+                if (
+                    !Particles.Contains(ParticlesPool.GetParticle(newPosition, particle.GetKind()))
+                     && !occupiedPositions.Contains(newPosition)
+                    )
+                {
+                    return newPosition;
+                }
+                if (displacement > 0) { dx--; } else { dx++; }
+            }
+        }
+
+        return lastPosition;
     }
 }
