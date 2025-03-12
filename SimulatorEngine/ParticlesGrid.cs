@@ -23,7 +23,7 @@ public class ParticlesGrid
         hashMap.Clear();
     }
 
-    public long GetHashFromPosition(Vector2 position)
+    public static long GetHashFromPosition(Vector2 position)
     {
         int x = (int)(position.X / cellSize);
         int y = (int)(position.Y / cellSize);

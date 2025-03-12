@@ -12,7 +12,6 @@ public class ParticlesPool
         if (ParticlesFactory.Count > 0)
         {
             var particle = ParticlesFactory.Pop();
-            particle.Position = position;
             return particle;
         }
         else
@@ -26,7 +25,7 @@ public class ParticlesPool
         ParticlesFactory.Push(particle);
     }
 
-    private Particle CreateNewParticle(Vector2 position, ParticleKind kind)
+    private static Particle CreateNewParticle(Vector2 position, ParticleKind kind)
     {
         switch (kind)
         {

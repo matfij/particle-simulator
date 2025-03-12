@@ -6,9 +6,9 @@ public class ParticlesManager
 {
     private static readonly float Gravity = 0.05f;
     private readonly (int Width, int Height) CanvasSize = (1200, 600);
-    private readonly ParticlesPool ParticlesPool = new();
-    private HashSet<Particle> Particles = [];
     private readonly System.Timers.Timer TickTimer = new(20);
+    private readonly ParticlesPool ParticlesPool = new();
+    private readonly HashSet<Particle> Particles = [];
     private bool ParticlesLock = false;
 
     public ParticlesManager()
@@ -93,7 +93,6 @@ public class ParticlesManager
         List<(Particle, Vector2)> movedParticles = [];
         HashSet<Vector2> occupiedPositions = [];
 
-        var particlesCount = Particles.Count;
         foreach (var particle in Particles)
         {
             Vector2 newPosition = particle.Position;
@@ -125,8 +124,7 @@ public class ParticlesManager
         foreach (var (particle, newPosition) in movedParticles)
         {
             Particles.Remove(particle);
-            particle.Position = newPosition;
-            Particles.Add(particle);
+            Particles.Add(ParticlesPool.GetParticle(newPosition, particle.GetKind()));
         }
         foreach (var particle in particlesToRemove)
         {

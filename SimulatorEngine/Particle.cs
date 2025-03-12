@@ -21,7 +21,7 @@ public enum ParticleBody
 
 public abstract class Particle(Vector2 position)
 {
-    public Vector2 Position = position;
+    public readonly Vector2 Position = position;
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
 
