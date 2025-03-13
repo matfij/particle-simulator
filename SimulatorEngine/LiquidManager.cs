@@ -50,24 +50,24 @@ public class LiquidManager(float gravity)
 
     private static void MoveSideDown(ref Vector2 newPosition, int displacement, Vector2 lastPosition, HashSet<Vector2> occupiedPositions)
     {
-        for (int dx = displacement; Math.Abs(dx) > 0;)
+        for (int dx = Math.Abs(displacement); dx > 0; dx--)
         {
             for (int dy = Math.Abs(displacement); dy > 0; dy--)
             {
-                Vector2 newPositionCandidate = new(lastPosition.X + dx, lastPosition.Y);
+                var newX = lastPosition.X + dx * Math.Sign(displacement);
+                Vector2 newPositionCandidate = new(newX, lastPosition.Y);
                 CheckNewPosition(ref newPosition, newPositionCandidate, occupiedPositions);
             }
-            if (displacement > 0) { dx--; } else { dx++; }
         }
     }
 
     private static void MoveSide(ref Vector2 newPosition, int displacement, Vector2 lastPosition, HashSet<Vector2> occupiedPositions)
     {
-        for (int dx = displacement; Math.Abs(dx) > 0;)
+        for (int dx = Math.Abs(displacement); dx > 0; dx--)
         {
-            Vector2 newPositionCandidate = new(lastPosition.X + dx, lastPosition.Y);
+            var newX = lastPosition.X + dx * Math.Sign(displacement);
+            Vector2 newPositionCandidate = new(newX, lastPosition.Y);
             CheckNewPosition(ref newPosition, newPositionCandidate, occupiedPositions);
-            if (displacement > 0) { dx--; } else { dx++; }
         }
     }
 
