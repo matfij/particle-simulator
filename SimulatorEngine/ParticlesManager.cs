@@ -4,67 +4,70 @@ namespace SimulatorEngine;
 
 public class ParticlesManager
 {
-    private static readonly float Gravity = 0.05f;
-    private readonly (int Width, int Height) CanvasSize = (1200, 600);
-    private readonly System.Timers.Timer TickTimer = new(20);
-    private readonly ParticlesPool ParticlesPool = new();
-    private readonly HashSet<Particle> Particles = [];
-    private bool ParticlesLock = false;
+    private static readonly float _dt = 20;
+    private static readonly float _gravity = 0.05f;
+    private readonly (int Width, int Height) _canvasSize = (1200, 600);
+    private readonly System.Timers.Timer _simulationTimer = new(_dt);
+    private readonly ParticlesPool _particlesPool = new();
+    private readonly HashSet<Particle> _particles = [];
+    private readonly LiquidManager _liquidManager;
+    private bool _particlesLock = false;
 
     public ParticlesManager()
     {
-        TickTimer.Elapsed += (sender, args) => Tick();
-        TickTimer.Start();
+        _liquidManager = new(_gravity);
+        _simulationTimer.Elapsed += (sender, args) => Tick();
+        _simulationTimer.Start();
     }
 
-    public IEnumerable<Particle> GetParticles => Particles;
+    public IEnumerable<Particle> GetParticles => _particles;
 
-    public int GetParticlesCount => Particles.Count;
+    public int GetParticlesCount => _particles.Count;
 
     public void AddParticles(Vector2 center, int radius, ParticleKind kind)
     {
-        if (ParticlesLock)
+        if (_particlesLock)
         {
             return;
         }
-        ParticlesLock = true;
+        _particlesLock = true;
 
         int radiusSquare = radius * radius;
         for (int dx = -radius; dx <= radius; dx++)
         {
-            if (center.X + dx > CanvasSize.Width || center.X + dx < 0)
+            if (center.X + dx > _canvasSize.Width || center.X + dx < 0)
             {
                 continue;
             }
             for (int dy = -radius; dy <= radius; dy++)
             {
-                if (center.Y + dy > CanvasSize.Height || center.Y + dy < 0)
+                if (center.Y + dy > _canvasSize.Height || center.Y + dy < 0)
                 {
                     continue;
                 }
                 Vector2 position = new(center.X + dx, center.Y + dy);
-                if (!Particles.Contains(ParticlesPool.GetParticle(position, kind)) && dx * dx + dy * dy <= radiusSquare)
+                if (!_particles.Contains(_particlesPool.GetParticle(position, kind)) && dx * dx + dy * dy <= radiusSquare)
                 {
-                    Particles.Add(ParticlesPool.GetParticle(position, kind));
+                    _particles.Add(_particlesPool.GetParticle(position, kind));
                 }
             }
         }
 
-        ParticlesLock = false;
+        _particlesLock = false;
     }
 
     public void RemoveParticles(Vector2 center, int radius)
     {
-        if (ParticlesLock)
+        if (_particlesLock)
         {
             return;
         }
-        ParticlesLock = true;
+        _particlesLock = true;
 
         List<Particle> particlesToRemove = [];
         int radiusSquare = radius * radius;
 
-        foreach (var particle in Particles)
+        foreach (var particle in _particles)
         {
             var deltaFromCenter = Vector2.DistanceSquared(particle.Position, center);
             if (deltaFromCenter < radiusSquare)
@@ -75,25 +78,30 @@ public class ParticlesManager
 
         foreach (var particle in particlesToRemove)
         {
-            Particles.Remove(particle);
+            _particles.Remove(particle);
         }
 
-        ParticlesLock = false;
+        _particlesLock = false;
     }
 
     private void Tick()
     {
-        if (ParticlesLock)
+        if (_particlesLock)
         {
             return;
         }
-        ParticlesLock = true;
+        _particlesLock = true;
 
         List<Particle> particlesToRemove = [];
         List<(Particle, Vector2)> movedParticles = [];
         HashSet<Vector2> occupiedPositions = [];
 
-        foreach (var particle in Particles)
+        foreach (var particle in _particles)
+        {
+            occupiedPositions.Add(particle.Position);
+        }
+
+        foreach (var particle in _particles)
         {
             Vector2 newPosition = particle.Position;
 
@@ -102,7 +110,7 @@ public class ParticlesManager
                 case ParticleBody.Gas:
                     break;
                 case ParticleBody.Liquid:
-                    newPosition = MoveLiquid(particle, occupiedPositions, 0.2f);
+                    newPosition = _liquidManager.MoveLiquid(particle, occupiedPositions, _dt / 100);
                     break;
                 case ParticleBody.Powder:
                     break;
@@ -110,88 +118,29 @@ public class ParticlesManager
                     break;
             }
 
-            if (particle.Position.X < 0 || particle.Position.X > CanvasSize.Width || particle.Position.Y < 0 || particle.Position.Y > CanvasSize.Height)
+            if (particle.Position.X < 0 || particle.Position.X > _canvasSize.Width || particle.Position.Y < 0 || particle.Position.Y > _canvasSize.Height)
             {
+                // TODO #6001 - fix removing after position update
                 particlesToRemove.Add(particle);
             }
             if (newPosition != particle.Position)
             {
                 movedParticles.Add((particle, newPosition));
+                occupiedPositions.Remove(particle.Position);
                 occupiedPositions.Add(newPosition);
             }
         }
 
         foreach (var (particle, newPosition) in movedParticles)
         {
-            Particles.Remove(particle);
-            Particles.Add(ParticlesPool.GetParticle(newPosition, particle.GetKind()));
+            _particles.Remove(particle);
+            _particles.Add(_particlesPool.GetParticle(newPosition, particle.GetKind()));
         }
         foreach (var particle in particlesToRemove)
         {
-            Particles.Remove(particle);
+            _particles.Remove(particle);
         }
 
-        ParticlesLock = false;
-    }
-
-    private Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, float dt)
-    {
-        var lastPosition = particle.Position;
-
-        var gravityDisplacement = (int)(dt * particle.GetDensity() * Gravity);
-
-        for (int i = gravityDisplacement; i > 0; i--)
-        {
-            Vector2 newPosition = new(lastPosition.X, lastPosition.Y + i);
-            if (
-                !Particles.Contains(ParticlesPool.GetParticle(newPosition, particle.GetKind()))
-                && !occupiedPositions.Contains(newPosition)
-                )
-            {
-                return newPosition;
-            }
-        }
-
-
-        int[] displacements = [-5, 5];
-        Random.Shared.Shuffle(displacements);
-
-        foreach (var displacement in displacements)
-        {
-            for (int dx = displacement; Math.Abs(dx) > 0;)
-            {
-                for (int dy = Math.Abs(displacement); dy > 0; dy--)
-                {
-                    Vector2 newPosition = new(lastPosition.X + dx, lastPosition.Y + dy);
-                    if (
-                   !Particles.Contains(ParticlesPool.GetParticle(newPosition, particle.GetKind()))
-                    && !occupiedPositions.Contains(newPosition)
-                   )
-                    {
-                        return newPosition;
-                    }
-                }
-                if (displacement > 0) { dx--; } else { dx++; }
-            }
-        }
-
-        foreach (var displacement
-            in displacements)
-        {
-            for (int dx = displacement; Math.Abs(dx) > 0;)
-            {
-                Vector2 newPosition = new(lastPosition.X + dx, lastPosition.Y);
-                if (
-                    !Particles.Contains(ParticlesPool.GetParticle(newPosition, particle.GetKind()))
-                     && !occupiedPositions.Contains(newPosition)
-                    )
-                {
-                    return newPosition;
-                }
-                if (displacement > 0) { dx--; } else { dx++; }
-            }
-        }
-
-        return lastPosition;
+        _particlesLock = false;
     }
 }
