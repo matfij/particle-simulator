@@ -4,7 +4,8 @@ namespace SimulatorEngine;
 
 public class LiquidManager(float gravity)
 {
-    private readonly int[] _sideDisplacementFactors = [-5, 5];
+    private readonly float _sideDisplacementRatio = 0.75f;
+    private readonly int[] _sideDisplacementDirections = [-1, 1];
     private readonly float _gravity = gravity;
 
     public Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, float dt)
@@ -12,70 +13,52 @@ public class LiquidManager(float gravity)
         var initialPosition = particle.Position;
         var newPosition = particle.Position;
 
-        MoveDown(ref newPosition, initialPosition, occupiedPositions, dt, particle);
+        var gravityDisplacement = (int)(dt * particle.GetDensity() * _gravity);
+
+        for (int dy = 1; dy <= gravityDisplacement; dy++)
+        {
+            Vector2 newPositionCandidate = new(initialPosition.X, initialPosition.Y + dy);
+            if (!occupiedPositions.Contains(newPositionCandidate))
+            {
+                newPosition = newPositionCandidate;
+            }
+            else
+            {
+                break;
+            }
+        }
         if (newPosition != initialPosition)
         {
             return newPosition;
         }
 
-        Random.Shared.Shuffle(_sideDisplacementFactors);
+        Random.Shared.Shuffle(_sideDisplacementDirections);
 
-        foreach (var displacement in _sideDisplacementFactors)
+        foreach (var direction in _sideDisplacementDirections)
         {
-            MoveSideDown(ref newPosition, displacement, initialPosition, occupiedPositions);
+            var sideDisplacement = (int)(dt * particle.GetDensity() * _sideDisplacementRatio * _gravity);
+
+            for (int dx = 1; dx <= Math.Abs(sideDisplacement); dx++)
+            {
+                for (int dy = 0; dy <= Math.Abs(sideDisplacement); dy++)
+                {
+                    Vector2 newPositionCandidate = new(initialPosition.X + dx * direction, initialPosition.Y + dy);
+                    if (!occupiedPositions.Contains(newPositionCandidate))
+                    {
+                        newPosition = newPositionCandidate;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
             if (newPosition != initialPosition)
             {
                 return newPosition;
             }
-            MoveSide(ref newPosition, displacement, initialPosition, occupiedPositions);
-            if (newPosition != initialPosition)
-            {
-                return newPosition;
-            }
         }
 
-        return newPosition;
-    }
-
-    private void MoveDown(ref Vector2 newPosition, Vector2 initialPosition, HashSet<Vector2> occupiedPositions, float dt, Particle particle)
-    {
-        var gravityDisplacement = (int)(dt * particle.GetDensity() * _gravity);
-
-        for (int i = gravityDisplacement; i > 0; i--)
-        {
-            Vector2 newPositionCandidate = new(initialPosition.X, initialPosition.Y + i);
-            CheckNewPosition(ref newPosition, newPositionCandidate, occupiedPositions);
-        }
-    }
-
-    private static void MoveSideDown(ref Vector2 newPosition, int displacement, Vector2 lastPosition, HashSet<Vector2> occupiedPositions)
-    {
-        for (int dx = Math.Abs(displacement); dx > 0; dx--)
-        {
-            for (int dy = Math.Abs(displacement); dy > 0; dy--)
-            {
-                var newX = lastPosition.X + dx * Math.Sign(displacement);
-                Vector2 newPositionCandidate = new(newX, lastPosition.Y);
-                CheckNewPosition(ref newPosition, newPositionCandidate, occupiedPositions);
-            }
-        }
-    }
-
-    private static void MoveSide(ref Vector2 newPosition, int displacement, Vector2 lastPosition, HashSet<Vector2> occupiedPositions)
-    {
-        for (int dx = Math.Abs(displacement); dx > 0; dx--)
-        {
-            var newX = lastPosition.X + dx * Math.Sign(displacement);
-            Vector2 newPositionCandidate = new(newX, lastPosition.Y);
-            CheckNewPosition(ref newPosition, newPositionCandidate, occupiedPositions);
-        }
-    }
-
-    private static void CheckNewPosition(ref Vector2 newPosition, Vector2 newPositionCandidate, HashSet<Vector2> occupiedPositions)
-    {
-        if (!occupiedPositions.Contains(newPositionCandidate))
-        {
-            newPosition = newPositionCandidate;
-        }
+        return initialPosition;
     }
 }
