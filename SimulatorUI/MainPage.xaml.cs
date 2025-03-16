@@ -1,4 +1,5 @@
-﻿using SimulatorEngine;
+﻿using System.Diagnostics;
+using SimulatorEngine;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -15,22 +16,28 @@ public partial class MainPage : ContentPage
         Style = SKPaintStyle.Stroke,
     };
     private readonly ParticlesManager ParticlesManager;
-    private readonly System.Timers.Timer PaintTimer = new(20); // 1000ms / 20 = 50fps
+    private readonly System.Timers.Timer PaintTimer = new(20);
+    private readonly System.Timers.Timer PrintTimer = new(200);
     private readonly SKBitmap ParticlesBitmap = new(CanvasSize.Width, CanvasSize.Height);
     private (float X, float Y) CanvasScale = (1, 1);
     private (float X, float Y, float R) Cursor = (0, 0, 10);
     private ParticleKind CurrentParticleKind = ParticleKind.Water;
+    private readonly Stopwatch _stopwatch = new();
+    private TimeSpan _paintTime = new();
 
     public MainPage()
     {
         InitializeComponent();
         ParticlesManager = new ParticlesManager();
-        PaintTimer.Elapsed += (sender, args) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
+        PaintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         PaintTimer.Start();
+        PrintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
+        PrintTimer.Start();
     }
 
     private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
     {
+        _stopwatch.Restart();
         try
         {
             CanvasScale = (args.Info.Width / (float)CanvasSize.Width, args.Info.Height / (float)CanvasSize.Height);
@@ -41,13 +48,20 @@ public partial class MainPage : ContentPage
 
             canvas.DrawBitmap(ParticlesBitmap, 0, 0);
             canvas.DrawCircle(Cursor.X, Cursor.Y, Cursor.R, CursorPaint);
-            ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Rendering error: {ex.Message}");
+            Debug.WriteLine($"Rendering error: {ex.Message}");
         }
+        _stopwatch.Stop();
+        _paintTime = _stopwatch.Elapsed;
+    }
 
+    private void PrintPerformanceInfo()
+    {
+        ParticleCountLabel.Text = $"Particles: {ParticlesManager.GetParticlesCount}";
+        ComputeTimeLabel.Text = $"Compute time: {(int)ParticlesManager.LoopTime.TotalMilliseconds} [ms]";
+        PaintTimeLabel.Text = $"Paint time: {(int)_paintTime.TotalMilliseconds} [ms]";
     }
 
     private unsafe void UpdateBitmap()

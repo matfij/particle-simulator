@@ -1,21 +1,24 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace SimulatorEngine;
 
 public class ParticlesManager
 {
-    private static readonly float _dt = 20;
+    public TimeSpan LoopTime { private set; get; } = new();
+    private static readonly float _dt = 0.2f;
     private static readonly float _gravity = 0.05f;
     private readonly (int Width, int Height) _canvasSize = (1200, 600);
-    private readonly System.Timers.Timer _simulationTimer = new(_dt);
+    private readonly System.Timers.Timer _simulationTimer = new(20);
     private readonly ParticlesPool _particlesPool = new();
     private readonly HashSet<Particle> _particles = [];
     private readonly LiquidManager _liquidManager;
+    private readonly Stopwatch _stopwatch = new();
     private bool _particlesLock = false;
 
     public ParticlesManager()
     {
-        _liquidManager = new(_gravity);
+        _liquidManager = new(_dt, _gravity);
         _simulationTimer.Elapsed += (sender, args) => Tick();
         _simulationTimer.Start();
     }
@@ -91,14 +94,19 @@ public class ParticlesManager
             return;
         }
         _particlesLock = true;
+        _stopwatch.Restart();
 
-        List<Particle> particlesToRemove = [];
         List<(Particle, Vector2)> movedParticles = [];
         HashSet<Vector2> occupiedPositions = [];
+        HashSet<Vector2> liquidPositions = [];
 
         foreach (var particle in _particles)
         {
             occupiedPositions.Add(particle.Position);
+            if (particle.Body == ParticleBody.Liquid)
+            {
+                liquidPositions.Add(particle.Position);
+            }
         }
 
         foreach (var particle in _particles)
@@ -110,7 +118,7 @@ public class ParticlesManager
                 case ParticleBody.Gas:
                     break;
                 case ParticleBody.Liquid:
-                    newPosition = _liquidManager.MoveLiquid(particle, occupiedPositions, _dt / 100);
+                    newPosition = _liquidManager.MoveLiquid(particle, occupiedPositions, liquidPositions);
                     break;
                 case ParticleBody.Powder:
                     break;
@@ -118,11 +126,6 @@ public class ParticlesManager
                     break;
             }
 
-            if (particle.Position.X < 0 || particle.Position.X > _canvasSize.Width || particle.Position.Y < 0 || particle.Position.Y > _canvasSize.Height)
-            {
-                // TODO #6001 - fix removing after position update
-                particlesToRemove.Add(particle);
-            }
             if (newPosition != particle.Position)
             {
                 movedParticles.Add((particle, newPosition));
@@ -134,13 +137,19 @@ public class ParticlesManager
         foreach (var (particle, newPosition) in movedParticles)
         {
             _particles.Remove(particle);
-            _particles.Add(_particlesPool.GetParticle(newPosition, particle.GetKind()));
-        }
-        foreach (var particle in particlesToRemove)
-        {
-            _particles.Remove(particle);
+            if (!IsOutOfBounds(newPosition))
+            {
+                _particles.Add(_particlesPool.GetParticle(newPosition, particle.GetKind()));
+            }
         }
 
+        _stopwatch.Stop();
+        LoopTime = _stopwatch.Elapsed;
         _particlesLock = false;
+    }
+
+    private bool IsOutOfBounds(Vector2 position)
+    {
+        return position.X < 0 || position.X > _canvasSize.Width || position.Y < 0 || position.Y > _canvasSize.Height;
     }
 }
