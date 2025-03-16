@@ -1,11 +1,12 @@
-﻿using SimulatorEngine;
-using System.Numerics;
+﻿using System.Numerics;
+
+namespace SimulatorEngine;
 
 public class LiquidManager(float dt, float gravity)
 {
     private readonly float _dt = dt;
     private readonly float _gravity = gravity;
-    private readonly float _sideDisplacementRatio = 1f;
+    private readonly float _sideDisplacementRatio = 0.8f;
     private readonly int[] _sideDisplacementDirections = [-1, 1];
 
     public Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, HashSet<Vector2> liquidPositions)
@@ -46,17 +47,18 @@ public class LiquidManager(float dt, float gravity)
                 {
                     break;
                 }
-
-                if (!occupiedPositions.Contains(sidePosition))
+                if (occupiedPositions.Contains(sidePosition))
                 {
-                    Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + 1);
-                    if (!occupiedPositions.Contains(diagonalPosition))
-                    {
-                        newPosition = diagonalPosition;
-                        continue;
-                    }
-                    newPosition = sidePosition;
+                    continue;
                 }
+
+                Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + Random.Shared.Next(1, 3));
+                if (!occupiedPositions.Contains(diagonalPosition))
+                {
+                    newPosition = diagonalPosition;
+                    continue;
+                }
+                newPosition = sidePosition;
             }
 
             if (newPosition != initialPosition)
