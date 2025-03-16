@@ -29,7 +29,17 @@
                 x:Name="ParticleCountLabel"
                 Text="Particles: 0"
                 TextColor="#fff"
-                AbsoluteLayout.LayoutBounds="10, 10, AutoSize, AutoSize"/>
+                AbsoluteLayout.LayoutBounds="5, 5, AutoSize, AutoSize"/>
+            <Label
+                x:Name="ComputeTimeLabel"
+                Text="Compute time: 0 [ms]"
+                TextColor="#fff"
+                AbsoluteLayout.LayoutBounds="5, 25, AutoSize, AutoSize"/>
+            <Label
+                x:Name="PaintTimeLabel"
+                Text="Paint time: 0 [ms]"
+                TextColor="#fff"
+                AbsoluteLayout.LayoutBounds="5, 45, AutoSize, AutoSize"/>
         </AbsoluteLayout>
 
         <HorizontalStackLayout Spacing="5">

@@ -2,18 +2,19 @@
 
 namespace SimulatorEngine;
 
-public class LiquidManager(float gravity)
+public class LiquidManager(float dt, float gravity)
 {
-    private readonly float _sideDisplacementRatio = 0.75f;
-    private readonly int[] _sideDisplacementDirections = [-1, 1];
+    private readonly float _dt = dt;
     private readonly float _gravity = gravity;
+    private readonly float _sideDisplacementRatio = 0.8f;
+    private readonly int[] _sideDisplacementDirections = [-1, 1];
 
-    public Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, float dt)
+    public Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, HashSet<Vector2> liquidPositions)
     {
         var initialPosition = particle.Position;
-        var newPosition = particle.Position;
+        var newPosition = initialPosition;
 
-        var gravityDisplacement = (int)(dt * particle.GetDensity() * _gravity);
+        var gravityDisplacement = (int)(_dt * particle.GetDensity() * _gravity);
 
         for (int dy = 1; dy <= gravityDisplacement; dy++)
         {
@@ -22,11 +23,12 @@ public class LiquidManager(float gravity)
             {
                 newPosition = newPositionCandidate;
             }
-            else
+            else if (!liquidPositions.Contains(newPositionCandidate))
             {
                 break;
             }
         }
+
         if (newPosition != initialPosition)
         {
             return newPosition;
@@ -36,23 +38,29 @@ public class LiquidManager(float gravity)
 
         foreach (var direction in _sideDisplacementDirections)
         {
-            var sideDisplacement = (int)(dt * particle.GetDensity() * _sideDisplacementRatio * _gravity);
+            int maxSideDisplacement = (int)(_dt * particle.GetDensity() * _sideDisplacementRatio * _gravity);
 
-            for (int dx = 1; dx <= Math.Abs(sideDisplacement); dx++)
+            for (int dx = 1; dx <= maxSideDisplacement; dx++)
             {
-                for (int dy = 0; dy <= Math.Abs(sideDisplacement); dy++)
+                Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
+                if (occupiedPositions.Contains(sidePosition) && !liquidPositions.Contains(sidePosition))
                 {
-                    Vector2 newPositionCandidate = new(initialPosition.X + dx * direction, initialPosition.Y + dy);
-                    if (!occupiedPositions.Contains(newPositionCandidate))
-                    {
-                        newPosition = newPositionCandidate;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
+                if (occupiedPositions.Contains(sidePosition))
+                {
+                    continue;
+                }
+
+                Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + Random.Shared.Next(1, 3));
+                if (!occupiedPositions.Contains(diagonalPosition))
+                {
+                    newPosition = diagonalPosition;
+                    continue;
+                }
+                newPosition = sidePosition;
             }
+
             if (newPosition != initialPosition)
             {
                 return newPosition;
