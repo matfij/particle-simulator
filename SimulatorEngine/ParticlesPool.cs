@@ -27,18 +27,13 @@ public class ParticlesPool
 
     private static Particle CreateNewParticle(Vector2 position, ParticleKind kind)
     {
-        switch (kind)
+        return kind switch
         {
-            case ParticleKind.Sand:
-                return new SandParticle(position);
-            case ParticleKind.Water:
-                return new WaterParticle(position);
-            case ParticleKind.Iron:
-                return new IronParticle(position);
-            case ParticleKind.Oxygen:
-                return new OxygenParticle(position);
-            default:
-                throw new InvalidEnumArgumentException("Unsupported particle kind");
-        }
+            ParticleKind.Sand => new SandParticle(position),
+            ParticleKind.Water => new WaterParticle(position),
+            ParticleKind.Iron => new IronParticle(position),
+            ParticleKind.Oxygen => new OxygenParticle(position),
+            _ => throw new InvalidEnumArgumentException("Unsupported particle kind"),
+        };
     }
 }

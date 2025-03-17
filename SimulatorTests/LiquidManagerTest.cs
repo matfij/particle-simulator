@@ -5,8 +5,8 @@ namespace SimulatorTests;
 
 public class LiquidManagerTest
 {
-    private readonly float dt = 1;
-    private readonly float gravity = 0.005f;
+    private readonly float _dt = 1;
+    private readonly float _gravity = 0.005f;
 
     [Fact]
     public void Should_MoveParticleDownWhenNotBlocked()
@@ -14,7 +14,7 @@ public class LiquidManagerTest
         var particle = new WaterParticle(new(100, 100));
         HashSet<Vector2> occupiedPositions = [];
         HashSet<Vector2> liquidPositions = [];
-        var manager = new LiquidManager(dt, gravity);
+        var manager = new LiquidManager(_dt, _gravity);
 
         var position = manager.MoveLiquid(particle, occupiedPositions, liquidPositions);
 
@@ -27,7 +27,7 @@ public class LiquidManagerTest
         var particle = new WaterParticle(new(100, 100));
         HashSet<Vector2> occupiedPositions = [new(100, 101)];
         HashSet<Vector2> liquidPositions = [];
-        var manager = new LiquidManager(dt, gravity);
+        var manager = new LiquidManager(_dt, _gravity);
 
         var position = manager.MoveLiquid(particle, occupiedPositions, liquidPositions);
 
@@ -39,14 +39,19 @@ public class LiquidManagerTest
     public void Should_NotMoveParticleWhenBlocked()
     {
         var particle = new WaterParticle(new(100, 100));
-        HashSet<Vector2> occupiedPositions = [
-            new(99, 100), new(101, 100),
-            new(100, 99), new(100, 101),
-            new(99, 99), new(99, 101),
-            new(99, 101), new(101, 101),
+        HashSet<Vector2> occupiedPositions =
+        [
+            new(99, 100),
+            new(101, 100),
+            new(100, 99),
+            new(100, 101),
+            new(99, 99),
+            new(99, 101),
+            new(99, 101),
+            new(101, 101),
         ];
         HashSet<Vector2> liquidPositions = [];
-        var manager = new LiquidManager(dt, gravity);
+        var manager = new LiquidManager(_dt, _gravity);
 
         var position = manager.MoveLiquid(particle, occupiedPositions, liquidPositions);
 
@@ -57,14 +62,19 @@ public class LiquidManagerTest
     public void Should_PassThroughOtherLiquids()
     {
         var particle = new WaterParticle(new(100, 100));
-        HashSet<Vector2> occupiedPositions = [
-            new(99, 100), new(101, 100),
-            new(100, 99), new(100, 101),
-            new(99, 99), new(99, 101),
-            new(99, 101), new(101, 101),
+        HashSet<Vector2> occupiedPositions =
+        [
+            new(99, 100),
+            new(101, 100),
+            new(100, 99),
+            new(100, 101),
+            new(99, 99),
+            new(99, 101),
+            new(99, 101),
+            new(101, 101),
         ];
         HashSet<Vector2> liquidPositions = [.. occupiedPositions];
-        var manager = new LiquidManager(dt, gravity);
+        var manager = new LiquidManager(_dt, _gravity);
 
         var position = manager.MoveLiquid(particle, occupiedPositions, liquidPositions);
 
