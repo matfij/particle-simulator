@@ -14,6 +14,7 @@ public class ParticlesManager
     private readonly HashSet<Particle> _particles = [];
     private readonly LiquidManager _liquidManager;
     private readonly PowderManager _powderManager;
+    private readonly GasManager _gasManager;
     private readonly Stopwatch _stopwatch = new();
     private bool _particlesLock = false;
 
@@ -21,6 +22,7 @@ public class ParticlesManager
     {
         _liquidManager = new(_dt, _gravity);
         _powderManager = new(_dt, _gravity);
+        _gasManager = new(_dt, _gravity);
         _simulationTimer.Elapsed += (sender, args) => Tick();
         _simulationTimer.Start();
     }
@@ -118,14 +120,13 @@ public class ParticlesManager
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
+                    newPosition = _gasManager.MoveLGas(particle, occupiedPositions);
                     break;
                 case ParticleBody.Liquid:
                     newPosition = _liquidManager.MoveLiquid(particle, occupiedPositions, liquidPositions);
                     break;
                 case ParticleBody.Powder:
                     newPosition = _powderManager.MovePowder(particle, occupiedPositions);
-                    break;
-                case ParticleBody.Solid:
                     break;
             }
 
