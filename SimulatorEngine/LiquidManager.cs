@@ -8,6 +8,7 @@ public class LiquidManager(float dt, float gravity)
     private readonly float _gravity = gravity;
     private readonly float _sideDisplacementRatio = 0.8f;
     private readonly int[] _sideDisplacementDirections = [-1, 1];
+    private readonly Random _randomFactory = new();
 
     public Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, HashSet<Vector2> liquidPositions)
     {
@@ -34,7 +35,7 @@ public class LiquidManager(float dt, float gravity)
             return newPosition;
         }
 
-        Random.Shared.Shuffle(_sideDisplacementDirections);
+        _randomFactory.Shuffle(_sideDisplacementDirections);
 
         foreach (var direction in _sideDisplacementDirections)
         {
@@ -52,7 +53,7 @@ public class LiquidManager(float dt, float gravity)
                     continue;
                 }
 
-                Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + Random.Shared.Next(1, 3));
+                Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + _randomFactory.Next(1, 1 + dx));
                 if (!occupiedPositions.Contains(diagonalPosition))
                 {
                     newPosition = diagonalPosition;
