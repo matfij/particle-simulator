@@ -120,7 +120,7 @@ public class ParticlesManager
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
-                    newPosition = _gasManager.MoveLGas(particle, occupiedPositions);
+                    newPosition = _gasManager.MoveGas(particle, occupiedPositions);
                     break;
                 case ParticleBody.Liquid:
                     newPosition = _liquidManager.MoveLiquid(particle, occupiedPositions, liquidPositions);

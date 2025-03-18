@@ -9,7 +9,7 @@ public class GasManager(float dt, float gravity)
     private readonly (int X, int Y)[] _displacementDirections = [(-1, 1), (1, -1), (1, 1), (-1, -1)];
     private readonly Random _randomFactory = new();
 
-    public Vector2 MoveLGas(Particle particle, HashSet<Vector2> occupiedPositions)
+    public Vector2 MoveGas(Particle particle, HashSet<Vector2> occupiedPositions)
     {
         var initialPosition = particle.Position;
         var newPosition = initialPosition;
@@ -30,7 +30,7 @@ public class GasManager(float dt, float gravity)
                     {
                         newPosition = newPositionCandidate;
                     }
-                    else if (occupiedPositions.Contains(newPositionCandidate) && newPosition != initialPosition)
+                    else if (newPosition != initialPosition)
                     {
                         return newPosition;
                     }
@@ -38,6 +38,10 @@ public class GasManager(float dt, float gravity)
                     {
                         break;
                     }
+                }
+                if (newPosition == initialPosition)
+                {
+                    break;
                 }
             }
             if (newPosition != initialPosition)
