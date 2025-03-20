@@ -11,7 +11,7 @@ public class ParticlesManager
     private readonly (int Width, int Height) _canvasSize = (1200, 600);
     private readonly System.Timers.Timer _simulationTimer = new(20);
     private readonly ParticlesPool _particlesPool = new();
-    private readonly HashSet<Particle> _particles = [];
+    private Dictionary<Vector2, Particle> _particles = [];
     private readonly LiquidManager _liquidManager;
     private readonly PowderManager _powderManager;
     private readonly GasManager _gasManager;
@@ -27,7 +27,7 @@ public class ParticlesManager
         _simulationTimer.Start();
     }
 
-    public IEnumerable<Particle> GetParticles => _particles;
+    public IDictionary<Vector2, Particle> GetParticles => _particles;
 
     public int GetParticlesCount => _particles.Count;
 
@@ -53,9 +53,9 @@ public class ParticlesManager
                     continue;
                 }
                 Vector2 position = new(center.X + dx, center.Y + dy);
-                if (!_particles.Contains(_particlesPool.GetParticle(position, kind)) && dx * dx + dy * dy <= radiusSquare)
+                if (!_particles.ContainsKey(position) && dx * dx + dy * dy <= radiusSquare)
                 {
-                    _particles.Add(_particlesPool.GetParticle(position, kind));
+                    _particles.Add(position, _particlesPool.GetParticle(kind));
                 }
             }
         }
@@ -71,21 +71,21 @@ public class ParticlesManager
         }
         _particlesLock = true;
 
-        List<Particle> particlesToRemove = [];
+        List<Vector2> positionsToRemove = [];
         int radiusSquare = radius * radius;
 
         foreach (var particle in _particles)
         {
-            var deltaFromCenter = Vector2.DistanceSquared(particle.Position, center);
+            var deltaFromCenter = Vector2.DistanceSquared(particle.Key, center);
             if (deltaFromCenter < radiusSquare)
             {
-                particlesToRemove.Add(particle);
+                positionsToRemove.Add(particle.Key);
             }
         }
 
-        foreach (var particle in particlesToRemove)
+        foreach (var position in positionsToRemove)
         {
-            _particles.Remove(particle);
+            _particles.Remove(position);
         }
 
         _particlesLock = false;
@@ -100,52 +100,36 @@ public class ParticlesManager
         _particlesLock = true;
         _stopwatch.Restart();
 
-        List<(Particle, Vector2)> movedParticles = [];
-        HashSet<Vector2> occupiedPositions = [];
-        HashSet<Vector2> liquidPositions = [];
+        var particles = new Dictionary<Vector2, Particle>(_particles);
 
-        foreach (var particle in _particles)
+        foreach (var (position, particle) in _particles)
         {
-            occupiedPositions.Add(particle.Position);
-            if (particle.Body == ParticleBody.Liquid)
-            {
-                liquidPositions.Add(particle.Position);
-            }
-        }
-
-        foreach (var particle in _particles)
-        {
-            Vector2 newPosition = particle.Position;
+            var newPosition = position;
 
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
-                    newPosition = _gasManager.MoveGas(particle, occupiedPositions);
+                    newPosition = _gasManager.MoveGas(position, particle, particles);
                     break;
                 case ParticleBody.Liquid:
-                    newPosition = _liquidManager.MoveLiquid(particle, occupiedPositions, liquidPositions);
+                    newPosition = _liquidManager.MoveLiquid(position, particle, particles);
                     break;
                 case ParticleBody.Powder:
-                    newPosition = _powderManager.MovePowder(particle, occupiedPositions);
+                    newPosition = _powderManager.MovePowder(position, particle, particles);
                     break;
             }
 
-            if (newPosition != particle.Position)
+            if (newPosition != position)
             {
-                movedParticles.Add((particle, newPosition));
-                occupiedPositions.Remove(particle.Position);
-                occupiedPositions.Add(newPosition);
+                particles.Remove(position);
+                if (!IsOutOfBounds(newPosition))
+                {
+                    particles.Add(newPosition, _particlesPool.GetParticle(particle.GetKind()));
+                }
             }
         }
 
-        foreach (var (particle, newPosition) in movedParticles)
-        {
-            _particles.Remove(particle);
-            if (!IsOutOfBounds(newPosition))
-            {
-                _particles.Add(_particlesPool.GetParticle(newPosition, particle.GetKind()));
-            }
-        }
+        _particles = new Dictionary<Vector2, Particle>(particles);
 
         _stopwatch.Stop();
         LoopTime = _stopwatch.Elapsed;

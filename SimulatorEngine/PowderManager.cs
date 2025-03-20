@@ -9,9 +9,9 @@ public class PowderManager(float dt, float gravity)
     private readonly int[] _sideDisplacementDirections = [-1, 1];
     private readonly Random _randomFactory = new();
 
-    public Vector2 MovePowder(Particle particle, HashSet<Vector2> occupiedPositions)
+    public Vector2 MovePowder(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
     {
-        var initialPosition = particle.Position;
+        var initialPosition = position;
         var newPosition = initialPosition;
 
         var gravityDisplacement = (int)(_dt * particle.GetDensity() * _gravity);
@@ -19,7 +19,7 @@ public class PowderManager(float dt, float gravity)
         for (int dy = 1; dy <= gravityDisplacement; dy++)
         {
             Vector2 newPositionCandidate = new(initialPosition.X, initialPosition.Y + dy);
-            if (!occupiedPositions.Contains(newPositionCandidate))
+            if (!particles.ContainsKey(newPositionCandidate))
             {
                 newPosition = newPositionCandidate;
                 continue;
@@ -37,7 +37,7 @@ public class PowderManager(float dt, float gravity)
         foreach (var direction in _sideDisplacementDirections)
         {
             Vector2 newPositionCandidate = new(initialPosition.X + direction, initialPosition.Y + 1);
-            if (!occupiedPositions.Contains(newPositionCandidate))
+            if (!particles.ContainsKey(newPositionCandidate))
             {
                 return newPositionCandidate;
             }

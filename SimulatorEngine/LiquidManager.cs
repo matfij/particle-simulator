@@ -10,9 +10,9 @@ public class LiquidManager(float dt, float gravity)
     private readonly int[] _sideDisplacementDirections = [-1, 1];
     private readonly Random _randomFactory = new();
 
-    public Vector2 MoveLiquid(Particle particle, HashSet<Vector2> occupiedPositions, HashSet<Vector2> liquidPositions)
+    public Vector2 MoveLiquid(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
     {
-        var initialPosition = particle.Position;
+        var initialPosition = position;
         var newPosition = initialPosition;
 
         var gravityDisplacement = (int)(_dt * particle.GetDensity() * _gravity);
@@ -20,11 +20,11 @@ public class LiquidManager(float dt, float gravity)
         for (int dy = 1; dy <= gravityDisplacement; dy++)
         {
             Vector2 newPositionCandidate = new(initialPosition.X, initialPosition.Y + dy);
-            if (!occupiedPositions.Contains(newPositionCandidate))
+            if (!particles.ContainsKey(newPositionCandidate))
             {
                 newPosition = newPositionCandidate;
             }
-            else if (!liquidPositions.Contains(newPositionCandidate))
+            else if (particles[newPositionCandidate].Body != ParticleBody.Liquid)
             {
                 break;
             }
@@ -44,17 +44,17 @@ public class LiquidManager(float dt, float gravity)
             for (int dx = 1; dx <= maxSideDisplacement; dx++)
             {
                 Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
-                if (occupiedPositions.Contains(sidePosition) && !liquidPositions.Contains(sidePosition))
+                if (particles.ContainsKey(sidePosition) && particles[sidePosition].Body != ParticleBody.Liquid)
                 {
                     break;
                 }
-                if (occupiedPositions.Contains(sidePosition))
+                if (particles.ContainsKey(sidePosition))
                 {
                     continue;
                 }
 
                 Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + _randomFactory.Next(1, 1 + dx));
-                if (!occupiedPositions.Contains(diagonalPosition))
+                if (!particles.ContainsKey(diagonalPosition))
                 {
                     newPosition = diagonalPosition;
                     continue;

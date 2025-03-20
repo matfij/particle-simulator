@@ -70,9 +70,9 @@ public partial class MainPage : ContentPage
         var pixels = (uint*)ParticlesBitmap.GetPixels();
         var maxIndex = CanvasSize.Width * CanvasSize.Height;
 
-        foreach (var particle in ParticlesManager.GetParticles)
+        foreach (var (position, particle) in ParticlesManager.GetParticles)
         {
-            int index = (int)particle.Position.X + (int)particle.Position.Y * CanvasSize.Width;
+            int index = (int)position.X + (int)position.Y * CanvasSize.Width;
             if (index >= 0 && index < maxIndex)
             {
                 pixels[index] = particle.GetColor();

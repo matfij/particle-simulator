@@ -9,9 +9,9 @@ public class GasManager(float dt, float gravity)
     private readonly (int X, int Y)[] _displacementDirections = [(-1, 1), (1, -1), (1, 1), (-1, -1)];
     private readonly Random _randomFactory = new();
 
-    public Vector2 MoveGas(Particle particle, HashSet<Vector2> occupiedPositions)
+    public Vector2 MoveGas(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
     {
-        var initialPosition = particle.Position;
+        var initialPosition = position;
         var newPosition = initialPosition;
 
         var maxDisplacementValue = (int)(_dt * (particle.GetDensity() / _gravity));
@@ -26,7 +26,7 @@ public class GasManager(float dt, float gravity)
                 for (var dy = 1; dy <= maxDisplacementValue; dy++)
                 {
                     Vector2 newPositionCandidate = new(initialPosition.X + X * dx, initialPosition.Y + Y * dy);
-                    if (!occupiedPositions.Contains(newPositionCandidate))
+                    if (!particles.ContainsKey(newPositionCandidate))
                     {
                         newPosition = newPositionCandidate;
                     }

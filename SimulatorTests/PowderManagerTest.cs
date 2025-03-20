@@ -12,44 +12,51 @@ public class PowderManagerTest
     [Fact]
     public void Should_MoveParticleDownWhenNotBlocked()
     {
-        var particle = new SandParticle(new(100, 100));
-        HashSet<Vector2> occupiedPositions = [];
+        var position = new Vector2(100, 100);
+        var particle = new SandParticle();
+        Dictionary<Vector2, Particle> particles = [];
         var manager = new PowderManager(_dt, _gravity);
 
-        var position = manager.MovePowder(particle, occupiedPositions);
+        var newPosition = manager.MovePowder(position, particle, particles);
 
-        Assert.Equal(new(100, 107), position);
+        Assert.Equal(new(100, 107), newPosition);
     }
 
     [Fact]
     public void Should_MoveParticleSideDownWhenDownBlocked()
     {
-        var particle = new SandParticle(new(100, 100));
-        HashSet<Vector2> occupiedPositions = [new(100, 101)];
+        var position = new Vector2(100, 100);
+        var particle = new SandParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { new Vector2(100, 101), new IronParticle() },
+        };
         var manager = new PowderManager(_dt, _gravity);
 
-        var position = manager.MovePowder(particle, occupiedPositions);
+        var newPosition = manager.MovePowder(position, particle, particles);
 
-        Assert.NotEqual(100, position.X);
-        Assert.Equal(101, position.Y);
+        Assert.NotEqual(100, newPosition.X);
+        Assert.Equal(101, newPosition.Y);
     }
 
     [Fact]
     public void Should_NotMoveParticleWhenBlocked()
     {
-        var particle = new SandParticle(new(100, 100));
-        HashSet<Vector2> occupiedPositions =
-        [
-            new(100, 101),
-            new(99, 100),
-            new(99, 99),
-            new(101, 101),
-            new(99, 101),
-        ];
+        var position = new Vector2(100, 100);
+        var particle = new SandParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { new Vector2(100, 101), new IronParticle() },
+            { new Vector2(99, 101), new IronParticle() },
+            { new Vector2(99, 99), new IronParticle() },
+            { new Vector2(101, 101), new IronParticle() },
+            { new Vector2(101, 100), new IronParticle() },
+            { new Vector2(99, 100), new IronParticle() },
+        };
         var manager = new PowderManager(_dt, _gravity);
 
-        var position = manager.MovePowder(particle, occupiedPositions);
+        var newPosition = manager.MovePowder(position, particle, particles);
 
-        Assert.Equal(new(100, 100), position);
+        Assert.Equal(new(100, 100), newPosition);
     }
 }

@@ -24,10 +24,10 @@ public class ParticlesManagerTest
         manager.AddParticles(new(5, 5), 10, ParticleKind.Oxygen);
 
         Assert.Equal(1008, manager.GetParticlesCount);
-        Assert.Equal(5, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Sand).Count());
-        Assert.Equal(81, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Water).Count());
-        Assert.Equal(709, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Iron).Count());
-        Assert.Equal(213, manager.GetParticles.Where(p => p.GetKind() == ParticleKind.Oxygen).Count());
+        Assert.Equal(5, manager.GetParticles.Where(p => p.Value.GetKind() == ParticleKind.Sand).Count());
+        Assert.Equal(81, manager.GetParticles.Where(p => p.Value.GetKind() == ParticleKind.Water).Count());
+        Assert.Equal(709, manager.GetParticles.Where(p => p.Value.GetKind() == ParticleKind.Iron).Count());
+        Assert.Equal(213, manager.GetParticles.Where(p => p.Value.GetKind() == ParticleKind.Oxygen).Count());
     }
 
     [Fact]
@@ -38,19 +38,19 @@ public class ParticlesManagerTest
         manager.AddParticles(new(100, 100), 2, ParticleKind.Sand);
 
         Assert.Equal(13, manager.GetParticlesCount);
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(100,100)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(100, 99)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(99, 99)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(101, 99)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(101, 101)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(101, 99)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(100, 98)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(100, 101)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(100, 102)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(101, 100)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(102, 100)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(99, 100)));
-        Assert.Single(manager.GetParticles.Where(p => p.Position == new Vector2(98, 100)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100,100)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100, 99)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(99, 99)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(101, 99)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(101, 101)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(101, 99)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100, 98)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100, 101)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100, 102)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(101, 100)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(102, 100)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(99, 100)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(98, 100)));
     }
 
     [Fact]

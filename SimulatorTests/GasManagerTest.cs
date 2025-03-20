@@ -11,34 +11,36 @@ public class GasManagerTest
     [Fact]
     public void Should_MoveParticleWhenNotBlocked()
     {
-        var particle = new OxygenParticle(new(100, 100));
-        HashSet<Vector2> occupiedPositions = [];
+        var position = new Vector2(100, 100);
+        var particle = new OxygenParticle();
+        Dictionary<Vector2, Particle> particles = [];
         var manager = new GasManager(_dt, _gravity);
 
-        var position = manager.MoveGas(particle, occupiedPositions);
+        var newPosition = manager.MoveGas(position, particle, particles);
 
-        Assert.NotEqual(particle.Position, position);
+        Assert.NotEqual(newPosition, position);
     }
 
     [Fact]
     public void Should_NotMoveParticleWhenBlocked()
     {
-        var particle = new OxygenParticle(new(100, 100));
-        HashSet<Vector2> occupiedPositions =
-        [
-            new(99, 100),
-            new(101, 100),
-            new(100, 99),
-            new(100, 101),
-            new(99, 99),
-            new(99, 101),
-            new(101, 99),
-            new(101, 101),
-        ];
+        var position = new Vector2(100, 100);
+        var particle = new OxygenParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { new Vector2(99, 100), new IronParticle() },
+            { new Vector2(101, 100), new IronParticle() },
+            { new Vector2(100, 99), new IronParticle() },
+            { new Vector2(100, 101), new IronParticle() },
+            { new Vector2(99, 99), new IronParticle() },
+            { new Vector2(99, 101), new IronParticle() },
+            { new Vector2(101, 99), new IronParticle() },
+            { new Vector2(101, 101), new IronParticle() }
+        };
         var manager = new GasManager(_dt, _gravity);
 
-        var position = manager.MoveGas(particle, occupiedPositions);
+        var newPosition = manager.MoveGas(position, particle, particles);
 
-        Assert.Equal(particle.Position, position);
+        Assert.Equal(newPosition, position);
     }
 }
