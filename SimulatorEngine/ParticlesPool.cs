@@ -7,7 +7,7 @@ public class ParticlesPool
 {
     private readonly Stack<Particle> ParticlesFactory = new();
 
-    public Particle GetParticle(Vector2 position, ParticleKind kind)
+    public Particle GetParticle(ParticleKind kind)
     {
         if (ParticlesFactory.Count > 0)
         {
@@ -16,7 +16,7 @@ public class ParticlesPool
         }
         else
         {
-            return CreateNewParticle(position, kind);
+            return CreateNewParticle(kind);
         }
     }
 
@@ -25,14 +25,14 @@ public class ParticlesPool
         ParticlesFactory.Push(particle);
     }
 
-    private static Particle CreateNewParticle(Vector2 position, ParticleKind kind)
+    private static Particle CreateNewParticle(ParticleKind kind)
     {
         return kind switch
         {
-            ParticleKind.Sand => new SandParticle(position),
-            ParticleKind.Water => new WaterParticle(position),
-            ParticleKind.Iron => new IronParticle(position),
-            ParticleKind.Oxygen => new OxygenParticle(position),
+            ParticleKind.Sand => new SandParticle(),
+            ParticleKind.Water => new WaterParticle(),
+            ParticleKind.Iron => new IronParticle(),
+            ParticleKind.Oxygen => new OxygenParticle(),
             _ => throw new InvalidEnumArgumentException("Unsupported particle kind"),
         };
     }

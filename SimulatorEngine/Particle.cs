@@ -19,9 +19,8 @@ public enum ParticleBody
     Gas,
 }
 
-public abstract class Particle(Vector2 position)
+public abstract class Particle
 {
-    public readonly Vector2 Position = position;
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
 
@@ -30,10 +29,6 @@ public abstract class Particle(Vector2 position)
     public abstract uint GetColor();
 
     public abstract float GetDensity();
-
-    public override bool Equals(object? obj) => obj is Particle p && p.Position == Position;
-
-    public override int GetHashCode() => HashCode.Combine(Position);
 }
 
 public class SandParticle : Particle
@@ -42,7 +37,7 @@ public class SandParticle : Particle
     private static readonly float Density = 1442f;
     private static readonly uint Color = 0xF6D7B0;
 
-    public SandParticle(Vector2 position) : base(position)
+    public SandParticle()
     {
         Temperature = 20;
         Body = ParticleBody.Powder;
@@ -61,7 +56,7 @@ public class WaterParticle : Particle
     private static readonly float Density = 1000f;
     private static readonly uint Color = 0x1CA3EC;
 
-    public WaterParticle(Vector2 position) : base(position)
+    public WaterParticle()
     {
         Temperature = 20;
         Body = ParticleBody.Liquid;
@@ -80,7 +75,7 @@ public class IronParticle : Particle
     private static readonly float Density = 7800f;
     private static readonly uint Color = 0xA19D94;
 
-    public IronParticle(Vector2 position) : base(position)
+    public IronParticle()
     {
         Temperature = 20;
         Body = ParticleBody.Solid;
@@ -99,7 +94,7 @@ public class OxygenParticle : Particle
     private static readonly float Density = 1.4f;
     private static readonly uint Color = 0x99E2FA;
 
-    public OxygenParticle(Vector2 position) : base(position)
+    public OxygenParticle()
     {
         Temperature = 20;
         Body = ParticleBody.Gas;
