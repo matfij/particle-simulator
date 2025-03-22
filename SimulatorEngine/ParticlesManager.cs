@@ -74,12 +74,12 @@ public class ParticlesManager
         List<Vector2> positionsToRemove = [];
         int radiusSquare = radius * radius;
 
-        foreach (var particle in _particles)
+        foreach (var position in _particles.Keys)
         {
-            var deltaFromCenter = Vector2.DistanceSquared(particle.Key, center);
+            var deltaFromCenter = Vector2.DistanceSquared(position, center);
             if (deltaFromCenter < radiusSquare)
             {
-                positionsToRemove.Add(particle.Key);
+                positionsToRemove.Add(position);
             }
         }
 

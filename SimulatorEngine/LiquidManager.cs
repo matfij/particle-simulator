@@ -20,11 +20,11 @@ public class LiquidManager(float dt, float gravity)
         for (int dy = 1; dy <= gravityDisplacement; dy++)
         {
             Vector2 newPositionCandidate = new(initialPosition.X, initialPosition.Y + dy);
-            if (!particles.ContainsKey(newPositionCandidate))
+            if (!particles.TryGetValue(newPositionCandidate, out Particle? collidingParticle))
             {
                 newPosition = newPositionCandidate;
             }
-            else if (particles[newPositionCandidate].Body != ParticleBody.Liquid)
+            else if (collidingParticle.Body != ParticleBody.Liquid)
             {
                 break;
             }
@@ -44,7 +44,8 @@ public class LiquidManager(float dt, float gravity)
             for (int dx = 1; dx <= maxSideDisplacement; dx++)
             {
                 Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
-                if (particles.ContainsKey(sidePosition) && particles[sidePosition].Body != ParticleBody.Liquid)
+                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle) &&
+                    collidingParticle.Body != ParticleBody.Liquid)
                 {
                     break;
                 }
