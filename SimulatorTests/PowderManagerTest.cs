@@ -59,4 +59,24 @@ public class PowderManagerTest
 
         Assert.Equal(new(100, 100), newPosition);
     }
+
+    [Fact]
+    public void Should_PushLighterParticleUp()
+    {
+        var position = new Vector2(100, 100);
+        var particle = new SandParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { new Vector2(100, 101), new WaterParticle() },
+        };
+        var manager = new PowderManager(_dt, _gravity);
+
+        Assert.False(particles.ContainsKey(new Vector2(100, 100)));
+
+        var newPosition = manager.MovePowder(position, particle, particles);
+
+        Assert.Equal(new(100, 101), newPosition);
+        Assert.True(particles.ContainsKey(new Vector2(100, 100)));
+        Assert.IsType<WaterParticle>(particles[new Vector2(100, 100)]);
+    }
 }

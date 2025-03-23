@@ -19,10 +19,14 @@ public class PowderManager(float dt, float gravity)
         for (int dy = 1; dy <= gravityDisplacement; dy++)
         {
             Vector2 newPositionCandidate = new(initialPosition.X, initialPosition.Y + dy);
-            if (!particles.ContainsKey(newPositionCandidate))
+            if (!particles.TryGetValue(newPositionCandidate, out Particle? collidingParticle))
             {
                 newPosition = newPositionCandidate;
                 continue;
+            }
+            else if (collidingParticle.GetDensity() < particle.GetDensity())
+            {
+                return PushLighterParticle(particles, newPositionCandidate, collidingParticle);
             }
             break;
         }
@@ -37,12 +41,34 @@ public class PowderManager(float dt, float gravity)
         foreach (var direction in _sideDisplacementDirections)
         {
             Vector2 newPositionCandidate = new(initialPosition.X + direction, initialPosition.Y + 1);
-            if (!particles.ContainsKey(newPositionCandidate))
+            if (!particles.TryGetValue(newPositionCandidate, out Particle? collidingParticle))
             {
                 return newPositionCandidate;
+            }
+            else if (collidingParticle.GetDensity() < particle.GetDensity())
+            {
+                return PushLighterParticle(particles, newPositionCandidate, collidingParticle);
             }
         }
 
         return initialPosition;
+    }
+
+    private static Vector2 PushLighterParticle(
+        Dictionary<Vector2, Particle> particles,
+        Vector2 newPositionCandidate,
+        Particle collidingParticle)
+    {
+        particles.Remove(newPositionCandidate);
+        var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
+        while (particles.ContainsKey(pushUpPosition) && pushUpPosition.Y > 0)
+        {
+            pushUpPosition.Y -= 1;
+        }
+        if (pushUpPosition.Y >= 0)
+        {
+            particles.Add(pushUpPosition, collidingParticle);
+        }
+        return newPositionCandidate;
     }
 }
