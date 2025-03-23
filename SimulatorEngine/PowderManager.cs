@@ -26,18 +26,7 @@ public class PowderManager(float dt, float gravity)
             }
             else if (collidingParticle.GetDensity() < particle.GetDensity())
             {
-                particles.Remove(newPositionCandidate);
-                newPosition = newPositionCandidate;
-                var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
-                while (particles.ContainsKey(pushUpPosition) && pushUpPosition.Y > 0)
-                {
-                    pushUpPosition.Y -= 1;
-                }
-                if (pushUpPosition.Y >= 0)
-                {
-                    particles.Add(pushUpPosition, collidingParticle);
-                }
-                break;
+                return PushLighterParticle(particles, newPositionCandidate, collidingParticle);
             }
             break;
         }
@@ -58,20 +47,28 @@ public class PowderManager(float dt, float gravity)
             }
             else if (collidingParticle.GetDensity() < particle.GetDensity())
             {
-                particles.Remove(newPositionCandidate);
-                var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
-                while (particles.ContainsKey(pushUpPosition) && pushUpPosition.Y > 0)
-                {
-                    pushUpPosition.Y -= 1;
-                }
-                if (pushUpPosition.Y >= 0)
-                {
-                    particles.Add(pushUpPosition, collidingParticle);
-                }
-                return newPositionCandidate;
+                return PushLighterParticle(particles, newPositionCandidate, collidingParticle);
             }
         }
 
         return initialPosition;
+    }
+
+    private static Vector2 PushLighterParticle(
+        Dictionary<Vector2, Particle> particles,
+        Vector2 newPositionCandidate,
+        Particle collidingParticle)
+    {
+        particles.Remove(newPositionCandidate);
+        var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
+        while (particles.ContainsKey(pushUpPosition) && pushUpPosition.Y > 0)
+        {
+            pushUpPosition.Y -= 1;
+        }
+        if (pushUpPosition.Y >= 0)
+        {
+            particles.Add(pushUpPosition, collidingParticle);
+        }
+        return newPositionCandidate;
     }
 }

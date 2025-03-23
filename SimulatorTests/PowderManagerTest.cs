@@ -77,5 +77,6 @@ public class PowderManagerTest
 
         Assert.Equal(new(100, 101), newPosition);
         Assert.True(particles.ContainsKey(new Vector2(100, 100)));
+        Assert.IsType<WaterParticle>(particles[new Vector2(100, 100)]);
     }
 }
