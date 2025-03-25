@@ -24,6 +24,10 @@ public class LiquidManager(float dt, float gravity)
             {
                 newPosition = newPositionCandidate;
             }
+            else if (TryPushLighterParticle(particle, collidingParticle, particles, newPositionCandidate))
+            {
+                return newPositionCandidate;
+            }
             else if (collidingParticle.Body != ParticleBody.Liquid)
             {
                 break;
@@ -49,16 +53,24 @@ public class LiquidManager(float dt, float gravity)
                 {
                     break;
                 }
+                else if (collidingParticle != null && TryPushLighterParticle(particle, collidingParticle, particles, sidePosition))
+                {
+                    return sidePosition;
+                }
                 if (particles.ContainsKey(sidePosition))
                 {
                     continue;
                 }
 
                 Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + _randomFactory.Next(1, 1 + dx));
-                if (!particles.ContainsKey(diagonalPosition))
+                if (!particles.TryGetValue(diagonalPosition, out collidingParticle))
                 {
                     newPosition = diagonalPosition;
                     continue;
+                }
+                else if (collidingParticle != null && TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
+                {
+                    return diagonalPosition;
                 }
                 newPosition = sidePosition;
             }
@@ -70,5 +82,30 @@ public class LiquidManager(float dt, float gravity)
         }
 
         return initialPosition;
+    }
+
+
+    private static bool TryPushLighterParticle(
+        Particle particle,
+        Particle collidingParticle,
+        Dictionary<Vector2, Particle> particles,
+        Vector2 newPositionCandidate)
+    {
+        if (collidingParticle.GetDensity() >= particle.GetDensity())
+        {
+            return false;
+        }
+        var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
+        while (particles.TryGetValue(pushUpPosition, out Particle? nextColliding) && pushUpPosition.Y > 0)
+        {
+            if (nextColliding?.Body == ParticleBody.Solid)
+            {
+                return false;
+            }
+            pushUpPosition.Y -= 1;
+        }
+        particles.Add(pushUpPosition, collidingParticle);
+        particles.Remove(newPositionCandidate);
+        return true;
     }
 }
