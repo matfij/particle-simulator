@@ -24,6 +24,10 @@ public class LiquidManager(float dt, float gravity)
             {
                 newPosition = newPositionCandidate;
             }
+            else if (ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, newPositionCandidate))
+            {
+                return newPositionCandidate;
+            }
             else if (collidingParticle.Body != ParticleBody.Liquid)
             {
                 break;
@@ -44,10 +48,15 @@ public class LiquidManager(float dt, float gravity)
             for (int dx = 1; dx <= maxSideDisplacement; dx++)
             {
                 Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
-                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle) &&
-                    collidingParticle.Body != ParticleBody.Liquid)
+                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle) 
+                    && collidingParticle.Body != ParticleBody.Liquid)
                 {
                     break;
+                }
+                else if (collidingParticle != null
+                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, sidePosition))
+                {
+                    return sidePosition;
                 }
                 if (particles.ContainsKey(sidePosition))
                 {
@@ -55,10 +64,16 @@ public class LiquidManager(float dt, float gravity)
                 }
 
                 Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + _randomFactory.Next(1, 1 + dx));
-                if (!particles.ContainsKey(diagonalPosition))
+                if (!particles.TryGetValue(diagonalPosition, out collidingParticle))
                 {
                     newPosition = diagonalPosition;
                     continue;
+                }
+                else if (
+                    collidingParticle != null
+                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
+                {
+                    return diagonalPosition;
                 }
                 newPosition = sidePosition;
             }
