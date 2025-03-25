@@ -61,7 +61,7 @@ public class PowderManagerTest
     }
 
     [Fact]
-    public void Should_PushLighterParticleUp()
+    public void Should_PushUpLighterParticle()
     {
         var position = new Vector2(100, 100);
         var particle = new SandParticle();
