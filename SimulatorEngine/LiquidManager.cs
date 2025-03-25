@@ -24,7 +24,7 @@ public class LiquidManager(float dt, float gravity)
             {
                 newPosition = newPositionCandidate;
             }
-            else if (TryPushLighterParticle(particle, collidingParticle, particles, newPositionCandidate))
+            else if (ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, newPositionCandidate))
             {
                 return newPositionCandidate;
             }
@@ -48,12 +48,13 @@ public class LiquidManager(float dt, float gravity)
             for (int dx = 1; dx <= maxSideDisplacement; dx++)
             {
                 Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
-                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle) &&
-                    collidingParticle.Body != ParticleBody.Liquid)
+                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle) 
+                    && collidingParticle.Body != ParticleBody.Liquid)
                 {
                     break;
                 }
-                else if (collidingParticle != null && TryPushLighterParticle(particle, collidingParticle, particles, sidePosition))
+                else if (collidingParticle != null
+                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, sidePosition))
                 {
                     return sidePosition;
                 }
@@ -68,7 +69,9 @@ public class LiquidManager(float dt, float gravity)
                     newPosition = diagonalPosition;
                     continue;
                 }
-                else if (collidingParticle != null && TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
+                else if (
+                    collidingParticle != null
+                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
                 {
                     return diagonalPosition;
                 }
@@ -82,30 +85,5 @@ public class LiquidManager(float dt, float gravity)
         }
 
         return initialPosition;
-    }
-
-
-    private static bool TryPushLighterParticle(
-        Particle particle,
-        Particle collidingParticle,
-        Dictionary<Vector2, Particle> particles,
-        Vector2 newPositionCandidate)
-    {
-        if (collidingParticle.GetDensity() >= particle.GetDensity())
-        {
-            return false;
-        }
-        var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
-        while (particles.TryGetValue(pushUpPosition, out Particle? nextColliding) && pushUpPosition.Y > 0)
-        {
-            if (nextColliding?.Body == ParticleBody.Solid)
-            {
-                return false;
-            }
-            pushUpPosition.Y -= 1;
-        }
-        particles.Add(pushUpPosition, collidingParticle);
-        particles.Remove(newPositionCandidate);
-        return true;
     }
 }
