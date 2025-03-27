@@ -26,6 +26,10 @@ public class SaltyWaterParticle : Particle
 
     public SaltyWaterParticle()
     {
+<<<<<<< HEAD
+=======
+        Temperature = 20;
+>>>>>>> 99e52c4 (Reorganize particles)
         Body = ParticleBody.Liquid;
     }
 
