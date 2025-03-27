@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
 
@@ -69,8 +70,7 @@ public class LiquidManager(float dt, float gravity)
                     newPosition = diagonalPosition;
                     continue;
                 }
-                else if (
-                    collidingParticle != null
+                else if (collidingParticle != null
                     && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
                 {
                     return diagonalPosition;
