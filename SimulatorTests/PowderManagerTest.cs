@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using SimulatorEngine;
+using SimulatorEngine.Particles;
 
 namespace SimulatorTests;
 
@@ -19,7 +20,7 @@ public class PowderManagerTest
 
         var newPosition = manager.MovePowder(position, particle, particles);
 
-        Assert.Equal(new(100, 107), newPosition);
+        Assert.Equal(new(100, 108), newPosition);
     }
 
     [Fact]

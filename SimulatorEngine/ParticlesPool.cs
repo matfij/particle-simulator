@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
 
@@ -32,6 +33,8 @@ public class ParticlesPool
             ParticleKind.Water => new WaterParticle(),
             ParticleKind.Iron => new IronParticle(),
             ParticleKind.Oxygen => new OxygenParticle(),
+            ParticleKind.Salt => new SaltParticle(),
+            ParticleKind.SaltyWater => new SaltyWaterParticle(),
             _ => throw new InvalidEnumArgumentException("Unsupported particle kind"),
         };
     }

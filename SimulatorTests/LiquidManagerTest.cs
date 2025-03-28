@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using SimulatorEngine;
+using SimulatorEngine.Particles;
 
 namespace SimulatorTests;
 
