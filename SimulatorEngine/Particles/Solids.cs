@@ -6,9 +6,8 @@ public class IronParticle : Particle
     private static readonly float Density = 7800f;
     private static readonly uint Color = 0xA19D94;
 
-    public IronParticle()
+    public IronParticle() : base()
     {
-        Temperature = 20;
         Body = ParticleBody.Solid;
     }
 

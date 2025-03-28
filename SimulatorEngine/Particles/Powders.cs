@@ -6,9 +6,8 @@ public class SandParticle : Particle
     private static readonly float Density = 1600f;
     private static readonly uint Color = 0xF6D7B0;
 
-    public SandParticle()
+    public SandParticle() : base()
     {
-        Temperature = 20;
         Body = ParticleBody.Powder;
     }
 
@@ -25,9 +24,8 @@ public class SaltParticle : Particle
     private static readonly float Density = 2100f;
     private static readonly uint Color = 0xFCF9F3;
 
-    public SaltParticle()
+    public SaltParticle() : base()
     {
-        Temperature = 20;
         Body = ParticleBody.Powder;
     }
 

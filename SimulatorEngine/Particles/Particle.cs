@@ -24,6 +24,11 @@ public abstract class Particle
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
 
+    public Particle()
+    {
+        Temperature = 20;
+    }
+
     public abstract ParticleKind GetKind();
 
     public abstract uint GetColor();

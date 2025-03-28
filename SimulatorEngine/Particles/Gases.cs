@@ -6,9 +6,8 @@ public class OxygenParticle : Particle
     private static readonly float Density = 1.4f;
     private static readonly uint Color = 0x99E2FA;
 
-    public OxygenParticle()
+    public OxygenParticle() : base()
     {
-        Temperature = 20;
         Body = ParticleBody.Gas;
     }
 

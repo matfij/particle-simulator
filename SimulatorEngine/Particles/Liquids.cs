@@ -6,9 +6,8 @@ public class WaterParticle : Particle
     private static readonly float Density = 1000f;
     private static readonly uint Color = 0x1CA3EC;
 
-    public WaterParticle()
+    public WaterParticle() : base()
     {
-        Temperature = 20;
         Body = ParticleBody.Liquid;
     }
 
