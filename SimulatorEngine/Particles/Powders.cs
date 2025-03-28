@@ -6,14 +6,8 @@ public class SandParticle : Particle
     private static readonly float Density = 1600f;
     private static readonly uint Color = 0xF6D7B0;
 
-<<<<<<< HEAD
     public SandParticle() : base()
     {
-=======
-    public SandParticle()
-    {
-        Temperature = 20;
->>>>>>> 99e52c4 (Reorganize particles)
         Body = ParticleBody.Powder;
     }
 
