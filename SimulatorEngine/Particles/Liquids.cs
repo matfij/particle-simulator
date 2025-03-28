@@ -24,12 +24,8 @@ public class SaltyWaterParticle : Particle
     private static readonly float Density = 1025f;
     private static readonly uint Color = 0x90AEBD;
 
-    public SaltyWaterParticle()
+    public SaltyWaterParticle() : base()
     {
-<<<<<<< HEAD
-=======
-        Temperature = 20;
->>>>>>> 99e52c4 (Reorganize particles)
         Body = ParticleBody.Liquid;
     }
 
