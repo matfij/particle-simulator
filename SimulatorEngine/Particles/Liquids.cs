@@ -26,7 +26,6 @@ public class SaltyWaterParticle : Particle
 
     public SaltyWaterParticle()
     {
-        Temperature = 20;
         Body = ParticleBody.Liquid;
     }
 

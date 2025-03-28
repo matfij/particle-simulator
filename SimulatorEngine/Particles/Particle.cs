@@ -24,7 +24,7 @@ public abstract class Particle
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
 
-    public Particle()
+    protected Particle()
     {
         Temperature = 20;
     }
