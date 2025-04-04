@@ -125,7 +125,7 @@ public class ParticlesManager
                 particles.Remove(position);
                 if (!IsOutOfBounds(newPosition))
                 {
-                    particles.Add(newPosition, _particlesPool.GetParticle(particle.GetKind()));
+                    particles.Add(newPosition, particle);
                 }
             }
         }

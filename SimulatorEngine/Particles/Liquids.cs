@@ -24,7 +24,7 @@ public class SaltyWaterParticle : Particle
     private static readonly float Density = 1025f;
     private static readonly uint Color = 0x90AEBD;
 
-    public SaltyWaterParticle()
+    public SaltyWaterParticle() : base()
     {
         Body = ParticleBody.Liquid;
     }

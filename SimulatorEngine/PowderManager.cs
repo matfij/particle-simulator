@@ -12,6 +12,12 @@ public class PowderManager(float dt, float gravity)
 
     public Vector2 MovePowder(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
     {
+        var stateChanged = HandleStateChange(position, particle, particles);
+        if (stateChanged)
+        {
+            return position;
+        }
+
         var initialPosition = position;
         var newPosition = initialPosition;
 
@@ -53,5 +59,28 @@ public class PowderManager(float dt, float gravity)
         }
 
         return initialPosition;
+    }
+
+    private static bool HandleStateChange(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
+    {
+        if (particle is SaltParticle saltParticle)
+        {
+            if (ParticleUtils.GetNeighborOfKind(position, particles, ParticleKind.Water) is not { } neighbor)
+            {
+                saltParticle.TicksToDissolve++;
+                return false;
+            }
+            var (neighborPosition, _) = neighbor;
+            saltParticle.TicksToDissolve--;
+            if (saltParticle.TicksToDissolve <= 0)
+            {
+                particles.Remove(neighborPosition);
+                particles.Remove(position);
+                particles.Add(neighborPosition, new SaltyWaterParticle());
+                particles.Add(position, new SaltyWaterParticle());
+                return true;
+            }
+        }
+        return false;
     }
 }
