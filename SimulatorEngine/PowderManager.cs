@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
@@ -77,6 +76,7 @@ public class PowderManager(float dt, float gravity)
             {
                 particles.Remove(neighborPosition);
                 particles.Remove(position);
+                particles.Add(neighborPosition, new SaltyWaterParticle());
                 particles.Add(position, new SaltyWaterParticle());
                 return true;
             }

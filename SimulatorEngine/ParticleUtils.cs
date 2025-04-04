@@ -8,7 +8,7 @@ public static class ParticleUtils
     private static readonly Vector2[] _neighborOffsets =
     [
         new(-1, 1), new(0, 1), new(1, 1),
-        new(-1, 0), new(0, 1),
+        new(-1, 0), new(1, 0),
         new(-1, -1), new(0, -1), new(1, -1),
     ];
 
