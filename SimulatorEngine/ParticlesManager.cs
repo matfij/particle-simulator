@@ -103,7 +103,7 @@ public class ParticlesManager
 
         var particles = new Dictionary<Vector2, Particle>(_particles);
 
-        foreach (var (position, particle) in from entry in _particles orderby entry.Value ascending select entry)
+        foreach (var (position, particle) in _particles.OrderBy(p => p.Value.GetDensity()))
         {
             var newPosition = position;
 
