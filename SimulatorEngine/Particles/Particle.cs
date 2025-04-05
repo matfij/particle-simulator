@@ -19,7 +19,7 @@ public enum ParticleBody
     Gas,
 }
 
-public abstract class Particle : IComparable<Particle>
+public abstract class Particle
 {
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
@@ -34,16 +34,4 @@ public abstract class Particle : IComparable<Particle>
     public abstract uint GetColor();
 
     public abstract float GetDensity();
-
-    public int CompareTo(Particle? other)
-    {
-        if (other?.GetDensity() > GetDensity())
-        {
-            return -1;
-        }
-        else
-        {
-            return 1;
-        }
-    }
 }
