@@ -103,7 +103,7 @@ public class ParticlesManager
 
         var particles = new Dictionary<Vector2, Particle>(_particles);
 
-        foreach (var (position, particle) in _particles)
+        foreach (var (position, particle) in from entry in _particles orderby entry.Value ascending select entry)
         {
             var newPosition = position;
 
@@ -123,7 +123,7 @@ public class ParticlesManager
             if (newPosition != position)
             {
                 particles.Remove(position);
-                if (!IsOutOfBounds(newPosition))
+                if (!IsOutOfBounds(newPosition) && !particles.ContainsKey(newPosition))
                 {
                     particles.Add(newPosition, particle);
                 }
