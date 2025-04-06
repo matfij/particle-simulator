@@ -5,7 +5,7 @@ namespace SimulatorEngine;
 
 public class SolidManager
 {
-    public Particle? DoInteractions(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
+    public static Particle? DoInteractions(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
     {
         var dissolvedInAcid = false;
 
@@ -13,7 +13,7 @@ public class SolidManager
         
         foreach (var neighbor in neighbors)
         {
-            if (!dissolvedInAcid && particle is IronParticle ironParticle && neighbor is AcidParticle acidNeighbor)
+            if (!dissolvedInAcid && particle is IronParticle ironParticle && neighbor is AcidParticle)
             {
                 ironParticle.TicksToDissolveInAcid -= 1;
                 dissolvedInAcid = true;

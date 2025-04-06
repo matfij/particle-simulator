@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace SimulatorEngine.Particles;
+﻿namespace SimulatorEngine.Particles;
 
 public class WaterParticle : Particle
 {

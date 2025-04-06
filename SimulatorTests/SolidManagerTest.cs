@@ -15,18 +15,19 @@ public class SolidManagerTest
         {
             {  new Vector2(100, 101), new AcidParticle() }
         };
-        var manager = new SolidManager();
 
         for (int i = 0; i < 2; i++)
         {
-            particle = manager.DoInteractions(position, particle!, particles);
+            particle = SolidManager.DoInteractions(position, particle!, particles);
         }
 
         Assert.NotNull(particle);
+        Assert.IsType<IronParticle>(particle);
+        Assert.Equal(3, ((IronParticle)particle).TicksToDissolveInAcid);
 
         for (int i = 0; i < 3; i++)
         {
-            particle = manager.DoInteractions(position, particle!, particles);
+            particle = SolidManager.DoInteractions(position, particle!, particles);
         }
 
         Assert.Null(particle);

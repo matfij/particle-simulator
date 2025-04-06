@@ -16,7 +16,6 @@ public class ParticlesManager
     private readonly LiquidManager _liquidManager;
     private readonly PowderManager _powderManager;
     private readonly GasManager _gasManager;
-    private readonly SolidManager _solidManager;
     private readonly Stopwatch _stopwatch = new();
     private bool _particlesLock = false;
 
@@ -25,7 +24,6 @@ public class ParticlesManager
         _liquidManager = new(_dt, _gravity);
         _powderManager = new(_dt, _gravity);
         _gasManager = new(_dt, _gravity);
-        _solidManager = new();
         _simulationTimer.Elapsed += (sender, args) => Tick();
         _simulationTimer.Start();
     }
@@ -140,7 +138,7 @@ public class ParticlesManager
             switch (particle.Body)
             {
                 case ParticleBody.Solid:
-                    newParticle = _solidManager.DoInteractions(position, newParticle, particlesToMove);
+                    newParticle = SolidManager.DoInteractions(position, newParticle, particlesToMove);
                     break;
             }
 
