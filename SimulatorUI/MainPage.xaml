@@ -44,19 +44,19 @@
 
         <HorizontalStackLayout Spacing="5">
             <Button 
-                Text="Sand" 
+                Text="Sand"
                 Clicked="SetParticleKind"
                 CommandParameter="{x:Static local:ParticleKind.Sand}"
                 WidthRequest="100"
                 BackgroundColor="#F6D7B0"/>
             <Button 
-                Text="Salt" 
+                Text="Salt"
                 Clicked="SetParticleKind"
                 CommandParameter="{x:Static local:ParticleKind.Salt}"
                 WidthRequest="100"
                 BackgroundColor="#FCF9F3"/>
             <Button 
-                Text="Water" 
+                Text="Water"
                 Clicked="SetParticleKind"
                 CommandParameter="{x:Static local:ParticleKind.Water}"
                 WidthRequest="100"
@@ -68,17 +68,23 @@
                 WidthRequest="100"
                 BackgroundColor="#90AEBD"/>
             <Button 
-                Text="Iron" 
+                Text="Iron"
                 Clicked="SetParticleKind"
                 CommandParameter="{x:Static local:ParticleKind.Iron}"
                 WidthRequest="100"
                 BackgroundColor="#A19D94"/>
             <Button 
-                Text="Oxygen" 
+                Text="Oxygen"
                 Clicked="SetParticleKind"
                 WidthRequest="100"
                 CommandParameter="{x:Static local:ParticleKind.Oxygen}" 
                 BackgroundColor="#99E2FA"/>
+            <Button 
+                Text="Acid"
+                Clicked="SetParticleKind"
+                WidthRequest="100"
+                CommandParameter="{x:Static local:ParticleKind.Acid}" 
+                BackgroundColor="#89FF00"/>
 
         </HorizontalStackLayout>
 

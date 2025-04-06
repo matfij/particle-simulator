@@ -35,3 +35,21 @@ public class SaltyWaterParticle : Particle
 
     public override ParticleKind GetKind() => Kind;
 }
+
+public class AcidParticle : Particle
+{
+    private static readonly ParticleKind Kind = ParticleKind.Acid;
+    private static readonly float Density = 1100f;
+    private static readonly uint Color = 0x89FF00;
+
+    public AcidParticle() : base()
+    {
+        Body = ParticleBody.Liquid;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
+}

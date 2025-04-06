@@ -29,4 +29,17 @@ public class LiquidParticlesTest
         Assert.Equal(0x90AEBD, (float)particle.GetColor());
         Assert.Equal(ParticleKind.SaltyWater, particle.GetKind());
     }
+
+    [Fact]
+    public void Should_Create_AcidParticle()
+    {
+        var particle = new AcidParticle();
+
+        Assert.NotNull(particle);
+        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(ParticleBody.Liquid, particle.Body);
+        Assert.Equal(1100, particle.GetDensity());
+        Assert.Equal(0x89FF00, (float)particle.GetColor());
+        Assert.Equal(ParticleKind.Acid, particle.GetKind());
+    }
 }

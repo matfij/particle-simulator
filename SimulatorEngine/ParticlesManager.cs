@@ -101,7 +101,7 @@ public class ParticlesManager
         _particlesLock = true;
         _stopwatch.Restart();
 
-        var particles = new Dictionary<Vector2, Particle>(_particles);
+        var particlesToMove = new Dictionary<Vector2, Particle>(_particles);
 
         foreach (var (position, particle) in _particles.OrderBy(p => p.Value.GetDensity()))
         {
@@ -110,27 +110,45 @@ public class ParticlesManager
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
-                    newPosition = _gasManager.MoveGas(position, particle, particles);
+                    newPosition = _gasManager.MoveGas(position, particle, particlesToMove);
                     break;
                 case ParticleBody.Liquid:
-                    newPosition = _liquidManager.MoveLiquid(position, particle, particles);
+                    newPosition = _liquidManager.MoveLiquid(position, particle, particlesToMove);
                     break;
                 case ParticleBody.Powder:
-                    newPosition = _powderManager.MovePowder(position, particle, particles);
+                    newPosition = _powderManager.MovePowder(position, particle, particlesToMove);
                     break;
             }
 
             if (newPosition != position)
             {
-                particles.Remove(position);
-                if (!IsOutOfBounds(newPosition) && !particles.ContainsKey(newPosition))
+                particlesToMove.Remove(position);
+                if (!IsOutOfBounds(newPosition) && !particlesToMove.ContainsKey(newPosition))
                 {
-                    particles.Add(newPosition, particle);
+                    particlesToMove.Add(newPosition, particle);
                 }
             }
         }
 
-        _particles = new Dictionary<Vector2, Particle>(particles);
+        var particlesToInteract = new Dictionary<Vector2, Particle>();
+        foreach (var (position, particle) in particlesToMove.OrderBy(p => p.Value.GetDensity()))
+        {
+            var newParticle = particle;
+
+            switch (particle.Body)
+            {
+                case ParticleBody.Solid:
+                    newParticle = SolidManager.DoInteractions(position, newParticle, particlesToMove);
+                    break;
+            }
+
+            if (newParticle != null)
+            {
+                particlesToInteract.Add(position, newParticle);
+            }
+        }
+
+        _particles = new Dictionary<Vector2, Particle>(particlesToInteract);
 
         _stopwatch.Stop();
         LoopTime = _stopwatch.Elapsed;
