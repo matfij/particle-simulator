@@ -9,6 +9,7 @@ public enum ParticleKind
     Oxygen,
     Salt,
     SaltyWater,
+    Acid,
 }
 
 public enum ParticleBody

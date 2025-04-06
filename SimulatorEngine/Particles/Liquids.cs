@@ -1,4 +1,6 @@
-﻿namespace SimulatorEngine.Particles;
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace SimulatorEngine.Particles;
 
 public class WaterParticle : Particle
 {
@@ -25,6 +27,24 @@ public class SaltyWaterParticle : Particle
     private static readonly uint Color = 0x90AEBD;
 
     public SaltyWaterParticle() : base()
+    {
+        Body = ParticleBody.Liquid;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
+}
+
+public class AcidParticle : Particle
+{
+    private static readonly ParticleKind Kind = ParticleKind.Acid;
+    private static readonly float Density = 1100f;
+    private static readonly uint Color = 0x89FF00;
+
+    public AcidParticle() : base()
     {
         Body = ParticleBody.Liquid;
     }

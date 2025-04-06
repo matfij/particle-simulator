@@ -36,6 +36,18 @@ public static class ParticleUtils
         return true;
     }
 
+    public static IEnumerable<Particle> GetNeighbors(Vector2 position, Dictionary<Vector2, Particle> particles)
+    {
+        foreach(var offset in _neighborOffsets)
+        {
+            var neighborPosition = Vector2.Add(position, offset);
+            if (particles.TryGetValue(neighborPosition, out Particle? neighbor))
+            {
+                yield return neighbor;
+            }
+        }
+    }
+
     public static (Vector2, Particle)? GetNeighborOfKind(
         Vector2 position, 
         Dictionary<Vector2, Particle> particles, 

@@ -35,6 +35,7 @@ public class ParticlesPool
             ParticleKind.Oxygen => new OxygenParticle(),
             ParticleKind.Salt => new SaltParticle(),
             ParticleKind.SaltyWater => new SaltyWaterParticle(),
+            ParticleKind.Acid => new AcidParticle(),
             _ => throw new InvalidEnumArgumentException("Unsupported particle kind"),
         };
     }
