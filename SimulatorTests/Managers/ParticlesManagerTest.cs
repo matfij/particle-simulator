@@ -2,7 +2,7 @@
 using SimulatorEngine;
 using SimulatorEngine.Particles;
 
-namespace SimulatorTests;
+namespace SimulatorTests.Managers;
 
 public class ParticlesManagerTest
 {
@@ -39,7 +39,7 @@ public class ParticlesManagerTest
         manager.AddParticles(new(100, 100), 2, ParticleKind.Sand);
 
         Assert.Equal(13, manager.GetParticlesCount);
-        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100,100)));
+        Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100, 100)));
         Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(100, 99)));
         Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(99, 99)));
         Assert.Single(manager.GetParticles.Where(p => p.Key == new Vector2(101, 99)));
@@ -83,11 +83,11 @@ public class ParticlesManagerTest
         manager.RemoveParticles(new(10, 10), 4);
 
         Assert.Equal(398, manager.GetParticlesCount);
-        
+
         manager.RemoveParticles(new(10, 100), 6);
 
         Assert.Equal(317, manager.GetParticlesCount);
-        
+
         manager.RemoveParticles(new(500, 100), 11);
 
         Assert.Equal(0, manager.GetParticlesCount);

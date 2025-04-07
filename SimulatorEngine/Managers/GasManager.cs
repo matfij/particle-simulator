@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using SimulatorEngine.Particles;
 
-namespace SimulatorEngine;
+namespace SimulatorEngine.Managers;
 
 public class GasManager(float dt, float gravity)
 {

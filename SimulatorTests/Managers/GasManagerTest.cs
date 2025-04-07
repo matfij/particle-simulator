@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
-using SimulatorEngine;
+using SimulatorEngine.Managers;
 using SimulatorEngine.Particles;
 
-namespace SimulatorTests;
+namespace SimulatorTests.Managers;
 
 public class GasManagerTest
 {

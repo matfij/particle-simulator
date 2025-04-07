@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
-using SimulatorEngine;
+using SimulatorEngine.Managers;
 using SimulatorEngine.Particles;
 
-namespace SimulatorTests;
+namespace SimulatorTests.Managers;
 
 public class LiquidManagerTest
 {
@@ -99,7 +99,7 @@ public class LiquidManagerTest
         var newPosition = manager.MoveLiquid(position, particle, particles);
 
         Assert.Equal(new Vector2(100, 101), newPosition);
-        Assert.True(particles.ContainsKey(new (100, 100)));
+        Assert.True(particles.ContainsKey(new(100, 100)));
         Assert.IsType<OxygenParticle>(particles[new(100, 100)]);
     }
 }

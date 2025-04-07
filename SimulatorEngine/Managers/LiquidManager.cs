@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using SimulatorEngine.Particles;
 
-namespace SimulatorEngine;
+namespace SimulatorEngine.Managers;
 
 public class LiquidManager(float dt, float gravity)
 {
@@ -49,7 +49,7 @@ public class LiquidManager(float dt, float gravity)
             for (int dx = 1; dx <= maxSideDisplacement; dx++)
             {
                 Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
-                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle) 
+                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle)
                     && collidingParticle.Body != ParticleBody.Liquid)
                 {
                     break;
