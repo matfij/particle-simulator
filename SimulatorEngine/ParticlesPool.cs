@@ -3,11 +3,11 @@ using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
 
-public class ParticlesPool
+public static class ParticlesPool
 {
-    private readonly Stack<Particle> ParticlesFactory = new();
+    private static readonly Stack<Particle> ParticlesFactory = new();
 
-    public Particle GetParticle(ParticleKind kind)
+    public static Particle GetParticle(ParticleKind kind)
     {
         if (ParticlesFactory.Count > 0)
         {
@@ -20,7 +20,7 @@ public class ParticlesPool
         }
     }
 
-    public void ReturnParticle(Particle particle)
+    public static void ReturnParticle(Particle particle)
     {
         ParticlesFactory.Push(particle);
     }
@@ -36,6 +36,7 @@ public class ParticlesPool
             ParticleKind.Salt => new SaltParticle(),
             ParticleKind.SaltyWater => new SaltyWaterParticle(),
             ParticleKind.Acid => new AcidParticle(),
+            ParticleKind.Lava => new LavaParticle(),
             _ => throw new InvalidEnumArgumentException("Unsupported particle kind"),
         };
     }

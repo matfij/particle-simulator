@@ -85,6 +85,12 @@
                 WidthRequest="100"
                 CommandParameter="{x:Static local:ParticleKind.Acid}" 
                 BackgroundColor="#89FF00"/>
+            <Button 
+                Text="Lava"
+                Clicked="SetParticleKind"
+                WidthRequest="100"
+                CommandParameter="{x:Static local:ParticleKind.Lava}" 
+                BackgroundColor="#CF1020"/>
 
         </HorizontalStackLayout>
 

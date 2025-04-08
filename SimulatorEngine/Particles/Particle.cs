@@ -10,6 +10,7 @@ public enum ParticleKind
     Salt,
     SaltyWater,
     Acid,
+    Lava,
 }
 
 public enum ParticleBody

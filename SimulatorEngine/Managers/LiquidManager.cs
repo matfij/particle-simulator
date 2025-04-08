@@ -44,12 +44,26 @@ public class LiquidManager(float dt, float gravity)
 
         foreach (var direction in _sideDisplacementDirections)
         {
-            int maxSideDisplacement = (int)(_dt * particle.GetDensity() * _sideDisplacementRatio * _gravity);
+            int maxSideDisplacement = (int)(_dt * _sideDisplacementRatio * _gravity * (1_000_000 / particle.GetDensity()));
 
             for (int dx = 1; dx <= maxSideDisplacement; dx++)
             {
                 Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
-                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle)
+                Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + _randomFactory.Next(1, 1 + dx));
+
+                if (!particles.TryGetValue(diagonalPosition, out Particle? collidingParticle))
+                {
+                    newPosition = diagonalPosition;
+                    continue;
+                }
+                else if (collidingParticle != null
+                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
+                {
+                    return diagonalPosition;
+                }
+                newPosition = sidePosition;
+
+                if (particles.TryGetValue(sidePosition, out collidingParticle)
                     && collidingParticle.Body != ParticleBody.Liquid)
                 {
                     break;
@@ -63,19 +77,6 @@ public class LiquidManager(float dt, float gravity)
                 {
                     continue;
                 }
-
-                Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + _randomFactory.Next(1, 1 + dx));
-                if (!particles.TryGetValue(diagonalPosition, out collidingParticle))
-                {
-                    newPosition = diagonalPosition;
-                    continue;
-                }
-                else if (collidingParticle != null
-                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
-                {
-                    return diagonalPosition;
-                }
-                newPosition = sidePosition;
             }
 
             if (newPosition != initialPosition)

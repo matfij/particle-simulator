@@ -53,3 +53,22 @@ public class AcidParticle : Particle
 
     public override ParticleKind GetKind() => Kind;
 }
+
+public class LavaParticle : Particle
+{
+    private static readonly ParticleKind Kind = ParticleKind.Lava;
+    private static readonly float Density = 3100f;
+    private static readonly uint Color = 0xCF1020;
+
+    public LavaParticle() : base()
+    {
+        Body = ParticleBody.Liquid;
+        Temperature = 1700;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
+}

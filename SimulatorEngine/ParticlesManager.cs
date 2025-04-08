@@ -12,7 +12,6 @@ public class ParticlesManager
     private static readonly float _gravity = 0.05f;
     private readonly (int Width, int Height) _canvasSize = (1200, 600);
     private readonly System.Timers.Timer _simulationTimer = new(20);
-    private readonly ParticlesPool _particlesPool = new();
     private Dictionary<Vector2, Particle> _particles = [];
     private readonly LiquidManager _liquidManager;
     private readonly PowderManager _powderManager;
@@ -57,7 +56,7 @@ public class ParticlesManager
                 Vector2 position = new(center.X + dx, center.Y + dy);
                 if (!_particles.ContainsKey(position) && dx * dx + dy * dy <= radiusSquare)
                 {
-                    _particles.Add(position, _particlesPool.GetParticle(kind));
+                    _particles.Add(position, ParticlesPool.GetParticle(kind));
                 }
             }
         }
