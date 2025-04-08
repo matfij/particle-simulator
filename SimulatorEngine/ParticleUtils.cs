@@ -22,7 +22,9 @@ public static class ParticleUtils
         {
             return false;
         }
+
         var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
+
         while (particles.TryGetValue(pushUpPosition, out Particle? nextColliding))
         {
             if (nextColliding?.Body == ParticleBody.Solid || pushUpPosition.Y < 0)
@@ -31,14 +33,16 @@ public static class ParticleUtils
             }
             pushUpPosition.Y -= 1;
         }
+
         particles.Add(pushUpPosition, collidingParticle);
         particles.Remove(newPositionCandidate);
+
         return true;
     }
 
     public static IEnumerable<Particle> GetNeighbors(Vector2 position, Dictionary<Vector2, Particle> particles)
     {
-        foreach(var offset in _neighborOffsets)
+        foreach (var offset in _neighborOffsets)
         {
             var neighborPosition = Vector2.Add(position, offset);
             if (particles.TryGetValue(neighborPosition, out Particle? neighbor))
@@ -49,8 +53,8 @@ public static class ParticleUtils
     }
 
     public static (Vector2, Particle)? GetNeighborOfKind(
-        Vector2 position, 
-        Dictionary<Vector2, Particle> particles, 
+        Vector2 position,
+        Dictionary<Vector2, Particle> particles,
         ParticleKind kind)
     {
         foreach (var offset in _neighborOffsets)

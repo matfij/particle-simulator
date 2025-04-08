@@ -18,10 +18,12 @@ public class InteractionManagerTest
 
         var updatedParticle = InteractionManager.DoInteractions(position, particle, particles);
 
+        Assert.NotNull(updatedParticle);
         Assert.Equal(ParticleKind.Water, particles[new Vector2(100, 99)].GetKind());
         Assert.Equal(ParticleKind.Salt, particle.GetKind());
 
-        for (var i = 0; i <= 100; i++)
+        var waterInteractionTicks = updatedParticle.Interactions.First(i => i.NeighborKind == ParticleKind.Water).Ticks;
+        for (var i = 0; i <= waterInteractionTicks; i++)
         {
             updatedParticle = InteractionManager.DoInteractions(position, updatedParticle!, particles);
         }
@@ -43,8 +45,10 @@ public class InteractionManagerTest
         var updatedParticle = InteractionManager.DoInteractions(position, particle, particles);
 
         Assert.NotNull(updatedParticle);
+        Assert.Equal(particle.GetKind(), updatedParticle.GetKind());
 
-        for (var i = 0; i <= 100; i++)
+        var acidInteractionTicks = updatedParticle.Interactions.First(i => i.NeighborKind == ParticleKind.Acid).Ticks;
+        for (var i = 0; i <= acidInteractionTicks; i++)
         {
             if (updatedParticle is null)
             {
@@ -54,5 +58,7 @@ public class InteractionManagerTest
         }
 
         Assert.Null(updatedParticle);
+        Assert.True(particles.TryGetValue(new Vector2(255, 256), out var acidParticle));
+        Assert.Equal(ParticleKind.Acid, acidParticle.GetKind());
     }
 }

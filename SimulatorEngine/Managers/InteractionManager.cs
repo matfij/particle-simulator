@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace SimulatorEngine.Managers;
 
-public class InteractionManager
+public static class InteractionManager
 {
     public static Particle? DoInteractions(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
     {
@@ -20,10 +20,10 @@ public class InteractionManager
                 continue;
             }
             var (neighborPosition, _) = neighbor;
-            particles.Remove(neighborPosition);
             switch (interaction.Result)
             {
                 case InteractionResult.Merge:
+                    particles.Remove(neighborPosition);
                     return CreateParticleOfKind(interaction.ResultKind ?? ParticleKind.None);
                 case InteractionResult.RemoveSelf:
                     return null;
