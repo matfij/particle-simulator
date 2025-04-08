@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
+using SimulatorEngine.Managers;
 using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
@@ -133,15 +134,7 @@ public class ParticlesManager
         var particlesToInteract = new Dictionary<Vector2, Particle>();
         foreach (var (position, particle) in particlesToMove.OrderBy(p => p.Value.GetDensity()))
         {
-            var newParticle = particle;
-
-            switch (particle.Body)
-            {
-                case ParticleBody.Solid:
-                    newParticle = SolidManager.DoInteractions(position, newParticle, particlesToMove);
-                    break;
-            }
-
+            var newParticle = InteractionManager.DoInteractions(position, particle, particlesToMove);
             if (newParticle != null)
             {
                 particlesToInteract.Add(position, newParticle);

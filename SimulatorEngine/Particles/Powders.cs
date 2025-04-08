@@ -9,6 +9,15 @@ public class SandParticle : Particle
     public SandParticle() : base()
     {
         Body = ParticleBody.Powder;
+        Interactions =
+        [
+            new()
+            {
+                 Result = InteractionResult.RemoveSelf,
+                 NeighborKind = ParticleKind.Acid,
+                 Ticks = 5,
+            },
+        ];
     }
 
     public override uint GetColor() => Color;
@@ -23,18 +32,26 @@ public class SaltParticle : Particle
     private static readonly ParticleKind Kind = ParticleKind.Salt;
     private static readonly float Density = 2100f;
     private static readonly uint Color = 0xFCF9F3;
-    private static readonly int MaxTicksToDissolve = 10;
-    private int _ticksToDissolve;
-    public int TicksToDissolve 
-    { 
-        get => _ticksToDissolve;
-        set => _ticksToDissolve = Math.Min(value, MaxTicksToDissolve);
-    }
 
     public SaltParticle() : base()
     {
         Body = ParticleBody.Powder;
-        TicksToDissolve = MaxTicksToDissolve;
+        Interactions =
+        [
+             new()
+             {
+                 Result = InteractionResult.Merge,
+                 NeighborKind = ParticleKind.Water,
+                 Ticks = 12,
+                 ResultKind = ParticleKind.SaltyWater,
+             },
+             new()
+             {
+                 Result = InteractionResult.RemoveSelf,
+                 NeighborKind = ParticleKind.Acid,
+                 Ticks = 6,
+             },
+        ];
     }
 
     public override uint GetColor() => Color;

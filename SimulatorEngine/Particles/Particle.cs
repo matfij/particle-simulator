@@ -24,10 +24,12 @@ public abstract class Particle
 {
     public int Temperature { get; set; }
     public ParticleBody Body { get; set; }
+    public List<ParticleInteraction> Interactions { get; set; }
 
     protected Particle()
     {
         Temperature = 20;
+        Interactions = [];
     }
 
     public abstract ParticleKind GetKind();
