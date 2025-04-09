@@ -63,7 +63,7 @@ public class LavaParticle : Particle
     public LavaParticle() : base()
     {
         Body = ParticleBody.Liquid;
-        Temperature = 1700;
+        Temperature = 1200;
     }
 
     public override uint GetColor() => Color;

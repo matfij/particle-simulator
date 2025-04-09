@@ -9,7 +9,7 @@ public class ParticlesManager
 {
     public TimeSpan LoopTime { private set; get; } = new();
     private static readonly float _dt = 0.2f;
-    private static readonly float _gravity = 0.05f;
+    private static readonly float _gravity = 0.025f;
     private readonly (int Width, int Height) _canvasSize = (1200, 600);
     private readonly System.Timers.Timer _simulationTimer = new(20);
     private Dictionary<Vector2, Particle> _particles = [];
