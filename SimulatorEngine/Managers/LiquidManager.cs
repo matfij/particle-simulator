@@ -7,7 +7,7 @@ public class LiquidManager(float dt, float gravity)
 {
     private readonly float _dt = dt;
     private readonly float _gravity = gravity;
-    private readonly float _sideDisplacementRatio = 0.8f;
+    private readonly float _sideDisplacementFactor = 100_000;
     private readonly int[] _sideDisplacementDirections = [-1, 1];
     private readonly Random _randomFactory = new();
 
@@ -16,20 +16,22 @@ public class LiquidManager(float dt, float gravity)
         var initialPosition = position;
         var newPosition = initialPosition;
 
-        var gravityDisplacement = (int)(_dt * particle.GetDensity() * _gravity);
-
-        for (int dy = 1; dy <= gravityDisplacement; dy++)
+        var dyMax = (int)(_dt * _gravity * particle.GetDensity());
+        for (var dy = 1; dy <= dyMax; dy++)
         {
-            Vector2 newPositionCandidate = new(initialPosition.X, initialPosition.Y + dy);
-            if (!particles.TryGetValue(newPositionCandidate, out Particle? collidingParticle))
+            var xNudge = _randomFactory.Next(-1, 2);
+
+            var nudgedDown = new Vector2(initialPosition.X + xNudge, initialPosition.Y + dy);
+
+            if (!particles.TryGetValue(nudgedDown, out var fallingInto))
             {
-                newPosition = newPositionCandidate;
+                newPosition = nudgedDown;
             }
-            else if (ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, newPositionCandidate))
+            else if (ParticleUtils.TryPushLighterParticle(particle, fallingInto, particles, nudgedDown))
             {
-                return newPositionCandidate;
+                return nudgedDown;
             }
-            else if (collidingParticle.Body != ParticleBody.Liquid)
+            else if (fallingInto.Body != ParticleBody.Liquid)
             {
                 break;
             }
@@ -44,46 +46,28 @@ public class LiquidManager(float dt, float gravity)
 
         foreach (var direction in _sideDisplacementDirections)
         {
-            int maxSideDisplacement = (int)(_dt * particle.GetDensity() * _sideDisplacementRatio * _gravity);
+            var dxMax = (int)(_dt * _sideDisplacementFactor / particle.GetDensity());
 
-            for (int dx = 1; dx <= maxSideDisplacement; dx++)
+            for (var dx = 1; dx <= dxMax; dx++)
             {
-                Vector2 sidePosition = new(initialPosition.X + dx * direction, initialPosition.Y);
-                if (particles.TryGetValue(sidePosition, out Particle? collidingParticle)
-                    && collidingParticle.Body != ParticleBody.Liquid)
+                var dxPosition = new Vector2(initialPosition.X + dx * direction, initialPosition.Y);
+
+                if (!particles.TryGetValue(dxPosition, out var dxNeighbor))
+                {
+                    return dxPosition;
+                }
+                if (dxNeighbor.Body != ParticleBody.Liquid)
                 {
                     break;
                 }
-                else if (collidingParticle != null
-                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, sidePosition))
+                if (ParticleUtils.TryPushLighterParticle(particle, dxNeighbor, particles, dxPosition))
                 {
-                    return sidePosition;
+                    return dxPosition;
                 }
-                if (particles.ContainsKey(sidePosition))
-                {
-                    continue;
-                }
-
-                Vector2 diagonalPosition = new(sidePosition.X, sidePosition.Y + _randomFactory.Next(1, 1 + dx));
-                if (!particles.TryGetValue(diagonalPosition, out collidingParticle))
-                {
-                    newPosition = diagonalPosition;
-                    continue;
-                }
-                else if (collidingParticle != null
-                    && ParticleUtils.TryPushLighterParticle(particle, collidingParticle, particles, diagonalPosition))
-                {
-                    return diagonalPosition;
-                }
-                newPosition = sidePosition;
-            }
-
-            if (newPosition != initialPosition)
-            {
-                return newPosition;
             }
         }
 
         return initialPosition;
     }
+
 }
