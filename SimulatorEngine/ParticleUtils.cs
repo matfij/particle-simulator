@@ -5,11 +5,17 @@ namespace SimulatorEngine;
 
 public static class ParticleUtils
 {
+    private static readonly Vector2[] _strictNeighborOffsets =
+    [
+        new(0, 1),
+        new(-1, 0), new(1, 0),
+        new(0, -1),
+    ];
     private static readonly Vector2[] _neighborOffsets =
     [
-        new(-1, 1), new(0, 1), new(1, 1),
-        new(-1, 0), new(1, 0),
-        new(-1, -1), new(0, -1), new(1, -1),
+        .._strictNeighborOffsets,
+        new(-1, 1),  new(1, 1),
+        new(-1, -1), new(1, -1),
     ];
 
     public static bool TryPushLighterParticle(
@@ -38,6 +44,18 @@ public static class ParticleUtils
         particles.Remove(newPositionCandidate);
 
         return true;
+    }
+
+    public static IEnumerable<Particle> GetStrictNeighbors(Vector2 position, Dictionary<Vector2, Particle> particles)
+    {
+        foreach (var offset in _strictNeighborOffsets)
+        {
+            var neighborPosition = Vector2.Add(position, offset);
+            if (particles.TryGetValue(neighborPosition, out Particle? neighbor))
+            {
+                yield return neighbor;
+            }
+        }
     }
 
     public static IEnumerable<Particle> GetNeighbors(Vector2 position, Dictionary<Vector2, Particle> particles)
