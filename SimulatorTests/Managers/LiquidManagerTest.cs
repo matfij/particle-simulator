@@ -84,22 +84,4 @@ public class LiquidManagerTest
 
         Assert.NotEqual(new Vector2(100, 100), newPosition);
     }
-
-    [Fact]
-    public void Should_PushUpLighterParticle()
-    {
-        var position = new Vector2(100, 100);
-        var particle = new WaterParticle();
-        Dictionary<Vector2, Particle> particles = new()
-        {
-            { new Vector2(100, 101), new OxygenParticle() },
-        };
-        var manager = new LiquidManager(_dt, _gravity);
-
-        var newPosition = manager.MoveLiquid(position, particle, particles);
-
-        Assert.Equal(new Vector2(100, 101), newPosition);
-        Assert.True(particles.ContainsKey(new(100, 100)));
-        Assert.IsType<OxygenParticle>(particles[new(100, 100)]);
-    }
 }

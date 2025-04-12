@@ -140,6 +140,8 @@ public class ParticlesManager
             }
         }
 
+        TemperatureManager.TransferHeat(particlesToInteract);
+
         _particles = new Dictionary<Vector2, Particle>(particlesToInteract);
 
         _stopwatch.Stop();

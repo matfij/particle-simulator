@@ -23,7 +23,7 @@ public enum ParticleBody
 
 public abstract class Particle
 {
-    public int Temperature { get; set; }
+    public float Temperature { get; set; }
     public ParticleBody Body { get; set; }
     public List<ParticleInteraction> Interactions { get; set; }
 
