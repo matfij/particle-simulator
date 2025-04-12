@@ -60,3 +60,21 @@ public class SaltParticle : Particle
 
     public override ParticleKind GetKind() => Kind;
 }
+
+public class StoneParticle : Particle
+{
+    private static readonly ParticleKind Kind = ParticleKind.Stone;
+    private static readonly float Density = 2500f;
+    private static readonly uint Color = 0x787A79;
+
+    public StoneParticle() : base()
+    {
+        Body = ParticleBody.Powder;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
+}

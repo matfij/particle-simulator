@@ -57,7 +57,7 @@ public class AcidParticle : Particle
 public class LavaParticle : Particle
 {
     private static readonly ParticleKind Kind = ParticleKind.Lava;
-    private static readonly float Density = 3100f;
+    private static readonly float Density = 2200f;
     private static readonly uint Color = 0xCF1020;
 
     public LavaParticle() : base()

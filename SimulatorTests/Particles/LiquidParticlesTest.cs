@@ -51,7 +51,7 @@ public class LiquidParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(1200, particle.Temperature);
         Assert.Equal(ParticleBody.Liquid, particle.Body);
-        Assert.Equal(3100, particle.GetDensity());
+        Assert.Equal(2200, particle.GetDensity());
         Assert.Equal(0xCF1020, (float)particle.GetColor());
         Assert.Equal(ParticleKind.Lava, particle.GetKind());
     }

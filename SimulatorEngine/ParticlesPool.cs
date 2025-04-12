@@ -37,6 +37,8 @@ public static class ParticlesPool
             ParticleKind.SaltyWater => new SaltyWaterParticle(),
             ParticleKind.Acid => new AcidParticle(),
             ParticleKind.Lava => new LavaParticle(),
+            ParticleKind.Stone => new StoneParticle(),
+            ParticleKind.Steam => new SteamParticle(),
             _ => throw new InvalidEnumArgumentException("Unsupported particle kind"),
         };
     }

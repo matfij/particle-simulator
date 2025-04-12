@@ -18,3 +18,21 @@ public class OxygenParticle : Particle
     public override ParticleKind GetKind() => Kind;
 }
 
+public class SteamParticle : Particle
+{
+    private static readonly ParticleKind Kind = ParticleKind.Steam;
+    private static readonly float Density = 15f;
+    private static readonly uint Color = 0xC7D5E0;
+
+    public SteamParticle() : base()
+    {
+        Body = ParticleBody.Gas;
+        Temperature = 128;
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
+}
