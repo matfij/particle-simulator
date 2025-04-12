@@ -5,7 +5,8 @@ namespace SimulatorEngine.Managers;
 
 public static class TemperatureManager
 {
-    public static readonly float _transferRatio = 0.015f;
+    private static readonly float _transferRatio = 0.015f;
+    private static readonly float _minTransferThreshold = 0.1f;
 
     public static void TransferHeat(Dictionary<Vector2, Particle> particles)
     {
@@ -16,7 +17,7 @@ public static class TemperatureManager
             foreach (var neighbor in neighbors)
             {
                 var tempDiff = particle.Temperature - neighbor.Temperature;
-                if (tempDiff == 0)
+                if (tempDiff < _minTransferThreshold)
                 {
                     continue;
                 }
