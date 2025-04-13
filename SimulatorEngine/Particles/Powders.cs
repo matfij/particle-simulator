@@ -15,7 +15,7 @@ public class SandParticle : Particle
             {
                  Result = InteractionResult.RemoveSelf,
                  NeighborKind = ParticleKind.Acid,
-                 Ticks = 5,
+                 Ticks = 8,
             },
         ];
     }
@@ -70,6 +70,15 @@ public class StoneParticle : Particle
     public StoneParticle() : base()
     {
         Body = ParticleBody.Powder;
+        Interactions =
+        [
+             new()
+             {
+                 Result = InteractionResult.RemoveSelf,
+                 NeighborKind = ParticleKind.Acid,
+                 Ticks = 12,
+             },
+        ];
     }
 
     public override uint GetColor() => Color;
