@@ -29,4 +29,17 @@ public class PowderParticlesTest
         Assert.Equal(0xFCF9F3, (float)particle.GetColor());
         Assert.Equal(ParticleKind.Salt, particle.GetKind());
     }
+
+    [Fact]
+    public void Should_Create_StoneParticle()
+    {
+        var particle = new StoneParticle();
+
+        Assert.NotNull(particle);
+        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(ParticleBody.Powder, particle.Body);
+        Assert.Equal(2500, particle.GetDensity());
+        Assert.Equal(0x787A79, (float)particle.GetColor());
+        Assert.Equal(ParticleKind.Stone, particle.GetKind());
+    }
 }

@@ -7,6 +7,7 @@ public class GasManager(float dt, float gravity)
 {
     private readonly float _dt = dt;
     private readonly float _gravity = gravity;
+    private readonly float _dxyRatio = 1000f;
     private readonly (int X, int Y)[] _displacementDirections = [(-1, 1), (1, -1), (1, 1), (-1, -1)];
     private readonly Random _randomFactory = new();
 
@@ -15,7 +16,7 @@ public class GasManager(float dt, float gravity)
         var initialPosition = position;
         var newPosition = initialPosition;
 
-        var maxDisplacementValue = (int)(_dt * (particle.GetDensity() / _gravity));
+        var maxDisplacementValue = (int)(_dt * _gravity * _dxyRatio / particle.GetDensity());
         maxDisplacementValue = _randomFactory.Next(1, 1 + maxDisplacementValue);
 
         _randomFactory.Shuffle(_displacementDirections);

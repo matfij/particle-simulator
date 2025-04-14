@@ -15,7 +15,7 @@ public class SandParticle : Particle
             {
                  Result = InteractionResult.RemoveSelf,
                  NeighborKind = ParticleKind.Acid,
-                 Ticks = 5,
+                 Ticks = 8,
             },
         ];
     }
@@ -50,6 +50,33 @@ public class SaltParticle : Particle
                  Result = InteractionResult.RemoveSelf,
                  NeighborKind = ParticleKind.Acid,
                  Ticks = 6,
+             },
+        ];
+    }
+
+    public override uint GetColor() => Color;
+
+    public override float GetDensity() => Density;
+
+    public override ParticleKind GetKind() => Kind;
+}
+
+public class StoneParticle : Particle
+{
+    private static readonly ParticleKind Kind = ParticleKind.Stone;
+    private static readonly float Density = 2500f;
+    private static readonly uint Color = 0x787A79;
+
+    public StoneParticle() : base()
+    {
+        Body = ParticleBody.Powder;
+        Interactions =
+        [
+             new()
+             {
+                 Result = InteractionResult.RemoveSelf,
+                 NeighborKind = ParticleKind.Acid,
+                 Ticks = 12,
              },
         ];
     }

@@ -91,6 +91,18 @@
                 WidthRequest="100"
                 CommandParameter="{x:Static local:ParticleKind.Lava}" 
                 BackgroundColor="#CF1020"/>
+            <Button 
+                Text="Stone"
+                Clicked="SetParticleKind"
+                WidthRequest="100"
+                CommandParameter="{x:Static local:ParticleKind.Stone}" 
+                BackgroundColor="#787A79"/>
+            <Button 
+                Text="Steam"
+                Clicked="SetParticleKind"
+                WidthRequest="100"
+                CommandParameter="{x:Static local:ParticleKind.Steam}" 
+                BackgroundColor="#C7D5E0"/>
 
         </HorizontalStackLayout>
 
