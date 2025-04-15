@@ -28,6 +28,15 @@ public class SteamParticle : Particle
     {
         Body = ParticleBody.Gas;
         Temperature = 128;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Down,
+                ResultKind = ParticleKind.Water,
+                Temperature = 99,
+            }
+        ];
     }
 
     public override uint GetColor() => Color;

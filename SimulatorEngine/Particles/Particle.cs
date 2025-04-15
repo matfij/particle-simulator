@@ -26,12 +26,14 @@ public enum ParticleBody
 public abstract class Particle
 {
     public float Temperature { get; set; }
-    public ParticleBody Body { get; set; }
-    public List<ParticleInteraction> Interactions { get; set; }
+    public ParticleBody Body { get; init; }
+    public List<PhaseTransition> Transitions { get; init; }
+    public List<ParticleInteraction> Interactions { get; init; }
 
     protected Particle()
     {
         Temperature = 20;
+        Transitions = [];
         Interactions = [];
     }
 

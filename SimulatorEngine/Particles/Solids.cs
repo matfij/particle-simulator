@@ -9,14 +9,23 @@ public class IronParticle : Particle
     public IronParticle() : base()
     {
         Body = ParticleBody.Solid;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Up,
+                ResultKind = ParticleKind.Lava,
+                Temperature = 1500,
+            }
+        ];
         Interactions =
         [
-             new()
-             {
-                 Result = InteractionResult.RemoveSelf,
-                 NeighborKind = ParticleKind.Acid,
-                 Ticks = 8,
-             },
+            new()
+            {
+                Result = InteractionResult.RemoveSelf,
+                NeighborKind = ParticleKind.Acid,
+                Ticks = 8,
+            },
         ];
     }
 
