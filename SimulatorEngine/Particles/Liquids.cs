@@ -42,7 +42,7 @@ public class SaltyWaterParticle : Particle
             {
                 Direction = PhaseTransitionDirection.Up,
                 ResultKind = ParticleKind.Steam,
-                Temperature = 100,
+                Temperature = 102,
             }
         ];
     }
