@@ -9,13 +9,22 @@ public class SandParticle : Particle
     public SandParticle() : base()
     {
         Body = ParticleBody.Powder;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Up,
+                ResultKind = ParticleKind.Lava,
+                Temperature = 1700,
+            }
+        ];
         Interactions =
         [
             new()
             {
-                 Result = InteractionResult.RemoveSelf,
-                 NeighborKind = ParticleKind.Acid,
-                 Ticks = 8,
+                Result = InteractionResult.RemoveSelf,
+                NeighborKind = ParticleKind.Acid,
+                Ticks = 8,
             },
         ];
     }
@@ -36,21 +45,30 @@ public class SaltParticle : Particle
     public SaltParticle() : base()
     {
         Body = ParticleBody.Powder;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Up,
+                ResultKind = ParticleKind.Lava,
+                Temperature = 800,
+            }
+        ];
         Interactions =
         [
-             new()
-             {
-                 Result = InteractionResult.Merge,
-                 NeighborKind = ParticleKind.Water,
-                 Ticks = 12,
-                 ResultKind = ParticleKind.SaltyWater,
-             },
-             new()
-             {
-                 Result = InteractionResult.RemoveSelf,
-                 NeighborKind = ParticleKind.Acid,
-                 Ticks = 6,
-             },
+            new()
+            {
+                Result = InteractionResult.Merge,
+                NeighborKind = ParticleKind.Water,
+                Ticks = 12,
+                ResultKind = ParticleKind.SaltyWater,
+            },
+            new()
+            {
+                Result = InteractionResult.RemoveSelf,
+                NeighborKind = ParticleKind.Acid,
+                Ticks = 6,
+            },
         ];
     }
 
@@ -70,14 +88,23 @@ public class StoneParticle : Particle
     public StoneParticle() : base()
     {
         Body = ParticleBody.Powder;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Up,
+                ResultKind = ParticleKind.Lava,
+                Temperature = 1200,
+            }
+        ];
         Interactions =
         [
-             new()
-             {
-                 Result = InteractionResult.RemoveSelf,
-                 NeighborKind = ParticleKind.Acid,
-                 Ticks = 12,
-             },
+            new()
+            {
+                Result = InteractionResult.RemoveSelf,
+                NeighborKind = ParticleKind.Acid,
+                Ticks = 12,
+            },
         ];
     }
 

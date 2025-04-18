@@ -36,7 +36,7 @@ public class LiquidParticlesTest
         var particle = new AcidParticle();
 
         Assert.NotNull(particle);
-        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(300, particle.Temperature);
         Assert.Equal(ParticleBody.Liquid, particle.Body);
         Assert.Equal(1100, particle.GetDensity());
         Assert.Equal(0x89FF00, (float)particle.GetColor());
@@ -49,7 +49,7 @@ public class LiquidParticlesTest
         var particle = new LavaParticle();
 
         Assert.NotNull(particle);
-        Assert.Equal(1200, particle.Temperature);
+        Assert.Equal(1600, particle.Temperature);
         Assert.Equal(ParticleBody.Liquid, particle.Body);
         Assert.Equal(2200, particle.GetDensity());
         Assert.Equal(0xCF1020, (float)particle.GetColor());

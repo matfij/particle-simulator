@@ -20,14 +20,14 @@ public class TemperatureManagerTest
         };
 
         Assert.Equal(20, waterParticle.Temperature);
-        Assert.Equal(1200, lavaParticle1.Temperature);
-        Assert.Equal(1200, lavaParticle2.Temperature);
+        Assert.Equal(1600, lavaParticle1.Temperature);
+        Assert.Equal(1600, lavaParticle2.Temperature);
 
         TemperatureManager.TransferHeat(particles);
 
         Assert.InRange(waterParticle.Temperature, 50, 100);
-        Assert.InRange(lavaParticle1.Temperature, 1100, 1190);
-        Assert.InRange(lavaParticle2.Temperature, 1100, 1190);
+        Assert.InRange(lavaParticle1.Temperature, 1500, 1570);
+        Assert.InRange(lavaParticle2.Temperature, 1500, 1570);
     }
 
     [Fact]
@@ -72,5 +72,65 @@ public class TemperatureManagerTest
 
         Assert.True(TestUtils.CloseTo(100f, waterParticle1.Temperature));
         Assert.True(TestUtils.CloseTo(250f, waterParticle2.Temperature));
+    }
+
+    [Fact]
+    public void ShouldNot_ShiftPhaseWhenTargetTemperatureNotReached()
+    {
+        var waterParticle = new WaterParticle();
+        var sandParticle = new SandParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { new Vector2(100, 100), waterParticle },
+            { new Vector2(100, 101), sandParticle },
+        };
+
+        sandParticle.Temperature = 90;
+
+        TemperatureManager.TransferHeat(particles);
+        TemperatureManager.TransferHeat(particles);
+        TemperatureManager.TransferHeat(particles);
+
+        Assert.Equal(ParticleKind.Water, waterParticle.GetKind());
+        Assert.Equal(ParticleKind.Sand, sandParticle.GetKind());
+    }
+
+    [Fact]
+    public void Should_ShiftPhaseUpWhenTargetTemperatureReached()
+    {
+        var waterParticle = new WaterParticle();
+        var lavaParticle = new LavaParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { new Vector2(100, 100), waterParticle },
+            { new Vector2(100, 101), lavaParticle },
+        };
+
+        TemperatureManager.TransferHeat(particles);
+        TemperatureManager.TransferHeat(particles);
+        TemperatureManager.TransferHeat(particles);
+
+        Assert.Equal(ParticleKind.Steam, particles[new Vector2(100, 100)].GetKind());
+    }
+
+    [Fact]
+    public void Should_ShiftPhaseDownWhenTargetTemperatureReached()
+    {
+        var steamParticle = new SteamParticle();
+        var ironParticle = new IronParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { new Vector2(100, 100), steamParticle },
+            { new Vector2(100, 101), ironParticle },
+        };
+
+        ironParticle.Temperature = -200;
+
+        for (var i = 0; i < 100; i++)
+        {
+            TemperatureManager.TransferHeat(particles);
+        }
+
+        Assert.Equal(ParticleKind.Water, particles[new Vector2(100, 100)].GetKind());
     }
 }

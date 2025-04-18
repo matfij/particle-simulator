@@ -9,6 +9,15 @@ public class WaterParticle : Particle
     public WaterParticle() : base()
     {
         Body = ParticleBody.Liquid;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Up,
+                ResultKind = ParticleKind.Steam,
+                Temperature = 100,
+            }
+        ];
     }
 
     public override uint GetColor() => Color;
@@ -27,6 +36,15 @@ public class SaltyWaterParticle : Particle
     public SaltyWaterParticle() : base()
     {
         Body = ParticleBody.Liquid;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Up,
+                ResultKind = ParticleKind.Steam,
+                Temperature = 102,
+            }
+        ];
     }
 
     public override uint GetColor() => Color;
@@ -45,6 +63,7 @@ public class AcidParticle : Particle
     public AcidParticle() : base()
     {
         Body = ParticleBody.Liquid;
+        Temperature = 300;
     }
 
     public override uint GetColor() => Color;
@@ -63,7 +82,16 @@ public class LavaParticle : Particle
     public LavaParticle() : base()
     {
         Body = ParticleBody.Liquid;
-        Temperature = 1200;
+        Temperature = 1600;
+        Transitions =
+        [
+            new()
+            {
+                Direction = PhaseTransitionDirection.Down,
+                ResultKind = ParticleKind.Stone,
+                Temperature = 1000,
+            }
+        ];
     }
 
     public override uint GetColor() => Color;
