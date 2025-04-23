@@ -1,16 +1,20 @@
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.RuntimeSupport;
 using Amazon.Lambda.Serialization.SystemTextJson;
+using UploadLambda;
 
-// The function handler that will be called for each Lambda event
-var handler = (string input, ILambdaContext context) =>
+var handler = async (Simulation input, ILambdaContext context) =>
 {
-    return input.ToUpper();
+    var dbClient = new AmazonDynamoDBClient();
+    var dbContext = new DynamoDBContext(dbClient);
+
+    await dbContext.SaveAsync(input);
+
+    return "SUCCESS";
 };
 
-// Build the Lambda runtime client passing in the handler to call for each
-// event and the JSON serializer to use for translating Lambda JSON documents
-// to .NET types.
 await LambdaBootstrapBuilder.Create(handler, new DefaultLambdaJsonSerializer())
         .Build()
         .RunAsync();
