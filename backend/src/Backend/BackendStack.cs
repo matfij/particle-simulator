@@ -11,7 +11,7 @@ namespace Backend
             var uploadLambdaProps = new FunctionProps()
             {
                 Runtime = Runtime.DOTNET_8,
-                Handler = "UploadLambda",
+                Handler = "UploadLambda::UploadLambda.Function::FunctionHandler",
                 Code = Code.FromAsset("./src/UploadLambda/bin/Release/net8.0/UploadLambda.zip"),
             };
             var uploadLambda = new Function(this, "UploadLambda", uploadLambdaProps);
