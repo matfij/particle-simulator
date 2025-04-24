@@ -7,7 +7,7 @@ namespace Backend
         public static void Main(string[] args)
         {
             var app = new App();
-            new BackendStack(app, "BackendStack", new StackProps { });
+            new BackendStack(app, "ParticleSimulatorStack", new StackProps { });
             app.Synth();
         }
     }

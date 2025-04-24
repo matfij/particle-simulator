@@ -5,14 +5,13 @@ using Amazon.Lambda.RuntimeSupport;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using UploadLambda;
 
+var dbClient = new AmazonDynamoDBClient();
+var dbContext = new DynamoDBContext(dbClient);
+
 var handler = async (Simulation input, ILambdaContext context) =>
 {
-    var dbClient = new AmazonDynamoDBClient();
-    var dbContext = new DynamoDBContext(dbClient);
-
     await dbContext.SaveAsync(input);
-
-    return "SUCCESS";
+    return $"{input.Name} saved";
 };
 
 await LambdaBootstrapBuilder.Create(handler, new DefaultLambdaJsonSerializer())

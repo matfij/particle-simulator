@@ -14,6 +14,7 @@ namespace Backend
                 Runtime = Runtime.DOTNET_8,
                 Handler = "UploadLambda",
                 Code = Code.FromAsset("./src/UploadLambda/bin/Release/net8.0/UploadLambda.zip"),
+                Timeout = Duration.Seconds(30)
             };
             var uploadLambda = new Function(this, "upload-lambda", uploadLambdaProps);
 
@@ -26,6 +27,7 @@ namespace Backend
                     Type = AttributeType.STRING,
                 },
                 RemovalPolicy = RemovalPolicy.DESTROY, // RETAIN in production
+                BillingMode = BillingMode.PAY_PER_REQUEST,
             };
             var simulationTable = new Table(this, "simulation-table", simulationTableProps);
 
