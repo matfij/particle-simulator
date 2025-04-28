@@ -2,12 +2,12 @@
 
 public class FileUploadRequest
 {
-    public string FileName { get; set; } = string.Empty;
-    public string ContentType { get; set; } = string.Empty;
+    public required string FileName { get; set; }
+    public required string ContentType { get; set; }
 }
 
 public class FileUploadResponse
 {
-    public string UploadUrl { get; set; } = string.Empty;
-    public string FileKey { get; set; } = string.Empty;
+    public required string UploadUrl { get; set; }
+    public required string FileKey { get; set; }
 }

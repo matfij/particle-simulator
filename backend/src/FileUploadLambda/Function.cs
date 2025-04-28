@@ -5,15 +5,17 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using FileUploadLambda;
 
-var bucketName = "simulation-bucket";
+var bucketName = "particle-simulation-bucket";
 var s3Client = new AmazonS3Client();
 
 var handler = async (FileUploadRequest input, ILambdaContext context) =>
 {
+    var fileName = $"{input.FileName.ToLower().Replace(" ", "-")}-${Guid.NewGuid()}";
+
     var request = new GetPreSignedUrlRequest
     {
         BucketName = bucketName,
-        Key = input.FileName,
+        Key = fileName,
         Verb = HttpVerb.PUT,
         Expires = DateTime.UtcNow.AddMinutes(15),
         ContentType = input.ContentType,
@@ -24,7 +26,7 @@ var handler = async (FileUploadRequest input, ILambdaContext context) =>
     return new FileUploadResponse
     {
         UploadUrl = url,
-        FileKey = input.FileName,
+        FileKey = fileName,
     };
 };
 

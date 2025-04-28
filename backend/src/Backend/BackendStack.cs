@@ -37,18 +37,21 @@ namespace Backend
             var fileUploadLambdaProps = new FunctionProps
             {
                 Runtime = Runtime.DOTNET_8,
-                Handler = "fileUploadLambda",
+                Handler = "FileUploadLambda",
                 Code = Code.FromAsset("./src/FileUploadLambda/bin/Release/net8.0/FileUploadLambda.zip"),
-                Timeout = Duration.Seconds(600)
+                Timeout = Duration.Seconds(30)
             };
             var fileUploadLambda = new Function(this, "file-upload-lambda", fileUploadLambdaProps);
 
             var simulationBucketProps = new BucketProps
             {
-                BucketName="simulation-bucket",
+                BucketName="particle-simulation-bucket",
                 RemovalPolicy= RemovalPolicy.DESTROY,
+                Encryption = BucketEncryption.S3_MANAGED,
+                BlockPublicAccess = BlockPublicAccess.BLOCK_ALL,
+                EnforceSSL = true,
             };
-            var simulationBucket = new Bucket(this, "simulation-bucket", simulationBucketProps);
+            var simulationBucket = new Bucket(this, "particle-simulation-bucket", simulationBucketProps);
 
             simulationBucket.GrantWrite(fileUploadLambda);
         }
