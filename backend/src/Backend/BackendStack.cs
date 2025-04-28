@@ -1,6 +1,7 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.Lambda;
+using Amazon.CDK.AWS.S3;
 using Constructs;
 
 namespace Backend
@@ -32,6 +33,24 @@ namespace Backend
             var simulationTable = new Table(this, "simulation-table", simulationTableProps);
 
             simulationTable.GrantReadWriteData(uploadLambda);
+
+            var fileUploadLambdaProps = new FunctionProps
+            {
+                Runtime = Runtime.DOTNET_8,
+                Handler = "fileUploadLambda",
+                Code = Code.FromAsset("./src/FileUploadLambda/bin/Release/net8.0/FileUploadLambda.zip"),
+                Timeout = Duration.Seconds(600)
+            };
+            var fileUploadLambda = new Function(this, "file-upload-lambda", fileUploadLambdaProps);
+
+            var simulationBucketProps = new BucketProps
+            {
+                BucketName="simulation-bucket",
+                RemovalPolicy= RemovalPolicy.DESTROY,
+            };
+            var simulationBucket = new Bucket(this, "simulation-bucket", simulationBucketProps);
+
+            simulationBucket.GrantWrite(fileUploadLambda);
         }
     }
 }
