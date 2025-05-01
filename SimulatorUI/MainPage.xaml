@@ -104,7 +104,15 @@
                 CommandParameter="{x:Static local:ParticleKind.Steam}" 
                 BackgroundColor="#C7D5E0"/>
 
+            <Button 
+                Text="Share"
+                Clicked="OnOpenShareModal"
+                WidthRequest="100"
+                BackgroundColor="#D3D3D3"/>
+
         </HorizontalStackLayout>
+
+    
 
     </VerticalStackLayout>
 

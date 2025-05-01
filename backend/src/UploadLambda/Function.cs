@@ -11,7 +11,7 @@ var dbContext = new DynamoDBContext(dbClient);
 var handler = async (Simulation input, ILambdaContext context) =>
 {
     await dbContext.SaveAsync(input);
-    return $"{input.Name} saved";
+    return input.Id;
 };
 
 await LambdaBootstrapBuilder.Create(handler, new DefaultLambdaJsonSerializer())
