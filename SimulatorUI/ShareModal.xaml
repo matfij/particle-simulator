@@ -21,7 +21,7 @@
                 x:Name="NameEntry" 
                 TextColor="#efe" 
                 Placeholder="Name"
-                MaxLength="20"/>
+                MaxLength="20" />
         </Frame>
         <Label 
             x:Name="NameError" 
@@ -30,21 +30,33 @@
             TextColor="Red" />
         <Line />
 
-        <HorizontalStackLayout Spacing="10">
+        <HorizontalStackLayout x:Name="ActionsLayout" Spacing="10">
             <Button 
                 Text="Share" 
                 WidthRequest="195" 
                 TextColor="#efe"
                 BorderColor="#efe"
                 Background="Transparent" 
-                Clicked="OnShare" />
+                Clicked="OnShare"
+                AutomationId="ShareButton"
+                SemanticProperties.Description="Share Simulation" />
             <Button 
                 Text="Cancel" 
                 WidthRequest="195"
                 TextColor="#ccc"
                 BorderColor="#ccc"
                 Background="Transparent" 
-                Clicked="OnCancel" />
+                Clicked="OnCancel"
+                AutomationId="CancelButton" 
+                SemanticProperties.Description="Cancel Sharing" />
         </HorizontalStackLayout>
+
+        <ActivityIndicator 
+            x:Name="LoadingIndicator" 
+            IsRunning="False" 
+            IsVisible="False"
+            Color="#efe"
+            HorizontalOptions="Center" />
+
     </VerticalStackLayout>
 </ContentPage>

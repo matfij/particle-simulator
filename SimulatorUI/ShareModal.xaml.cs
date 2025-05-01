@@ -9,11 +9,9 @@ public partial class ShareModal : ContentPage
 
 	private async void OnShare(object sender, EventArgs e)
 	{
-		var name = NameEntry.Text;
-		NameError.IsVisible = false;
-		if (name == null || name.Length < 4 || name.Length > 20)
+		var name = NameEntry.Text?.Trim();
+		if (!ValidateName(name))
 		{
-			NameError.IsVisible = true;
 			return;
 		}
 		// TODO aws-1410
@@ -22,6 +20,21 @@ public partial class ShareModal : ContentPage
 		// upload simulation to bucket
         await DisplayAlert("Success", $"{name} was shared.", "Close");
 		await Navigation.PopModalAsync();
+    }
+
+	private bool ValidateName(string? name)
+	{
+        NameError.IsVisible = false;
+        if (
+			string.IsNullOrEmpty(name) 
+			|| name.Length < 4 
+			|| name.Length > 20
+			|| name.Any(c => Path.GetInvalidFileNameChars().Contains(c)))
+        {
+            NameError.IsVisible = true;
+            return false;
+        }
+		return true;
     }
 
 	private async void OnCancel(object sender, EventArgs e)
