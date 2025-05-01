@@ -131,6 +131,11 @@ public partial class MainPage : ContentPage
         }
     }
 
+    private async void OnOpenShareModal(object sender, EventArgs e)
+    {
+        await Navigation.PushModalAsync(new ShareModal());
+    }
+
     private void InvalidateCanvas()
     {
         MainThread.BeginInvokeOnMainThread(() => ParticleCanvas.InvalidateSurface());

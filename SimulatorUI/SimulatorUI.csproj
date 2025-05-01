@@ -73,4 +73,10 @@
 	  <ProjectReference Include="..\SimulatorEngine\SimulatorEngine.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="ShareModal.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

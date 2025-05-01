@@ -7,7 +7,7 @@ public class Simulation
 {
     [DynamoDBHashKey]
     public string Id { get; set; } = Guid.NewGuid().ToString();
-    public string Name { get; set; } = String.Empty;
-    public string FileName { get; set; } = String.Empty;
+    public required string Name { get; set; }
+    public required string FileName { get; set; }
     public int Downloads { get; set; }
 }
