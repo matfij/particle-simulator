@@ -14,6 +14,11 @@ public class FileUploadResponse
     public required string FileKey { get; init; }
 }
 
+public class ApiError
+{
+    public required string Message { get; init; }
+}
+
 [DynamoDBTable("Simulation")]
 public class Simulation
 {

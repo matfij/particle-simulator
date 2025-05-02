@@ -1,11 +1,14 @@
+using System.Text.Json;
+using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.RuntimeSupport;
 using Amazon.Lambda.Serialization.SystemTextJson;
-using Amazon.S3;
-using Amazon.S3.Model;
+using Amazon.Lambda.APIGatewayEvents;
 using UploadLambda;
+using System.Net;
 
 var bucketName = "particle-simulation-bucket";
 var s3Client = new AmazonS3Client();
@@ -13,9 +16,27 @@ var s3Client = new AmazonS3Client();
 var dbClient = new AmazonDynamoDBClient();
 var dbContext = new DynamoDBContext(dbClient);
 
-var handler = async (FileUploadRequest input, ILambdaContext context) =>
+var httpHeaders = new Dictionary<string, string>
 {
-    var fileName = $"{input.Name.ToLower().Replace(" ", "-")}-${Guid.NewGuid()}.json";
+    { "Content-Type", "application/json" }
+};
+
+var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
+{
+    var input = JsonSerializer.Deserialize<FileUploadRequest>(request.Body);
+
+    if (input == null)
+    {
+        var error = new ApiError { Message = "Invalid request body" };
+        return new APIGatewayProxyResponse
+        {
+            StatusCode = (int)HttpStatusCode.BadRequest,
+            Body = JsonSerializer.Serialize(error),
+            Headers = httpHeaders,
+        };
+    }
+
+    var fileName = $"{input.Name.ToLower().Replace(" ", "-")}-{Guid.NewGuid()}.json";
 
     var simulation = new Simulation()
     {
@@ -27,7 +48,7 @@ var handler = async (FileUploadRequest input, ILambdaContext context) =>
 
     await dbContext.SaveAsync(simulation);
 
-    var request = new GetPreSignedUrlRequest
+    var s3Request = new GetPreSignedUrlRequest
     {
         BucketName = bucketName,
         Key = fileName,
@@ -36,12 +57,19 @@ var handler = async (FileUploadRequest input, ILambdaContext context) =>
         ContentType = input.ContentType,
     };
 
-    var url = s3Client.GetPreSignedURL(request);
+    var url = s3Client.GetPreSignedURL(s3Request);
 
-    return new FileUploadResponse
+    var response = new FileUploadResponse
     {
         UploadUrl = url,
         FileKey = fileName,
+    };
+
+    return new APIGatewayProxyResponse
+    {
+        StatusCode = (int)HttpStatusCode.OK,
+        Body = JsonSerializer.Serialize(response),
+        Headers = httpHeaders,
     };
 };
 
