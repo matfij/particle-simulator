@@ -23,8 +23,15 @@ var httpHeaders = new Dictionary<string, string>
 
 var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
 {
-    var input = JsonSerializer.Deserialize<FileUploadRequest>(request.Body);
-
+    FileUploadRequest? input;
+    try
+    {
+        input = JsonSerializer.Deserialize<FileUploadRequest>(request.Body);
+    }
+    catch (Exception e) when (e is JsonException || e is ArgumentNullException)
+    {
+        input = null;
+    }
     if (input == null)
     {
         var error = new ApiError { Message = "Invalid request body" };
