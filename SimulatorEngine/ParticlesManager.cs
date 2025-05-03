@@ -5,7 +5,17 @@ using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
 
-public class ParticlesManager
+public interface IParticlesManager
+{
+    IDictionary<Vector2, Particle> GetParticles { get; }
+    int GetParticlesCount { get; }
+    TimeSpan LoopTime { get; }
+
+    void AddParticles(Vector2 center, int radius, ParticleKind kind);
+    void RemoveParticles(Vector2 center, int radius);
+}
+
+public class ParticlesManager : IParticlesManager
 {
     public TimeSpan LoopTime { private set; get; } = new();
     private static readonly float _dt = 0.2f;

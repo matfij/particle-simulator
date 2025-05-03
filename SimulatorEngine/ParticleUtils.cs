@@ -85,4 +85,19 @@ public static class ParticleUtils
         }
         return null;
     }
+
+    public static string SerializeSimulation(IDictionary<Vector2, Particle> particles)
+    {
+        var simulationData = "";
+
+        foreach (var (position, particle) in particles)
+        {
+            simulationData +=
+                $"{position.X}|{position.Y}|" +
+                $"{particle.GetKind()}|{particle.Temperature}" +
+                $"{Environment.NewLine}";
+        }
+
+        return simulationData;
+    }
 }

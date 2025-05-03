@@ -1,13 +1,20 @@
+using SimulatorEngine.Particles;
+using System.Text.Json;
+using SimulatorEngine;
+
 namespace SimulatorUI;
 
 public partial class ShareModal : ContentPage
 {
-	public ShareModal()
-	{
-		InitializeComponent();
-	}
+	private readonly IParticlesManager _particlesManager;
 
-	private async void OnShare(object sender, EventArgs e)
+    public ShareModal(IParticlesManager particlesManager)
+    {
+        InitializeComponent();
+        this._particlesManager = particlesManager;
+    }
+
+    private async void OnShare(object sender, EventArgs e)
 	{
 		var name = NameEntry.Text?.Trim();
 		if (!ValidateName(name))
@@ -18,6 +25,8 @@ public partial class ShareModal : ContentPage
 		// make request to UploadLambda to get S3 url
 		// serialize simulation
 		// upload simulation to bucket
+		var simulationData = ParticleUtils.SerializeSimulation(_particlesManager.GetParticles);
+
         await DisplayAlert("Success", $"{name} was shared.", "Close");
 		await Navigation.PopModalAsync();
     }
