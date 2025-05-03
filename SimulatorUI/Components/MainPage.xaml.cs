@@ -21,8 +21,8 @@ public partial class MainPage : ContentPage
     private readonly System.Timers.Timer _printTimer = new(200);
     private readonly SKBitmap _particlesBitmap = new(_canvasSize.Width, _canvasSize.Height);
     private (float X, float Y) _canvasScale = (1, 1);
-    private (float X, float Y, float R) Cursor = (0, 0, 10);
-    private ParticleKind CurrentParticleKind = ParticleKind.Water;
+    private (float X, float Y, float R) _cursor = (0, 0, 10);
+    private ParticleKind _currentParticleKind = ParticleKind.Water;
     private readonly Stopwatch _stopwatch = new();
     private TimeSpan _paintTime = new();
 
@@ -48,7 +48,7 @@ public partial class MainPage : ContentPage
             canvas.Scale(_canvasScale.X, _canvasScale.Y);
 
             canvas.DrawBitmap(_particlesBitmap, 0, 0);
-            canvas.DrawCircle(Cursor.X, Cursor.Y, Cursor.R, _cursorPaint);
+            canvas.DrawCircle(_cursor.X, _cursor.Y, _cursor.R, _cursorPaint);
         }
         catch (Exception ex)
         {
@@ -60,7 +60,7 @@ public partial class MainPage : ContentPage
 
     private void PrintPerformanceInfo()
     {
-        ParticleCountLabel.Text = $"Particles: {_particlesManager.GetParticlesCount}";
+        ParticleCountLabel.Text = $"Particles: {_particlesManager.ParticlesCount}";
         ComputeTimeLabel.Text = $"Compute time: {(int)_particlesManager.LoopTime.TotalMilliseconds} [ms]";
         PaintTimeLabel.Text = $"Paint time: {(int)_paintTime.TotalMilliseconds} [ms]";
     }
@@ -71,7 +71,7 @@ public partial class MainPage : ContentPage
         var pixels = (uint*)_particlesBitmap.GetPixels();
         var maxIndex = _canvasSize.Width * _canvasSize.Height;
 
-        foreach (var (position, particle) in _particlesManager.GetParticles)
+        foreach (var (position, particle) in _particlesManager.Particles)
         {
             int index = (int)position.X + (int)position.Y * _canvasSize.Width;
             if (index >= 0 && index < maxIndex)
@@ -85,23 +85,23 @@ public partial class MainPage : ContentPage
     {
         if (args.ActionType == SKTouchAction.Moved)
         {
-            Cursor.X = (int)(args.Location.X / _canvasScale.X);
-            Cursor.Y = (int)(args.Location.Y / _canvasScale.Y);
+            _cursor.X = (int)(args.Location.X / _canvasScale.X);
+            _cursor.Y = (int)(args.Location.Y / _canvasScale.Y);
         }
         if (args.ActionType == SKTouchAction.WheelChanged)
         {
-            var radius = (int)(Cursor.R + args.WheelDelta / 25);
-            Cursor.R = Math.Clamp(radius, 1, 100);
+            var radius = (int)(_cursor.R + args.WheelDelta / 25);
+            _cursor.R = Math.Clamp(radius, 1, 100);
         }
         if (args.ActionType == SKTouchAction.Pressed || args.ActionType == SKTouchAction.Moved)
         {
             if (args.MouseButton == SKMouseButton.Left)
             {
-                _particlesManager.AddParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R, CurrentParticleKind);
+                _particlesManager.AddParticles(new(_cursor.X, _cursor.Y), (int)_cursor.R, _currentParticleKind);
             }
             if (args.MouseButton == SKMouseButton.Right)
             {
-                _particlesManager.RemoveParticles(new(Cursor.X, Cursor.Y), (int)Cursor.R);
+                _particlesManager.RemoveParticles(new(_cursor.X, _cursor.Y), (int)_cursor.R);
             }
         }
     }
@@ -110,7 +110,7 @@ public partial class MainPage : ContentPage
     {
         if (sender is Button selectedButton && selectedButton.CommandParameter is ParticleKind kind)
         {
-            CurrentParticleKind = kind;
+            _currentParticleKind = kind;
 
             if (selectedButton.Parent is HorizontalStackLayout parentLayout)
             {

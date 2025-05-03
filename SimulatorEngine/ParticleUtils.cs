@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text;
 using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
@@ -88,16 +89,15 @@ public static class ParticleUtils
 
     public static string SerializeSimulation(IDictionary<Vector2, Particle> particles)
     {
-        var simulationData = "";
+        var simulationData = new StringBuilder();
 
         foreach (var (position, particle) in particles)
         {
-            simulationData +=
+            simulationData.AppendLine(
                 $"{position.X}|{position.Y}|" +
-                $"{particle.GetKind()}|{particle.Temperature}" +
-                $"{Environment.NewLine}";
+                $"{particle.GetKind()}|{particle.Temperature}");
         }
 
-        return simulationData;
+        return simulationData.ToString();
     }
 }

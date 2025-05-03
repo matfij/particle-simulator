@@ -25,7 +25,7 @@ public partial class ShareModal : ContentPage
 		// make request to UploadLambda to get S3 url
 		// serialize simulation
 		// upload simulation to bucket
-		var simulationData = ParticleUtils.SerializeSimulation(_particlesManager.GetParticles);
+		var simulationData = ParticleUtils.SerializeSimulation(_particlesManager.Particles);
 
         await DisplayAlert("Success", $"{name} was shared.", "Close");
 		await Navigation.PopModalAsync();

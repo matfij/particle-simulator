@@ -7,8 +7,8 @@ namespace SimulatorEngine;
 
 public interface IParticlesManager
 {
-    IDictionary<Vector2, Particle> GetParticles { get; }
-    int GetParticlesCount { get; }
+    IDictionary<Vector2, Particle> Particles { get; }
+    int ParticlesCount { get; }
     TimeSpan LoopTime { get; }
 
     void AddParticles(Vector2 center, int radius, ParticleKind kind);
@@ -38,9 +38,9 @@ public class ParticlesManager : IParticlesManager
         _simulationTimer.Start();
     }
 
-    public IDictionary<Vector2, Particle> GetParticles => _particles;
+    public IDictionary<Vector2, Particle> Particles => _particles;
 
-    public int GetParticlesCount => _particles.Count;
+    public int ParticlesCount => _particles.Count;
 
     public void AddParticles(Vector2 center, int radius, ParticleKind kind)
     {
