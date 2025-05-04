@@ -87,7 +87,7 @@ public static class ParticleUtils
         return null;
     }
 
-    public static string SerializeSimulation(IDictionary<Vector2, Particle> particles)
+    public static string SerializeSimulation(IReadOnlyDictionary<Vector2, Particle> particles)
     {
         var simulationData = new StringBuilder();
 

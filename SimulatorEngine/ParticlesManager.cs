@@ -7,7 +7,7 @@ namespace SimulatorEngine;
 
 public interface IParticlesManager
 {
-    IDictionary<Vector2, Particle> Particles { get; }
+    IReadOnlyDictionary<Vector2, Particle> Particles { get; }
     int ParticlesCount { get; }
     TimeSpan LoopTime { get; }
 
