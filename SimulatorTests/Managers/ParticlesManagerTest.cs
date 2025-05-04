@@ -39,19 +39,19 @@ public class ParticlesManagerTest
         manager.AddParticles(new(100, 100), 2, ParticleKind.Sand);
 
         Assert.Equal(13, manager.ParticlesCount);
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(100, 100)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(100, 99)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(99, 99)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(101, 99)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(101, 101)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(101, 99)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(100, 98)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(100, 101)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(100, 102)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(101, 100)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(102, 100)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(99, 100)));
-        Assert.Single(manager.Particles.Where(p => p.Key == new Vector2(98, 100)));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(100, 100));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(100, 99));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(99, 99));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(101, 99));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(101, 101));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(101, 99));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(100, 98));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(100, 101));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(100, 102));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(101, 100));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(102, 100));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(99, 100));
+        Assert.Single(manager.Particles, p => p.Key == new Vector2(98, 100));
     }
 
     [Fact]

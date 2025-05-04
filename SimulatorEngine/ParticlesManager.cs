@@ -38,7 +38,7 @@ public class ParticlesManager : IParticlesManager
         _simulationTimer.Start();
     }
 
-    public IDictionary<Vector2, Particle> Particles => _particles;
+    public IReadOnlyDictionary<Vector2, Particle> Particles => _particles;
 
     public int ParticlesCount => _particles.Count;
 
