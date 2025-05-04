@@ -1,22 +1,23 @@
-using SimulatorEngine.Particles;
-using System.Text.Json;
 using SimulatorEngine;
+using SimulatorUI.Api;
 
 namespace SimulatorUI;
 
 public partial class ShareModal : ContentPage
 {
+	private readonly IApiManager _apiManager;
 	private readonly IParticlesManager _particlesManager;
 
-    public ShareModal(IParticlesManager particlesManager)
+    public ShareModal(IApiManager apiManager, IParticlesManager particlesManager)
     {
         InitializeComponent();
-        this._particlesManager = particlesManager;
+		_apiManager = apiManager;
+        _particlesManager = particlesManager;
     }
 
     private async void OnShare(object sender, EventArgs e)
 	{
-		var name = NameEntry.Text?.Trim();
+		var name = NameEntry.Text?.Trim() ?? string.Empty;
 		if (!ValidateName(name))
 		{
 			return;
@@ -26,6 +27,8 @@ public partial class ShareModal : ContentPage
 		// serialize simulation
 		// upload simulation to bucket
 		var simulationData = ParticleUtils.SerializeSimulation(_particlesManager.Particles);
+
+		await _apiManager.UploadSimulation(name);
 
         await DisplayAlert("Success", $"{name} was shared.", "Close");
 		await Navigation.PopModalAsync();

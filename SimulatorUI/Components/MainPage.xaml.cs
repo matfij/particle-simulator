@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using SimulatorEngine;
 using SimulatorEngine.Particles;
+using SimulatorUI.Api;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -16,7 +17,8 @@ public partial class MainPage : ContentPage
         Color = SKColors.GhostWhite,
         Style = SKPaintStyle.Stroke,
     };
-    private readonly ParticlesManager _particlesManager;
+    private readonly IApiManager _apiManager;
+    private readonly IParticlesManager _particlesManager;
     private readonly System.Timers.Timer _paintTimer = new(20);
     private readonly System.Timers.Timer _printTimer = new(200);
     private readonly SKBitmap _particlesBitmap = new(_canvasSize.Width, _canvasSize.Height);
@@ -26,9 +28,10 @@ public partial class MainPage : ContentPage
     private readonly Stopwatch _stopwatch = new();
     private TimeSpan _paintTime = new();
 
-    public MainPage()
+    public MainPage(ApiManager apiManager)
     {
         InitializeComponent();
+        _apiManager = apiManager;
         _particlesManager = new ParticlesManager();
         _paintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         _paintTimer.Start();
@@ -133,7 +136,7 @@ public partial class MainPage : ContentPage
 
     private async void OnOpenShareModal(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(new ShareModal(_particlesManager));
+        await Navigation.PushModalAsync(new ShareModal(_apiManager, _particlesManager));
     }
 
     private void InvalidateCanvas()

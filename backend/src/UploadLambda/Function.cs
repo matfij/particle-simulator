@@ -23,18 +23,67 @@ var httpHeaders = new Dictionary<string, string>
 
 var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
 {
-    FileUploadRequest? input;
     try
     {
-        input = JsonSerializer.Deserialize<FileUploadRequest>(request.Body);
+        FileUploadRequest? input;
+        try
+        {
+            input = JsonSerializer.Deserialize<FileUploadRequest>(request.Body);
+        }
+        catch (Exception e) when (e is JsonException || e is ArgumentNullException)
+        {
+            input = null;
+        }
+        if (input == null)
+        {
+            var error = new ApiError { Message = "Invalid request body" };
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest,
+                Body = JsonSerializer.Serialize(error),
+                Headers = httpHeaders,
+            };
+        }
+
+        var fileName = $"{input.Name.ToLower().Replace(" ", "-")}-{Guid.NewGuid()}.json";
+
+        var simulation = new Simulation()
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = input.Name,
+            FileName = fileName,
+            Downloads = 0,
+        };
+
+        await dbContext.SaveAsync(simulation);
+
+        var s3Request = new GetPreSignedUrlRequest
+        {
+            BucketName = bucketName,
+            Key = fileName,
+            Verb = HttpVerb.PUT,
+            Expires = DateTime.UtcNow.AddMinutes(15),
+            ContentType = input.ContentType,
+        };
+
+        var url = s3Client.GetPreSignedURL(s3Request);
+
+        var response = new FileUploadResponse
+        {
+            UploadUrl = url,
+            FileKey = fileName,
+        };
+
+        return new APIGatewayProxyResponse
+        {
+            StatusCode = (int)HttpStatusCode.OK,
+            Body = JsonSerializer.Serialize(response),
+            Headers = httpHeaders,
+        };
     }
-    catch (Exception e) when (e is JsonException || e is ArgumentNullException)
+    catch
     {
-        input = null;
-    }
-    if (input == null)
-    {
-        var error = new ApiError { Message = "Invalid request body" };
+        var error = new ApiError { Message = $"Unexpected error occurred" };
         return new APIGatewayProxyResponse
         {
             StatusCode = (int)HttpStatusCode.BadRequest,
@@ -42,42 +91,7 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
             Headers = httpHeaders,
         };
     }
-
-    var fileName = $"{input.Name.ToLower().Replace(" ", "-")}-{Guid.NewGuid()}.json";
-
-    var simulation = new Simulation()
-    {
-        Id = Guid.NewGuid().ToString(),
-        Name = input.Name,
-        FileName = fileName,
-        Downloads = 0,
-    };
-
-    await dbContext.SaveAsync(simulation);
-
-    var s3Request = new GetPreSignedUrlRequest
-    {
-        BucketName = bucketName,
-        Key = fileName,
-        Verb = HttpVerb.PUT,
-        Expires = DateTime.UtcNow.AddMinutes(15),
-        ContentType = input.ContentType,
-    };
-
-    var url = s3Client.GetPreSignedURL(s3Request);
-
-    var response = new FileUploadResponse
-    {
-        UploadUrl = url,
-        FileKey = fileName,
-    };
-
-    return new APIGatewayProxyResponse
-    {
-        StatusCode = (int)HttpStatusCode.OK,
-        Body = JsonSerializer.Serialize(response),
-        Headers = httpHeaders,
-    };
+    
 };
 
 await LambdaBootstrapBuilder.Create(handler, new DefaultLambdaJsonSerializer())

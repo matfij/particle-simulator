@@ -384,3 +384,6 @@ snapshots-diff/
 temp
 .packages
 /src/Templates/.tempTemplateOutput
+
+#build secrets
+appsettings.json
