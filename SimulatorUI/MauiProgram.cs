@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SimulatorEngine;
 using SimulatorUI.Api;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
@@ -11,8 +11,9 @@ namespace SimulatorUI
         public static MauiApp CreateMauiApp()
         {
             var config = new ConfigurationBuilder()
-                .SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.base.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
 
             var builder = MauiApp.CreateBuilder();
@@ -25,8 +26,11 @@ namespace SimulatorUI
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Services.AddSingleton<IConfiguration>(config);
             builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddSingleton<ApiManager>();
+            builder.Services.AddTransient<ShareModal>();
+            builder.Services.AddSingleton<IApiManager, ApiManager>();
+            builder.Services.AddSingleton<IParticlesManager, ParticlesManager>();
 
 #if DEBUG
             builder.Logging.AddDebug();
