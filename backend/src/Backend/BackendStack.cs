@@ -70,7 +70,7 @@ namespace Backend
 
             plan.AddApiStage(new UsagePlanPerApiStage
             {
-                Stage = api.DeploymentStage
+                Stage = api.DeploymentStage,
             });
 
             var uploadLambdaIntegration = new LambdaIntegration(uploadLambda);

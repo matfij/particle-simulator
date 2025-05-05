@@ -16,7 +16,7 @@ public partial class MainPage : ContentPage
         Color = SKColors.GhostWhite,
         Style = SKPaintStyle.Stroke,
     };
-    private readonly ParticlesManager _particlesManager;
+    private readonly IParticlesManager _particlesManager;
     private readonly System.Timers.Timer _paintTimer = new(20);
     private readonly System.Timers.Timer _printTimer = new(200);
     private readonly SKBitmap _particlesBitmap = new(_canvasSize.Width, _canvasSize.Height);
@@ -25,11 +25,13 @@ public partial class MainPage : ContentPage
     private ParticleKind _currentParticleKind = ParticleKind.Water;
     private readonly Stopwatch _stopwatch = new();
     private TimeSpan _paintTime = new();
+    private readonly ShareModal _shareModal;
 
-    public MainPage()
+    public MainPage(IParticlesManager particlesManager, ShareModal shareModal)
     {
         InitializeComponent();
-        _particlesManager = new ParticlesManager();
+        _particlesManager = particlesManager;
+        _shareModal = shareModal;
         _paintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         _paintTimer.Start();
         _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
@@ -133,7 +135,7 @@ public partial class MainPage : ContentPage
 
     private async void OnOpenShareModal(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(new ShareModal(_particlesManager));
+        await Navigation.PushModalAsync(_shareModal);
     }
 
     private void InvalidateCanvas()
