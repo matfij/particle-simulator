@@ -24,8 +24,10 @@ public partial class ShareModal : ContentPage
         }
         try
         {
+            ToggleLoading(true);
             var simulationData = ParticleUtils.SerializeSimulation(_particlesManager.Particles);
             await _apiManager.UploadSimulation(name, simulationData);
+            ToggleLoading(false);
             await DisplayAlert("Success", $"{name} was shared.", "Close");
             await Navigation.PopModalAsync();
         }
@@ -36,6 +38,10 @@ public partial class ShareModal : ContentPage
         catch
         {
             await DisplayAlert("Error", "Unknown error, please try again later", "Close");
+        }
+        finally
+        {
+            ToggleLoading(false);
         }
     }
 
@@ -52,6 +58,14 @@ public partial class ShareModal : ContentPage
             return false;
         }
         return true;
+    }
+
+    private void ToggleLoading(bool loading)
+    {
+        ShareButton.IsVisible = !loading;
+        CancelButton.IsVisible = !loading;
+        LoadingIndicator.IsVisible = loading;
+        EntryFrame.IsEnabled = !loading;
     }
 
     private async void OnCancel(object sender, EventArgs e)
