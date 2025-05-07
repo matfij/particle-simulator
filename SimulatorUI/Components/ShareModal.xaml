@@ -32,6 +32,7 @@
 
         <HorizontalStackLayout x:Name="ActionsLayout" Spacing="10">
             <Button 
+                x:Name="ShareButton" 
                 Text="Share" 
                 WidthRequest="195" 
                 TextColor="#efe"
@@ -41,6 +42,7 @@
                 AutomationId="ShareButton"
                 SemanticProperties.Description="Share Simulation" />
             <Button 
+                x:Name="CancelButton" 
                 Text="Cancel" 
                 WidthRequest="195"
                 TextColor="#ccc"
@@ -53,7 +55,7 @@
 
         <ActivityIndicator 
             x:Name="LoadingIndicator" 
-            IsRunning="False" 
+            IsRunning="True" 
             IsVisible="False"
             Color="#efe"
             HorizontalOptions="Center" />

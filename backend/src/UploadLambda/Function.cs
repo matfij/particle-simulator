@@ -36,7 +36,7 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
         }
         if (input == null)
         {
-            var error = new ApiError { Message = $"Invalid request body {JsonSerializer.Serialize(request)}" };
+            var error = new ApiError { Message = $"Invalid request body" };
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.BadRequest,
