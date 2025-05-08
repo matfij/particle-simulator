@@ -17,7 +17,17 @@ namespace Backend
                 Runtime = Runtime.DOTNET_8,
                 Handler = "UploadLambda",
                 Code = Code.FromAsset("./src/UploadLambda/bin/Release/net8.0/UploadLambda.zip"),
-                Timeout = Duration.Seconds(30)
+                Timeout = Duration.Seconds(30),
+            });
+            #endregion
+
+            #region Preview Lambda
+            var previewLambda = new Function(this, "preview-lambda", new FunctionProps
+            {
+                Runtime = Runtime.DOTNET_8,
+                Handler = "PreviewLambda",
+                Code = Code.FromAsset("./src/PreviewLambda/bin/Release/net8.0/PreviewLambda.zip"),
+                Timeout = Duration.Seconds(30),
             });
             #endregion
 
@@ -34,7 +44,8 @@ namespace Backend
                 BillingMode = BillingMode.PAY_PER_REQUEST,
             });
 
-            simulationTable.GrantReadWriteData(uploadLambda);
+            simulationTable.GrantWriteData(uploadLambda);
+            simulationTable.GrantReadData(previewLambda);
             #endregion
 
             #region Simulation S3 Bucket
@@ -58,27 +69,11 @@ namespace Backend
                 ApiKeySourceType = ApiKeySourceType.HEADER,
             });
 
-            var plan = api.AddUsagePlan("api-usage-plan", new UsagePlanProps
-            {
-                Name = "UsagePlan",
-                Throttle = new ThrottleSettings
-                {
-                    RateLimit = 5,
-                    BurstLimit = 10,
-                }
-            });
-
-            plan.AddApiStage(new UsagePlanPerApiStage
-            {
-                Stage = api.DeploymentStage,
-            });
-
             var uploadLambdaIntegration = new LambdaIntegration(uploadLambda);
+            api.Root.AddResource("upload").AddMethod("POST", uploadLambdaIntegration);
 
-            api.Root.AddResource("upload").AddMethod("POST", uploadLambdaIntegration, new MethodOptions
-            {
-                ApiKeyRequired = true,
-            });
+            var previewLambdaIntegration = new LambdaIntegration(previewLambda);
+            api.Root.AddResource("preview").AddMethod("GET", previewLambdaIntegration);
             #endregion
         }
     }

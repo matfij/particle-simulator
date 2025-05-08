@@ -7,8 +7,8 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.RuntimeSupport;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Amazon.Lambda.APIGatewayEvents;
-using UploadLambda;
 using System.Net;
+using SharedLibrary;
 
 var bucketName = "particle-simulation-bucket";
 var s3Client = new AmazonS3Client();
@@ -25,16 +25,12 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
 {
     try
     {
-        FileUploadRequest? input;
+        FileUploadRequest input;
         try
         {
             input = JsonSerializer.Deserialize<FileUploadRequest>(request.Body);
         }
         catch (Exception e) when (e is JsonException || e is ArgumentNullException)
-        {
-            input = null;
-        }
-        if (input == null)
         {
             var error = new ApiError { Message = $"Invalid request body" };
             return new APIGatewayProxyResponse
