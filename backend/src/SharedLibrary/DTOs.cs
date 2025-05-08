@@ -2,8 +2,8 @@
 
 public readonly struct SimulationPreview
 {
-    public List<Simulation> Simulations { get; init; }
-    public string PaginationToken { get; init; }
+    public IReadOnlyList<Simulation> Simulations { get; init; }
+    public string? PaginationToken { get; init; }
 }
 
 public readonly struct FileUploadRequest

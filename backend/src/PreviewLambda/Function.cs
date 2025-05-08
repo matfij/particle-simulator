@@ -21,13 +21,16 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
 {
     try
     {
-        var scanConfig = new ScanOperationConfig();
-        
-        if (request.Headers.TryGetValue("pagination-token", out string? paginationToken))
+        var scanConfig = new ScanOperationConfig
+        {
+            Limit = 10
+        };
+
+        if (request.Headers is not null && request.Headers.TryGetValue("pagination-token", out string? paginationToken))
         {
             scanConfig.PaginationToken = paginationToken;
         }
-        
+
         var search = dbContext.FromScanAsync<Simulation>(scanConfig);
         var simulations = await search.GetRemainingAsync();
 
@@ -46,7 +49,8 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
     }
     catch (Exception ex)
     {
-        var error = new ApiError { Message = $"Unexpected error occurred {ex.Message}" };
+        context.Logger.LogError($"Error processing request: {ex}");
+        var error = new ApiError { Message = $"Unexpected error occurred" };
         return new APIGatewayProxyResponse
         {
             StatusCode = (int)HttpStatusCode.BadRequest,
