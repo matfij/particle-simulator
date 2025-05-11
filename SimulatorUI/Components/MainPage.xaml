@@ -12,8 +12,8 @@
         Spacing="10"
         MaximumWidthRequest="1250"
         MinimumWidthRequest="1250"
-        MaximumHeightRequest="700"
-        MinimumHeightRequest="700">
+        MaximumHeightRequest="660"
+        MinimumHeightRequest="660">
 
         <AbsoluteLayout>
             <skia:SKCanvasView
