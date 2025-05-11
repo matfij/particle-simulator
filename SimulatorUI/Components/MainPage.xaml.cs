@@ -27,11 +27,11 @@ public partial class MainPage : ContentPage
     private TimeSpan _paintTime = new();
     private readonly UploadPage _uploadPage;
 
-    public MainPage(IParticlesManager particlesManager, UploadPage shareModal)
+    public MainPage(IParticlesManager particlesManager, UploadPage uploadPage)
     {
         InitializeComponent();
         _particlesManager = particlesManager;
-        _uploadPage = shareModal;
+        _uploadPage = uploadPage;
         _paintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         _paintTimer.Start();
         _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
