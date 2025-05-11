@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SimulatorUI.ShareModal"
-             Title="ShareModal"
-             BackgroundColor="#123">
+             x:Class="SimulatorUI.UploadPage"
+             Title="UploadPage"
+             BackgroundColor="{StaticResource Secondary}">
+
     <VerticalStackLayout Margin="100" Spacing="10"  WidthRequest="400">
         <Label 
             Text="Share Simulation" 
-            TextColor="#efe" 
+            TextColor="{StaticResource Light}" 
             FontSize="Medium" />
         <Frame 
             x:Name="EntryFrame"
             Padding="0"
             CornerRadius="6"
-            BorderColor="#efe"
+            BorderColor="{StaticResource Light}"
             HasShadow="False"
             BackgroundColor="Transparent" 
             HeightRequest="45">
             <Entry 
                 x:Name="NameEntry" 
-                TextColor="#efe" 
+                TextColor="{StaticResource Light}" 
                 Placeholder="Name"
                 MaxLength="20" />
         </Frame>
@@ -27,7 +28,7 @@
             x:Name="NameError" 
             Text="Name must be between 4 and 20 characters" 
             IsVisible="False"
-            TextColor="Red" />
+            TextColor="{StaticResource Error}" />
         <Line />
 
         <HorizontalStackLayout x:Name="ActionsLayout" Spacing="10">
@@ -35,8 +36,8 @@
                 x:Name="ShareButton" 
                 Text="Share" 
                 WidthRequest="195" 
-                TextColor="#efe"
-                BorderColor="#efe"
+                TextColor="{StaticResource Primary}"
+                BorderColor="{StaticResource Primary}"
                 Background="Transparent" 
                 Clicked="OnShare"
                 AutomationId="ShareButton"
@@ -45,8 +46,8 @@
                 x:Name="CancelButton" 
                 Text="Cancel" 
                 WidthRequest="195"
-                TextColor="#ccc"
-                BorderColor="#ccc"
+                TextColor="{StaticResource Light}"
+                BorderColor="{StaticResource Light}"
                 Background="Transparent" 
                 Clicked="OnCancel"
                 AutomationId="CancelButton" 
@@ -57,8 +58,7 @@
             x:Name="LoadingIndicator" 
             IsRunning="True" 
             IsVisible="False"
-            Color="#efe"
+            Color="{StaticResource Primary}"
             HorizontalOptions="Center" />
-
     </VerticalStackLayout>
 </ContentPage>

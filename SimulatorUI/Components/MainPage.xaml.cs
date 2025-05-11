@@ -25,13 +25,13 @@ public partial class MainPage : ContentPage
     private ParticleKind _currentParticleKind = ParticleKind.Water;
     private readonly Stopwatch _stopwatch = new();
     private TimeSpan _paintTime = new();
-    private readonly ShareModal _shareModal;
+    private readonly UploadPage _uploadPage;
 
-    public MainPage(IParticlesManager particlesManager, ShareModal shareModal)
+    public MainPage(IParticlesManager particlesManager, UploadPage shareModal)
     {
         InitializeComponent();
         _particlesManager = particlesManager;
-        _shareModal = shareModal;
+        _uploadPage = shareModal;
         _paintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         _paintTimer.Start();
         _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
@@ -133,9 +133,19 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async void OnOpenShareModal(object sender, EventArgs e)
+    private void OnTogglePlayPage(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(_shareModal);
+        throw new NotImplementedException("TODO - simulation play pause");
+    }
+
+    private async void OnOpenUploadPage(object sender, EventArgs e)
+    {
+        await Navigation.PushModalAsync(_uploadPage);
+    }
+
+    private void OnOpenDownloadPage(object sender, EventArgs e)
+    {
+        throw new NotImplementedException("TODO - download page");
     }
 
     private void InvalidateCanvas()

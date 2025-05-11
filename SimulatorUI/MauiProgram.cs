@@ -28,7 +28,7 @@ namespace SimulatorUI
 
             builder.Services.AddSingleton<IConfiguration>(config);
             builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddTransient<ShareModal>();
+            builder.Services.AddTransient<UploadPage>();
             builder.Services.AddSingleton<IApiManager, ApiManager>();
             builder.Services.AddSingleton<IParticlesManager, ParticlesManager>();
 
