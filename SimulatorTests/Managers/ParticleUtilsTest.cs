@@ -18,6 +18,54 @@ public class ParticleUtilsTest
         { new Vector2(55, 5), new SaltParticle() }
     };
 
+
+    [Fact]
+    public void Should_GetStrictNeighbors()
+    {
+        var strictNeighbors = ParticleUtils.GetStrictNeighbors(new Vector2(100, 100), _particles);
+
+        Assert.Equal(
+            [
+                _particles[new Vector2(100, 101)],
+                _particles[new Vector2(99, 100)],
+                _particles[new Vector2(101, 100)],
+                _particles[new Vector2(100, 99)],
+            ],
+            strictNeighbors);
+    }
+
+    [Fact]
+    public void Should_GetNeighbors()
+    {
+        var neighbors = ParticleUtils.GetNeighbors(new Vector2(100, 100), _particles);
+
+        Assert.Equal(
+            [
+                _particles[new Vector2(100, 101)],
+                _particles[new Vector2(99, 100)],
+                _particles[new Vector2(101, 100)],
+                _particles[new Vector2(100, 99)],
+                _particles[new Vector2(99, 99)],
+            ],
+            neighbors);
+    }
+
+    [Fact]
+    public void Should_GetNeighborOfKindIfPresent()
+    {
+        var neighbor = ParticleUtils.GetNeighborOfKind(new Vector2(100, 100), _particles, ParticleKind.Lava);
+
+        Assert.Equal(_particles[new Vector2(99, 99)], neighbor?.Item2);
+    }
+
+    [Fact]
+    public void Should_NotGetNeighborOfKindIfNotPresent()
+    {
+        var neighbor = ParticleUtils.GetNeighborOfKind(new Vector2(100, 100), _particles, ParticleKind.Acid);
+
+        Assert.Null(neighbor);
+    }
+
     [Fact]
     public void Should_SerializeSimulation()
     {
@@ -39,7 +87,7 @@ public class ParticleUtilsTest
     [Fact]
     public void Should_SerializeEmptySimulation()
     {
-        var data = ParticleUtils.SerializeSimulation(new Dictionary<Vector2, Particle> ());
+        var data = ParticleUtils.SerializeSimulation(new Dictionary<Vector2, Particle>());
 
         Assert.Equal("", data);
     }

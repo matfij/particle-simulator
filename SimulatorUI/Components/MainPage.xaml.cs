@@ -17,6 +17,7 @@ public partial class MainPage : ContentPage
         Style = SKPaintStyle.Stroke,
     };
     private readonly IParticlesManager _particlesManager;
+    private bool _isPlaying = false;
     private readonly System.Timers.Timer _paintTimer = new(20);
     private readonly System.Timers.Timer _printTimer = new(200);
     private readonly SKBitmap _particlesBitmap = new(_canvasSize.Width, _canvasSize.Height);
@@ -63,7 +64,9 @@ public partial class MainPage : ContentPage
     private void PrintPerformanceInfo()
     {
         ParticleCountLabel.Text = $"Particles: {_particlesManager.ParticlesCount}";
-        ComputeTimeLabel.Text = $"Compute time: {(int)_particlesManager.LoopTime.TotalMilliseconds} [ms]";
+        MoveTimeLabel.Text = $"Move time: {(int)_particlesManager.MoveTime.TotalMilliseconds} [ms]";
+        InteractionTimeLabel.Text = $"Interaction time: {(int)_particlesManager.InteractionTime.TotalMilliseconds} [ms]";
+        HeatTransferTimeTimeLabel.Text = $"Heat transfer time: {(int)_particlesManager.HeatTransferTime.TotalMilliseconds} [ms]";
         PaintTimeLabel.Text = $"Paint time: {(int)_paintTime.TotalMilliseconds} [ms]";
     }
 
@@ -135,7 +138,16 @@ public partial class MainPage : ContentPage
 
     private void OnTogglePlayPage(object sender, EventArgs e)
     {
-        throw new NotImplementedException("TODO - simulation play pause");
+        _isPlaying = !_isPlaying;
+        _particlesManager.TogglePlayPause(_isPlaying);
+        if (_isPlaying)
+        {
+            PlayPauseButton.Source = "pause.png";
+        }
+        else
+        {
+            PlayPauseButton.Source = "play.png";
+        }
     }
 
     private async void OnOpenUploadPage(object sender, EventArgs e)
