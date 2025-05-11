@@ -5,15 +5,15 @@
     xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
     xmlns:local="clr-namespace:SimulatorEngine.Particles;assembly=SimulatorEngine"
     x:Class="SimulatorUI.MainPage"
-    BackgroundColor="Beige">
+    BackgroundColor="{StaticResource Light}">
 
     <VerticalStackLayout
         Padding="10"
         Spacing="10"
         MaximumWidthRequest="1250"
         MinimumWidthRequest="1250"
-        MaximumHeightRequest="700"
-        MinimumHeightRequest="700">
+        MaximumHeightRequest="660"
+        MinimumHeightRequest="660">
 
         <AbsoluteLayout>
             <skia:SKCanvasView
@@ -28,92 +28,119 @@
             <Label
                 x:Name="ParticleCountLabel"
                 Text="Particles: 0"
-                TextColor="#fff"
+                TextColor="{StaticResource Light}"
                 AbsoluteLayout.LayoutBounds="5, 5, AutoSize, AutoSize"/>
             <Label
                 x:Name="ComputeTimeLabel"
                 Text="Compute time: 0 [ms]"
-                TextColor="#fff"
+                TextColor="{StaticResource Light}"
                 AbsoluteLayout.LayoutBounds="5, 25, AutoSize, AutoSize"/>
             <Label
                 x:Name="PaintTimeLabel"
                 Text="Paint time: 0 [ms]"
-                TextColor="#fff"
+                TextColor="{StaticResource Light}"
                 AbsoluteLayout.LayoutBounds="5, 45, AutoSize, AutoSize"/>
         </AbsoluteLayout>
 
-        <HorizontalStackLayout Spacing="5">
-            <Button 
-                Text="Sand"
-                Clicked="SetParticleKind"
-                CommandParameter="{x:Static local:ParticleKind.Sand}"
-                WidthRequest="100"
-                BackgroundColor="#F6D7B0"/>
-            <Button 
-                Text="Salt"
-                Clicked="SetParticleKind"
-                CommandParameter="{x:Static local:ParticleKind.Salt}"
-                WidthRequest="100"
-                BackgroundColor="#FCF9F3"/>
-            <Button 
-                Text="Water"
-                Clicked="SetParticleKind"
-                CommandParameter="{x:Static local:ParticleKind.Water}"
-                WidthRequest="100"
-                BackgroundColor="#1CA3EC"/>
-            <Button 
-                Text="Salt Water" 
-                Clicked="SetParticleKind"
-                CommandParameter="{x:Static local:ParticleKind.SaltyWater}"
-                WidthRequest="100"
-                BackgroundColor="#90AEBD"/>
-            <Button 
-                Text="Iron"
-                Clicked="SetParticleKind"
-                CommandParameter="{x:Static local:ParticleKind.Iron}"
-                WidthRequest="100"
-                BackgroundColor="#A19D94"/>
-            <Button 
-                Text="Oxygen"
-                Clicked="SetParticleKind"
-                WidthRequest="100"
-                CommandParameter="{x:Static local:ParticleKind.Oxygen}" 
-                BackgroundColor="#99E2FA"/>
-            <Button 
-                Text="Acid"
-                Clicked="SetParticleKind"
-                WidthRequest="100"
-                CommandParameter="{x:Static local:ParticleKind.Acid}" 
-                BackgroundColor="#89FF00"/>
-            <Button 
-                Text="Lava"
-                Clicked="SetParticleKind"
-                WidthRequest="100"
-                CommandParameter="{x:Static local:ParticleKind.Lava}" 
-                BackgroundColor="#CF1020"/>
-            <Button 
-                Text="Stone"
-                Clicked="SetParticleKind"
-                WidthRequest="100"
-                CommandParameter="{x:Static local:ParticleKind.Stone}" 
-                BackgroundColor="#787A79"/>
-            <Button 
-                Text="Steam"
-                Clicked="SetParticleKind"
-                WidthRequest="100"
-                CommandParameter="{x:Static local:ParticleKind.Steam}" 
-                BackgroundColor="#C7D5E0"/>
+        <Grid
+            HeightRequest="44"
+            WidthRequest="1200"
+            MaximumWidthRequest="1200"
+            MinimumWidthRequest="1200"
+            HorizontalOptions="Start"
+            Margin="0"
+            Padding="0"
+            ColumnDefinitions="*, Auto">
 
-            <Button 
-                Text="Share"
-                Clicked="OnOpenShareModal"
-                WidthRequest="100"
-                BackgroundColor="#D3D3D3"/>
+            <HorizontalStackLayout 
+                Grid.Column="0"
+                Margin="0"
+                Spacing="5" 
+                HeightRequest="22"
+                HorizontalOptions="Start"
+                VerticalOptions="Center">
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Sand"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Sand}"
+                    BackgroundColor="#F6D7B0"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Salt"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Salt}"
+                    BackgroundColor="#FCF9F3"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Water"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Water}"
+                    BackgroundColor="#1CA3EC"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Salt Water" 
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.SaltyWater}"
+                    BackgroundColor="#90AEBD"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Iron"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Iron}"
+                    BackgroundColor="#A19D94"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Oxygen"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Oxygen}" 
+                    BackgroundColor="#99E2FA"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Acid"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Acid}" 
+                    BackgroundColor="#89FF00"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Lava"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Lava}" 
+                    BackgroundColor="#CF1020"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Stone"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Stone}" 
+                    BackgroundColor="#787A79"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Steam"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Steam}" 
+                    BackgroundColor="#C7D5E0"/>
+            </HorizontalStackLayout>
 
-        </HorizontalStackLayout>
-
-    
-
+            <HorizontalStackLayout 
+                Grid.Column="1"
+                Spacing="5" 
+                HeightRequest="44" 
+                HorizontalOptions="End"
+                VerticalOptions="Center"
+                Margin="0">
+                <ImageButton 
+                    Style="{StaticResource IconButton}" 
+                    Source="play.png"
+                    Clicked="OnTogglePlayPage"/>
+                <ImageButton 
+                    Style="{StaticResource IconButton}" 
+                    Source="upload.png"
+                    Clicked="OnOpenUploadPage"/>
+                <ImageButton 
+                    Style="{StaticResource IconButton}" 
+                    Source="download.png"
+                    Clicked="OnOpenDownloadPage"/>
+            </HorizontalStackLayout>
+        </Grid>
     </VerticalStackLayout>
-
 </ContentPage>

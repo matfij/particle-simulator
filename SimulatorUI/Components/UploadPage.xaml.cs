@@ -3,12 +3,12 @@ using SimulatorUI.Api;
 
 namespace SimulatorUI;
 
-public partial class ShareModal : ContentPage
+public partial class UploadPage : ContentPage
 {
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
 
-    public ShareModal(IApiManager apiManager, IParticlesManager particlesManager)
+    public UploadPage(IApiManager apiManager, IParticlesManager particlesManager)
     {
         InitializeComponent();
         _apiManager = apiManager;
