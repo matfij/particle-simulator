@@ -31,15 +31,25 @@
                 TextColor="{StaticResource Light}"
                 AbsoluteLayout.LayoutBounds="5, 5, AutoSize, AutoSize"/>
             <Label
-                x:Name="ComputeTimeLabel"
-                Text="Compute time: 0 [ms]"
+                x:Name="MoveTimeLabel"
+                Text="Move time: 0 [ms]"
                 TextColor="{StaticResource Light}"
                 AbsoluteLayout.LayoutBounds="5, 25, AutoSize, AutoSize"/>
+            <Label
+                x:Name="InteractionTimeLabel"
+                Text="Interaction time: 0 [ms]"
+                TextColor="{StaticResource Light}"
+                AbsoluteLayout.LayoutBounds="5, 45, AutoSize, AutoSize"/>
+            <Label
+                x:Name="HeatTransferTimeLabel"
+                Text="Heat transfer time: 0 [ms]"
+                TextColor="{StaticResource Light}"
+                AbsoluteLayout.LayoutBounds="5, 65, AutoSize, AutoSize"/>
             <Label
                 x:Name="PaintTimeLabel"
                 Text="Paint time: 0 [ms]"
                 TextColor="{StaticResource Light}"
-                AbsoluteLayout.LayoutBounds="5, 45, AutoSize, AutoSize"/>
+                AbsoluteLayout.LayoutBounds="5, 85, AutoSize, AutoSize"/>
         </AbsoluteLayout>
 
         <Grid
@@ -129,6 +139,7 @@
                 VerticalOptions="Center"
                 Margin="0">
                 <ImageButton 
+                    x:Name="PlayPauseButton"
                     Style="{StaticResource IconButton}" 
                     Source="play.png"
                     Clicked="OnTogglePlayPage"/>

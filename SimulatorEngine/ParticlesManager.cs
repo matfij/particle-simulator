@@ -9,15 +9,20 @@ public interface IParticlesManager
 {
     IReadOnlyDictionary<Vector2, Particle> Particles { get; }
     int ParticlesCount { get; }
-    TimeSpan LoopTime { get; }
+    TimeSpan MoveTime { get; }
+    TimeSpan InteractionTime { get; }
+    TimeSpan HeatTransferTime { get; }
 
     void AddParticles(Vector2 center, int radius, ParticleKind kind);
     void RemoveParticles(Vector2 center, int radius);
+    void TogglePlayPause(bool play);
 }
 
 public class ParticlesManager : IParticlesManager
 {
-    public TimeSpan LoopTime { private set; get; } = new();
+    public TimeSpan MoveTime { private set; get; } = new();
+    public TimeSpan InteractionTime { private set; get; } = new();
+    public TimeSpan HeatTransferTime { private set; get; } = new();
     private static readonly float _dt = 0.2f;
     private static readonly float _gravity = 0.025f;
     private readonly (int Width, int Height) _canvasSize = (1200, 600);
@@ -35,7 +40,6 @@ public class ParticlesManager : IParticlesManager
         _powderManager = new(_dt, _gravity);
         _gasManager = new(_dt, _gravity);
         _simulationTimer.Elapsed += (sender, args) => Tick();
-        _simulationTimer.Start();
     }
 
     public IReadOnlyDictionary<Vector2, Particle> Particles => _particles;
@@ -102,6 +106,18 @@ public class ParticlesManager : IParticlesManager
         _particlesLock = false;
     }
 
+    public void TogglePlayPause(bool play)
+    {
+        if (play)
+        {
+            _simulationTimer.Start();
+        }
+        else
+        {
+            _simulationTimer.Stop();
+        }
+    }
+
     private void Tick()
     {
         if (_particlesLock)
@@ -109,14 +125,12 @@ public class ParticlesManager : IParticlesManager
             return;
         }
         _particlesLock = true;
+
         _stopwatch.Restart();
-
         var particlesToMove = new Dictionary<Vector2, Particle>(_particles);
-
         foreach (var (position, particle) in _particles.OrderBy(p => p.Value.GetDensity()))
         {
             var newPosition = position;
-
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
@@ -129,7 +143,6 @@ public class ParticlesManager : IParticlesManager
                     newPosition = _powderManager.MovePowder(position, particle, particlesToMove);
                     break;
             }
-
             if (newPosition != position)
             {
                 particlesToMove.Remove(position);
@@ -139,7 +152,10 @@ public class ParticlesManager : IParticlesManager
                 }
             }
         }
+        _stopwatch.Stop();
+        MoveTime = _stopwatch.Elapsed;
 
+        _stopwatch.Restart();
         var particlesToInteract = new Dictionary<Vector2, Particle>();
         foreach (var (position, particle) in particlesToMove.OrderBy(p => p.Value.GetDensity()))
         {
@@ -149,13 +165,16 @@ public class ParticlesManager : IParticlesManager
                 particlesToInteract.Add(position, newParticle);
             }
         }
+        _stopwatch.Stop();
+        InteractionTime = _stopwatch.Elapsed;
 
+        _stopwatch.Restart();
         TemperatureManager.TransferHeat(particlesToInteract);
+        _stopwatch.Stop();
+        HeatTransferTime = _stopwatch.Elapsed;
 
         _particles = new Dictionary<Vector2, Particle>(particlesToInteract);
 
-        _stopwatch.Stop();
-        LoopTime = _stopwatch.Elapsed;
         _particlesLock = false;
     }
 

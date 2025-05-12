@@ -7,7 +7,7 @@ namespace SimulatorTests.Managers;
 public class ParticlesManagerTest
 {
     [Fact]
-    public void Should_Create_ParticleManager()
+    public void Should_CreateParticleManager()
     {
         var manager = new ParticlesManager();
 
@@ -15,7 +15,7 @@ public class ParticlesManagerTest
     }
 
     [Fact]
-    public void Should_Add_Different_Particles()
+    public void Should_AddDifferentParticles()
     {
         var manager = new ParticlesManager();
 
@@ -32,7 +32,7 @@ public class ParticlesManagerTest
     }
 
     [Fact]
-    public void Should_Add_Particles_In_Circular_Shape()
+    public void Should_AddParticlesInCircularShape()
     {
         var manager = new ParticlesManager();
 
@@ -55,7 +55,7 @@ public class ParticlesManagerTest
     }
 
     [Fact]
-    public void Should_Not_Add_Particles_To_Same_Coordinates()
+    public void Should_NotAddParticlesToSameCoordinates()
     {
         var manager = new ParticlesManager();
 
@@ -70,7 +70,7 @@ public class ParticlesManagerTest
     }
 
     [Fact]
-    public void Should_Remove_Any_Particle_Kind()
+    public void Should_RemoveAnyParticleKind()
     {
         var manager = new ParticlesManager();
 
@@ -94,7 +94,7 @@ public class ParticlesManagerTest
     }
 
     [Fact]
-    public void Should_Not_Remove_Particle_Outside_Of_Radius()
+    public void Should_NotRemoveParticleOutsideOfRadius()
     {
         var manager = new ParticlesManager();
 
@@ -105,5 +105,81 @@ public class ParticlesManagerTest
         manager.RemoveParticles(new(100, 100), 9);
 
         Assert.Equal(68, manager.ParticlesCount);
+    }
+
+    [Fact]
+    public async Task Should_OnlyUpdateParticlesWhenPlaying()
+    {
+        var manager = new ParticlesManager();
+
+        manager.TogglePlayPause(false);
+
+        manager.AddParticles(new(200, 200), 100, ParticleKind.Lava);
+
+        Assert.Equal(0, manager.MoveTime.TotalMilliseconds);
+        Assert.Equal(0, manager.InteractionTime.TotalMilliseconds);
+        Assert.Equal(0, manager.HeatTransferTime.TotalMilliseconds);
+
+        manager.TogglePlayPause(true);
+
+        await Task.Delay(100);
+
+        Assert.NotEqual(0, manager.MoveTime.TotalMilliseconds);
+        Assert.NotEqual(0, manager.InteractionTime.TotalMilliseconds);
+        Assert.NotEqual(0, manager.HeatTransferTime.TotalMilliseconds);
+    }
+
+    [Fact]
+    public async Task Should_MoveParticlesBelowTargetTime()
+    {
+        var manager = new ParticlesManager();
+
+        manager.TogglePlayPause(false);
+
+        manager.AddParticles(new(200, 200), 100, ParticleKind.Lava);
+        manager.AddParticles(new(400, 200), 100, ParticleKind.Sand);
+        manager.AddParticles(new(400, 200), 100, ParticleKind.Oxygen);
+
+        manager.TogglePlayPause(true);
+
+        await Task.Delay(100);
+
+        Assert.InRange(manager.MoveTime.TotalMilliseconds, 10, 75);
+    }
+
+    [Fact]
+    public async Task Should_DoInteractionsBelowTargetTime()
+    {
+        var manager = new ParticlesManager();
+
+        manager.TogglePlayPause(false);
+
+        manager.AddParticles(new(200, 200), 100, ParticleKind.Water);
+        manager.AddParticles(new(400, 200), 100, ParticleKind.Iron);
+        manager.AddParticles(new(400, 200), 100, ParticleKind.Oxygen);
+
+        manager.TogglePlayPause(true);
+
+        await Task.Delay(100);
+
+        Assert.InRange(manager.InteractionTime.TotalMilliseconds, 10, 50);
+    }
+
+    [Fact]
+    public async Task Should_TransferHeatBelowTargetTime()
+    {
+        var manager = new ParticlesManager();
+
+        manager.TogglePlayPause(false);
+
+        manager.AddParticles(new(200, 200), 100, ParticleKind.Water);
+        manager.AddParticles(new(400, 200), 100, ParticleKind.Iron);
+        manager.AddParticles(new(400, 200), 100, ParticleKind.Steam);
+
+        manager.TogglePlayPause(true);
+
+        await Task.Delay(100);
+
+        Assert.InRange(manager.HeatTransferTime.TotalMilliseconds, 10, 50);
     }
 }
