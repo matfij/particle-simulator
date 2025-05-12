@@ -66,7 +66,7 @@ public partial class MainPage : ContentPage
         ParticleCountLabel.Text = $"Particles: {_particlesManager.ParticlesCount}";
         MoveTimeLabel.Text = $"Move time: {(int)_particlesManager.MoveTime.TotalMilliseconds} [ms]";
         InteractionTimeLabel.Text = $"Interaction time: {(int)_particlesManager.InteractionTime.TotalMilliseconds} [ms]";
-        HeatTransferTimeTimeLabel.Text = $"Heat transfer time: {(int)_particlesManager.HeatTransferTime.TotalMilliseconds} [ms]";
+        HeatTransferTimeLabel.Text = $"Heat transfer time: {(int)_particlesManager.HeatTransferTime.TotalMilliseconds} [ms]";
         PaintTimeLabel.Text = $"Paint time: {(int)_paintTime.TotalMilliseconds} [ms]";
     }
 

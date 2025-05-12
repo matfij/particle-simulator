@@ -41,7 +41,7 @@
                 TextColor="{StaticResource Light}"
                 AbsoluteLayout.LayoutBounds="5, 45, AutoSize, AutoSize"/>
             <Label
-                x:Name="HeatTransferTimeTimeLabel"
+                x:Name="HeatTransferTimeLabel"
                 Text="Heat transfer time: 0 [ms]"
                 TextColor="{StaticResource Light}"
                 AbsoluteLayout.LayoutBounds="5, 65, AutoSize, AutoSize"/>

@@ -108,7 +108,7 @@ public class ParticlesManagerTest
     }
 
     [Fact]
-    public void Should_OnlyUpdateParticlesWhenPlaying()
+    public async Task Should_OnlyUpdateParticlesWhenPlaying()
     {
         var manager = new ParticlesManager();
 
@@ -122,7 +122,7 @@ public class ParticlesManagerTest
 
         manager.TogglePlayPause(true);
 
-        Thread.Sleep(100);
+        await Task.Delay(100);
 
         Assert.NotEqual(0, manager.MoveTime.TotalMilliseconds);
         Assert.NotEqual(0, manager.InteractionTime.TotalMilliseconds);
@@ -130,7 +130,7 @@ public class ParticlesManagerTest
     }
 
     [Fact]
-    public void Should_MoveParticlesBelowTargetTime()
+    public async Task Should_MoveParticlesBelowTargetTime()
     {
         var manager = new ParticlesManager();
 
@@ -142,13 +142,13 @@ public class ParticlesManagerTest
 
         manager.TogglePlayPause(true);
 
-        Thread.Sleep(100);
+        await Task.Delay(100);
 
         Assert.InRange(manager.MoveTime.TotalMilliseconds, 10, 75);
     }
 
     [Fact]
-    public void Should_DoInteractionsBelowTargetTime()
+    public async Task Should_DoInteractionsBelowTargetTime()
     {
         var manager = new ParticlesManager();
 
@@ -160,13 +160,13 @@ public class ParticlesManagerTest
 
         manager.TogglePlayPause(true);
 
-        Thread.Sleep(100);
+        await Task.Delay(100);
 
         Assert.InRange(manager.InteractionTime.TotalMilliseconds, 10, 50);
     }
 
     [Fact]
-    public void Should_TransferHeatBelowTargetTime()
+    public async Task Should_TransferHeatBelowTargetTime()
     {
         var manager = new ParticlesManager();
 
@@ -178,8 +178,8 @@ public class ParticlesManagerTest
 
         manager.TogglePlayPause(true);
 
-        Thread.Sleep(100);
+        await Task.Delay(100);
 
-        Assert.InRange(manager.InteractionTime.TotalMilliseconds, 10, 50);
+        Assert.InRange(manager.HeatTransferTime.TotalMilliseconds, 10, 50);
     }
 }
