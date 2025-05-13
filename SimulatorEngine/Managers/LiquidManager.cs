@@ -11,12 +11,13 @@ public class LiquidManager(float dt, float gravity)
     private readonly int[] _sideDisplacementDirections = [-1, 1];
     private readonly Random _randomFactory = new();
 
-    public Vector2 MoveLiquid(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
+    public Vector2 MoveLiquid(Vector2 position, IParticle particle, Dictionary<Vector2, IParticle> particles)
     {
         var initialPosition = position;
         var newPosition = initialPosition;
+        var particleData = ParticlesDataManager.GetParticleData(particle.Kind);
 
-        var dyMax = (int)(_dt * _gravity * particle.GetDensity());
+        var dyMax = (int)(_dt * _gravity * particleData.Density);
         for (var dy = 1; dy <= dyMax; dy++)
         {
             var xNudge = _randomFactory.Next(-1, 2);
@@ -31,7 +32,7 @@ public class LiquidManager(float dt, float gravity)
             {
                 return nudgedDown;
             }
-            else if (fallingInto.Body != ParticleBody.Liquid)
+            else if (ParticlesDataManager.GetParticleData(fallingInto.Kind).Body != ParticleBody.Liquid)
             {
                 break;
             }
@@ -46,7 +47,7 @@ public class LiquidManager(float dt, float gravity)
 
         foreach (var direction in _sideDisplacementDirections)
         {
-            var dxMax = (int)(_dt * _sideDisplacementFactor / particle.GetDensity());
+            var dxMax = (int)(_dt * _sideDisplacementFactor / particleData.Density);
 
             for (var dx = 1; dx <= dxMax; dx++)
             {
@@ -56,7 +57,7 @@ public class LiquidManager(float dt, float gravity)
                 {
                     return dxPosition;
                 }
-                if (dxNeighbor.Body != ParticleBody.Liquid)
+                if (ParticlesDataManager.GetParticleData(dxNeighbor.Kind).Body != ParticleBody.Liquid)
                 {
                     break;
                 }

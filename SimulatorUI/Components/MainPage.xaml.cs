@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using SimulatorEngine;
+using SimulatorEngine.Managers;
 using SimulatorEngine.Particles;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
@@ -81,7 +82,7 @@ public partial class MainPage : ContentPage
             int index = (int)position.X + (int)position.Y * _canvasSize.Width;
             if (index >= 0 && index < maxIndex)
             {
-                pixels[index] = particle.GetColor();
+                pixels[index] = ParticlesDataManager.GetParticleData(particle.Kind).Color;
             }
         }
     }

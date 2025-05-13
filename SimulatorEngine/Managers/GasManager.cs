@@ -11,12 +11,13 @@ public class GasManager(float dt, float gravity)
     private readonly (int X, int Y)[] _displacementDirections = [(-1, 1), (1, -1), (1, 1), (-1, -1)];
     private readonly Random _randomFactory = new();
 
-    public Vector2 MoveGas(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
+    public Vector2 MoveGas(Vector2 position, IParticle particle, Dictionary<Vector2, IParticle> particles)
     {
         var initialPosition = position;
         var newPosition = initialPosition;
+        var particleData = ParticlesDataManager.GetParticleData(particle.Kind);
 
-        var maxDisplacementValue = (int)(_dt * _gravity * _dxyRatio / particle.GetDensity());
+        var maxDisplacementValue = (int)(_dt * _gravity * _dxyRatio / particleData.Density);
         maxDisplacementValue = _randomFactory.Next(1, 1 + maxDisplacementValue);
 
         _randomFactory.Shuffle(_displacementDirections);

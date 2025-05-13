@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Text;
+using SimulatorEngine.Managers;
 using SimulatorEngine.Particles;
 
 namespace SimulatorEngine;
@@ -20,21 +21,25 @@ public static class ParticleUtils
     ];
 
     public static bool TryPushLighterParticle(
-        Particle particle,
-        Particle collidingParticle,
-        Dictionary<Vector2, Particle> particles,
+        IParticle particle,
+        IParticle collidingParticle,
+        Dictionary<Vector2, IParticle> particles,
         Vector2 newPositionCandidate)
     {
-        if (collidingParticle.GetDensity() >= particle.GetDensity())
+        var particleData = ParticlesDataManager.GetParticleData(particle.Kind);
+        var collidingParticleData = ParticlesDataManager.GetParticleData(collidingParticle.Kind);
+
+        if (collidingParticleData.Density >= particleData.Density)
         {
             return false;
         }
 
         var pushUpPosition = new Vector2(newPositionCandidate.X, newPositionCandidate.Y - 1);
 
-        while (particles.TryGetValue(pushUpPosition, out Particle? nextColliding))
+        while (particles.TryGetValue(pushUpPosition, out IParticle? nextColliding))
         {
-            if (nextColliding?.Body == ParticleBody.Solid || pushUpPosition.Y < 0)
+            var nextCollidingData = ParticlesDataManager.GetParticleData(nextColliding.Kind);
+            if (nextCollidingData.Body == ParticleBody.Solid || pushUpPosition.Y < 0)
             {
                 return false;
             }
@@ -47,39 +52,39 @@ public static class ParticleUtils
         return true;
     }
 
-    public static IEnumerable<Particle> GetStrictNeighbors(Vector2 position, Dictionary<Vector2, Particle> particles)
+    public static IEnumerable<IParticle> GetStrictNeighbors(Vector2 position, Dictionary<Vector2, IParticle> particles)
     {
         foreach (var offset in _strictNeighborOffsets)
         {
             var neighborPosition = Vector2.Add(position, offset);
-            if (particles.TryGetValue(neighborPosition, out Particle? neighbor))
+            if (particles.TryGetValue(neighborPosition, out IParticle? neighbor))
             {
                 yield return neighbor;
             }
         }
     }
 
-    public static IEnumerable<Particle> GetNeighbors(Vector2 position, Dictionary<Vector2, Particle> particles)
+    public static IEnumerable<IParticle> GetNeighbors(Vector2 position, Dictionary<Vector2, IParticle> particles)
     {
         foreach (var offset in _neighborOffsets)
         {
             var neighborPosition = Vector2.Add(position, offset);
-            if (particles.TryGetValue(neighborPosition, out Particle? neighbor))
+            if (particles.TryGetValue(neighborPosition, out IParticle? neighbor))
             {
                 yield return neighbor;
             }
         }
     }
 
-    public static (Vector2, Particle)? GetNeighborOfKind(
+    public static (Vector2, IParticle)? GetNeighborOfKind(
         Vector2 position,
-        Dictionary<Vector2, Particle> particles,
+        Dictionary<Vector2, IParticle> particles,
         ParticleKind kind)
     {
         foreach (var offset in _neighborOffsets)
         {
             var neighborPosition = Vector2.Add(position, offset);
-            if (particles.TryGetValue(neighborPosition, out Particle? neighbor) && neighbor.GetKind() == kind)
+            if (particles.TryGetValue(neighborPosition, out IParticle? neighbor) && neighbor.Kind == kind)
             {
                 return (neighborPosition, neighbor);
             }
@@ -87,7 +92,7 @@ public static class ParticleUtils
         return null;
     }
 
-    public static string SerializeSimulation(IReadOnlyDictionary<Vector2, Particle> particles)
+    public static string SerializeSimulation(IReadOnlyDictionary<Vector2, IParticle> particles)
     {
         var simulationData = new StringBuilder();
 
@@ -95,7 +100,7 @@ public static class ParticleUtils
         {
             simulationData.AppendLine(
                 $"{position.X}|{position.Y}|" +
-                $"{particle.GetKind()}|{particle.Temperature}");
+                $"{particle.Kind}|{particle.Temperature}");
         }
 
         return simulationData.ToString();

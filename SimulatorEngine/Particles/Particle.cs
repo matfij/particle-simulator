@@ -23,23 +23,17 @@ public enum ParticleBody
     Gas,
 }
 
-public abstract class Particle
+public abstract class ParticleData
 {
+    public abstract ParticleBody Body { get; init; }
+    public abstract float Density { get; init; }
+    public abstract uint Color { get; init; }
+    public virtual List<PhaseTransition> Transitions { get; init; } = [];
+    public virtual List<ParticleInteraction> Interactions { get; init; } = [];
+}
+
+public interface IParticle
+{
+    public ParticleKind Kind { get; init; }
     public float Temperature { get; set; }
-    public ParticleBody Body { get; init; }
-    public List<PhaseTransition> Transitions { get; init; }
-    public List<ParticleInteraction> Interactions { get; init; }
-
-    protected Particle()
-    {
-        Temperature = 20;
-        Transitions = [];
-        Interactions = [];
-    }
-
-    public abstract ParticleKind GetKind();
-
-    public abstract uint GetColor();
-
-    public abstract float GetDensity();
 }

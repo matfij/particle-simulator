@@ -1,47 +1,36 @@
 ﻿namespace SimulatorEngine.Particles;
 
-public class OxygenParticle : Particle
+public class OxygenData : ParticleData
 {
-    private static readonly ParticleKind Kind = ParticleKind.Oxygen;
-    private static readonly float Density = 1.4f;
-    private static readonly uint Color = 0x99E2FA;
-
-    public OxygenParticle() : base()
-    {
-        Body = ParticleBody.Gas;
-    }
-
-    public override uint GetColor() => Color;
-
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
+    public override ParticleBody Body { get; init; } = ParticleBody.Gas;
+    public override float Density { get; init; } = 1.4f;
+    public override uint Color { get; init; } = 0x99E2FA;
 }
 
-public class SteamParticle : Particle
+public class OxygenParticle : IParticle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Steam;
-    private static readonly float Density = 15f;
-    private static readonly uint Color = 0xC7D5E0;
+    public ParticleKind Kind { get; init; } = ParticleKind.Oxygen;
+    public float Temperature { get; set; } = 20;
+}
 
-    public SteamParticle() : base()
-    {
-        Body = ParticleBody.Gas;
-        Temperature = 128;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Down,
-                ResultKind = ParticleKind.Water,
-                Temperature = 99,
-            }
-        ];
-    }
+public class SteamData : ParticleData
+{
+    public override ParticleBody Body { get; init; } = ParticleBody.Gas;
+    public override float Density { get; init; } = 15f;
+    public override uint Color { get; init; } = 0xC7D5E0;
+    public new List<PhaseTransition> Transitions =
+    [
+        new ()
+        {
+            Direction = PhaseTransitionDirection.Down,
+            ResultKind = ParticleKind.Water,
+            Temperature = 99,
+        }
+    ];
+}
 
-    public override uint GetColor() => Color;
-
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
+public class SteamParticle : IParticle
+{
+    public ParticleKind Kind { get; init; } = ParticleKind.Steam;
+    public float Temperature { get; set; } = 128;
 }
