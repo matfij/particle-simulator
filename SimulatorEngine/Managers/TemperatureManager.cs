@@ -8,7 +8,7 @@ public static class TemperatureManager
     private static readonly float _transferRatio = 0.025f;
     private static readonly float _minTransferThreshold = 0.1f;
 
-    public static void TransferHeat(Dictionary<Vector2, Particle> particles)
+    public static void TransferHeat(Dictionary<Vector2, IParticle> particles)
     {
         foreach (var (position, particle) in particles)
         {
@@ -28,7 +28,8 @@ public static class TemperatureManager
 
         foreach(var (position, particle) in particles)
         {
-            foreach (var transition in particle.Transitions)
+            var particleData = ParticlesDataManager.GetParticleData(particle.Kind);
+            foreach (var transition in particleData.Transitions)
             {
                 if (transition.Direction == PhaseTransitionDirection.Up && particle.Temperature > transition.Temperature
                     || transition.Direction == PhaseTransitionDirection.Down && particle.Temperature < transition.Temperature)

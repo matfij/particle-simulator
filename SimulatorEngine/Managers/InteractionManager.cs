@@ -5,9 +5,10 @@ namespace SimulatorEngine.Managers;
 
 public static class InteractionManager
 {
-    public static Particle? DoInteractions(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
+    public static IParticle? DoInteractions(Vector2 position, IParticle particle, Dictionary<Vector2, IParticle> particles)
     {
-        foreach (var interaction in particle.Interactions)
+        var particleData = ParticlesDataManager.GetParticleData(particle.Kind);
+        foreach (var interaction in particleData.Interactions)
         {
             if (ParticleUtils.GetNeighborOfKind(position, particles, interaction.NeighborKind) is not { } neighbor)
             {

@@ -1,116 +1,101 @@
 ﻿namespace SimulatorEngine.Particles;
 
-public class SandParticle : Particle
+public class SandData : ParticleData
 {
-    private static readonly ParticleKind Kind = ParticleKind.Sand;
-    private static readonly float Density = 1600f;
-    private static readonly uint Color = 0xF6D7B0;
-
-    public SandParticle() : base()
-    {
-        Body = ParticleBody.Powder;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Up,
-                ResultKind = ParticleKind.Lava,
-                Temperature = 1700,
-            }
-        ];
-        Interactions =
-        [
-            new()
-            {
-                Result = InteractionResult.RemoveSelf,
-                NeighborKind = ParticleKind.Acid,
-                Ticks = 8,
-            },
-        ];
-    }
-
-    public override uint GetColor() => Color;
-
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
+    public override ParticleBody Body { get; init; } = ParticleBody.Powder;
+    public override float Density { get; init; } = 1600f;
+    public override uint Color { get; init; } = 0xF6D7B0;
+    public new List<PhaseTransition> Transitions { get; init; } =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Up,
+            ResultKind = ParticleKind.Lava,
+            Temperature = 1700,
+        }
+    ];
+    public new List<ParticleInteraction> Interactions { get; init; } =
+    [
+        new()
+        {
+            Result = InteractionResult.RemoveSelf,
+            NeighborKind = ParticleKind.Acid,
+            Ticks = 8,
+        },
+    ];
 }
 
-public class SaltParticle : Particle
+public class SandParticle : IParticle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Salt;
-    private static readonly float Density = 2100f;
-    private static readonly uint Color = 0xFCF9F3;
-
-    public SaltParticle() : base()
-    {
-        Body = ParticleBody.Powder;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Up,
-                ResultKind = ParticleKind.Lava,
-                Temperature = 800,
-            }
-        ];
-        Interactions =
-        [
-            new()
-            {
-                Result = InteractionResult.Merge,
-                NeighborKind = ParticleKind.Water,
-                Ticks = 12,
-                ResultKind = ParticleKind.SaltyWater,
-            },
-            new()
-            {
-                Result = InteractionResult.RemoveSelf,
-                NeighborKind = ParticleKind.Acid,
-                Ticks = 6,
-            },
-        ];
-    }
-
-    public override uint GetColor() => Color;
-
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
+    public ParticleKind Kind { get; init; } = ParticleKind.Sand;
+    public float Temperature { get; set; } = 20;
 }
 
-public class StoneParticle : Particle
+public class SaltData : ParticleData
 {
-    private static readonly ParticleKind Kind = ParticleKind.Stone;
-    private static readonly float Density = 2500f;
-    private static readonly uint Color = 0x787A79;
+    public override ParticleBody Body { get; init; } = ParticleBody.Powder;
+    public override float Density { get; init; } = 2100f;
+    public override uint Color { get; init; } = 0xFCF9F3;
+    public new List<PhaseTransition> Transitions { get; init; } =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Up,
+            ResultKind = ParticleKind.Lava,
+            Temperature = 800,
+        }
+    ];
+    public new List<ParticleInteraction> Interactions { get; init; } =
+    [
+        new()
+        {
+            Result = InteractionResult.Merge,
+            NeighborKind = ParticleKind.Water,
+            Ticks = 12,
+            ResultKind = ParticleKind.SaltyWater,
+        },
+        new()
+        {
+            Result = InteractionResult.RemoveSelf,
+            NeighborKind = ParticleKind.Acid,
+            Ticks = 6,
+        },
+    ];
+}
 
-    public StoneParticle() : base()
-    {
-        Body = ParticleBody.Powder;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Up,
-                ResultKind = ParticleKind.Lava,
-                Temperature = 1200,
-            }
-        ];
-        Interactions =
-        [
-            new()
-            {
-                Result = InteractionResult.RemoveSelf,
-                NeighborKind = ParticleKind.Acid,
-                Ticks = 12,
-            },
-        ];
-    }
+public class SaltParticle : IParticle
+{
+    public ParticleKind Kind { get; init; } = ParticleKind.Salt;
+    public float Temperature { get; set; } = 20;
+}
 
-    public override uint GetColor() => Color;
+public class StoneData : ParticleData
+{
+    public override ParticleBody Body { get; init; } = ParticleBody.Powder;
+    public override float Density { get; init; } = 2500f;
+    public override uint Color { get; init; } = 0x787A79;
+    public new List<PhaseTransition> Transitions { get; init; } =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Up,
+            ResultKind = ParticleKind.Lava,
+            Temperature = 1200,
+        }
+    ];
+    public new List<ParticleInteraction> Interactions { get; init; } =
+    [
+        new()
+        {
+            Result = InteractionResult.RemoveSelf,
+            NeighborKind = ParticleKind.Acid,
+            Ticks = 12,
+        },
+    ];
+}
 
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
+public class StoneParticle : IParticle
+{
+    public ParticleKind Kind { get; init; } = ParticleKind.Stone;
+    public float Temperature { get; set; } = 20;
 }

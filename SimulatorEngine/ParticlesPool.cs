@@ -5,9 +5,9 @@ namespace SimulatorEngine;
 
 public static class ParticlesPool
 {
-    private static readonly Stack<Particle> ParticlesFactory = new();
+    private static readonly Stack<IParticle> ParticlesFactory = new();
 
-    public static Particle GetParticle(ParticleKind kind)
+    public static IParticle GetParticle(ParticleKind kind)
     {
         if (ParticlesFactory.Count > 0)
         {
@@ -20,12 +20,12 @@ public static class ParticlesPool
         }
     }
 
-    public static void ReturnParticle(Particle particle)
+    public static void ReturnParticle(IParticle particle)
     {
         ParticlesFactory.Push(particle);
     }
 
-    private static Particle CreateNewParticle(ParticleKind kind)
+    private static IParticle CreateNewParticle(ParticleKind kind)
     {
         return kind switch
         {
