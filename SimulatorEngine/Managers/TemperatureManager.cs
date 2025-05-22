@@ -5,29 +5,31 @@ namespace SimulatorEngine.Managers;
 
 public static class TemperatureManager
 {
-    private static readonly float _transferRatio = 0.025f;
+    private static readonly float _transferRatio = 0.05f;
     private static readonly float _minTransferThreshold = 0.1f;
+    private static readonly List<Vector2> _topLeftOffsets =
+    [
+        new(0, 1), new(-1, 0),
+    ];
 
     public static void TransferHeat(Dictionary<Vector2, Particle> particles)
     {
         foreach (var (position, particle) in particles)
         {
-            var neighbors = ParticleUtils.GetStrictNeighbors(position, particles);
-
-            foreach (var neighbor in neighbors)
+            foreach (Vector2 offset in _topLeftOffsets)
             {
-                var tempDiff = particle.Temperature - neighbor.Temperature;
-                if (tempDiff < _minTransferThreshold)
+                if (!particles.TryGetValue(Vector2.Add(position, offset), out Particle? neighbor))
                 {
                     continue;
                 }
-                particle.Temperature -= _transferRatio * tempDiff;
-                neighbor.Temperature += _transferRatio * tempDiff;
+                var tempDiff = particle.Temperature - neighbor.Temperature;
+                if (tempDiff > _minTransferThreshold)
+                {
+                    particle.Temperature -= _transferRatio * tempDiff;
+                    neighbor.Temperature += _transferRatio * tempDiff;
+                }
             }
-        }
 
-        foreach(var (position, particle) in particles)
-        {
             foreach (var transition in particle.Transitions)
             {
                 if (transition.Direction == PhaseTransitionDirection.Up && particle.Temperature > transition.Temperature
@@ -36,7 +38,6 @@ public static class TemperatureManager
                     particles[position] = ParticlesPool.GetParticle(transition.ResultKind);
                     particles[position].Temperature = particle.Temperature;
                 }
-                
             }
         }
     }

@@ -76,7 +76,7 @@ public static class ParticleUtils
         Dictionary<Vector2, Particle> particles,
         ParticleKind kind)
     {
-        foreach (var offset in _neighborOffsets)
+        foreach (var offset in _strictNeighborOffsets)
         {
             var neighborPosition = Vector2.Add(position, offset);
             if (particles.TryGetValue(neighborPosition, out Particle? neighbor) && neighbor.GetKind() == kind)

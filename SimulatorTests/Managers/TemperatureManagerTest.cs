@@ -26,8 +26,8 @@ public class TemperatureManagerTest
         TemperatureManager.TransferHeat(particles);
 
         Assert.InRange(waterParticle.Temperature, 50, 100);
-        Assert.InRange(lavaParticle1.Temperature, 1500, 1570);
-        Assert.InRange(lavaParticle2.Temperature, 1500, 1570);
+        Assert.InRange(lavaParticle1.Temperature, 1520, 1530);
+        Assert.InRange(lavaParticle2.Temperature, 1590, 1610);
     }
 
     [Fact]
@@ -102,15 +102,16 @@ public class TemperatureManagerTest
         var lavaParticle = new LavaParticle();
         Dictionary<Vector2, Particle> particles = new()
         {
-            { new Vector2(100, 100), waterParticle },
-            { new Vector2(100, 101), lavaParticle },
+            { new Vector2(100, 101), waterParticle },
+            { new Vector2(100, 100), lavaParticle },
         };
 
-        TemperatureManager.TransferHeat(particles);
-        TemperatureManager.TransferHeat(particles);
-        TemperatureManager.TransferHeat(particles);
+        for (var i = 0; i < 10; i++)
+        {
+            TemperatureManager.TransferHeat(particles);
+        }
 
-        Assert.Equal(ParticleKind.Steam, particles[new Vector2(100, 100)].GetKind());
+        Assert.Equal(ParticleKind.Steam, particles[new Vector2(100, 101)].GetKind());
     }
 
     [Fact]
