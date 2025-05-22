@@ -18,24 +18,25 @@ public static class TemperatureManager
         {
             foreach (Vector2 offset in _topLeftOffsets)
             {
-                if (particles.TryGetValue(Vector2.Add(position, offset), out Particle? neighbor))
+                if (!particles.TryGetValue(Vector2.Add(position, offset), out Particle? neighbor))
                 {
-                    var tempDiff = particle.Temperature - neighbor.Temperature;
-                    if (tempDiff > _minTransferThreshold)
-                    {
-                        particle.Temperature -= _transferRatio * tempDiff;
-                        neighbor.Temperature += _transferRatio * tempDiff;
-                    }
+                    continue;
                 }
-
-                foreach (var transition in particle.Transitions)
+                var tempDiff = particle.Temperature - neighbor.Temperature;
+                if (tempDiff > _minTransferThreshold)
                 {
-                    if (transition.Direction == PhaseTransitionDirection.Up && particle.Temperature > transition.Temperature
-                        || transition.Direction == PhaseTransitionDirection.Down && particle.Temperature < transition.Temperature)
-                    {
-                        particles[position] = ParticlesPool.GetParticle(transition.ResultKind);
-                        particles[position].Temperature = particle.Temperature;
-                    }
+                    particle.Temperature -= _transferRatio * tempDiff;
+                    neighbor.Temperature += _transferRatio * tempDiff;
+                }
+            }
+
+            foreach (var transition in particle.Transitions)
+            {
+                if (transition.Direction == PhaseTransitionDirection.Up && particle.Temperature > transition.Temperature
+                    || transition.Direction == PhaseTransitionDirection.Down && particle.Temperature < transition.Temperature)
+                {
+                    particles[position] = ParticlesPool.GetParticle(transition.ResultKind);
+                    particles[position].Temperature = particle.Temperature;
                 }
             }
         }
