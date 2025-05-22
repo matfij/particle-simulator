@@ -128,7 +128,7 @@ public class ParticlesManager : IParticlesManager
 
         _stopwatch.Restart();
         var particlesToMove = new Dictionary<Vector2, Particle>(_particles);
-        foreach (var (position, particle) in _particles.OrderBy(p => p.Value.GetDensity()))
+        foreach (var (position, particle) in _particles)
         {
             var newPosition = position;
             switch (particle.Body)
@@ -157,7 +157,7 @@ public class ParticlesManager : IParticlesManager
 
         _stopwatch.Restart();
         var particlesToInteract = new Dictionary<Vector2, Particle>();
-        foreach (var (position, particle) in particlesToMove.OrderBy(p => p.Value.GetDensity()))
+        foreach (var (position, particle) in particlesToMove)
         {
             var newParticle = InteractionManager.DoInteractions(position, particle, particlesToMove);
             if (newParticle != null)

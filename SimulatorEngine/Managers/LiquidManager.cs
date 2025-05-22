@@ -21,15 +21,15 @@ public class LiquidManager(float dt, float gravity)
         {
             var xNudge = _randomFactory.Next(-1, 2);
 
-            var nudgedDown = new Vector2(initialPosition.X + xNudge, initialPosition.Y + dy);
+            var yNudge = new Vector2(initialPosition.X + xNudge, initialPosition.Y + dy);
 
-            if (!particles.TryGetValue(nudgedDown, out var fallingInto))
+            if (!particles.TryGetValue(yNudge, out var fallingInto))
             {
-                newPosition = nudgedDown;
+                newPosition = yNudge;
             }
-            else if (ParticleUtils.TryPushLighterParticle(particle, fallingInto, particles, nudgedDown))
+            else if (ParticleUtils.TryPushLighterParticle(particle, fallingInto, particles, yNudge))
             {
-                return nudgedDown;
+                return yNudge;
             }
             else if (fallingInto.Body != ParticleBody.Liquid)
             {
