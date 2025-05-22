@@ -36,4 +36,5 @@ public interface IParticle
 {
     public ParticleKind Kind { get; init; }
     public float Temperature { get; set; }
+    public List<int> InteractionTicks { get; init; }
 }

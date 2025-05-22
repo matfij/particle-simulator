@@ -9,13 +9,13 @@ public static class ParticlesDataManager
         { ParticleKind.Sand, new SandData() },
         { ParticleKind.Water, new WaterData() },
         { ParticleKind.Iron, new IronData() },
-        { ParticleKind.Iron, new OxygenData() },
-        { ParticleKind.Iron, new SaltData() },
-        { ParticleKind.Iron, new SaltyWaterData() },
-        { ParticleKind.Iron, new AcidData() },
-        { ParticleKind.Iron, new LavaData() },
-        { ParticleKind.Iron, new StoneData() },
-        { ParticleKind.Iron, new SteamData() },
+        { ParticleKind.Oxygen, new OxygenData() },
+        { ParticleKind.Salt, new SaltData() },
+        { ParticleKind.SaltyWater, new SaltyWaterData() },
+        { ParticleKind.Acid, new AcidData() },
+        { ParticleKind.Lava, new LavaData() },
+        { ParticleKind.Stone, new StoneData() },
+        { ParticleKind.Steam, new SteamData() },
     };
 
     public static ParticleData GetParticleData(ParticleKind kind) => _particleData[kind];

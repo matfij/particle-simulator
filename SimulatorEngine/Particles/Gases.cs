@@ -11,6 +11,7 @@ public class OxygenParticle : IParticle
 {
     public ParticleKind Kind { get; init; } = ParticleKind.Oxygen;
     public float Temperature { get; set; } = 20;
+    public List<int> InteractionTicks { get; init; } = [];
 }
 
 public class SteamData : ParticleData
@@ -18,7 +19,7 @@ public class SteamData : ParticleData
     public override ParticleBody Body { get; init; } = ParticleBody.Gas;
     public override float Density { get; init; } = 15f;
     public override uint Color { get; init; } = 0xC7D5E0;
-    public new List<PhaseTransition> Transitions =
+    public override List<PhaseTransition> Transitions { get; init; } =
     [
         new ()
         {
@@ -33,4 +34,5 @@ public class SteamParticle : IParticle
 {
     public ParticleKind Kind { get; init; } = ParticleKind.Steam;
     public float Temperature { get; set; } = 128;
+    public List<int> InteractionTicks { get; init; } = [];
 }

@@ -8,14 +8,14 @@ public static class InteractionManager
     public static IParticle? DoInteractions(Vector2 position, IParticle particle, Dictionary<Vector2, IParticle> particles)
     {
         var particleData = ParticlesDataManager.GetParticleData(particle.Kind);
-        foreach (var interaction in particleData.Interactions)
+        foreach (var (interaction, index) in particleData.Interactions.Select((value, index) => ( value, index )))
         {
             if (ParticleUtils.GetNeighborOfKind(position, particles, interaction.NeighborKind) is not { } neighbor)
             {
                 continue;
             }
-            interaction.Ticks--;
-            if (interaction.Ticks > 0)
+            particle.InteractionTicks[index]--;
+            if (particle.InteractionTicks[index] > 0)
             {
                 continue;
             }
