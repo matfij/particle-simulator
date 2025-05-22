@@ -18,18 +18,15 @@ public static class TemperatureManager
         {
             foreach (Vector2 offset in _topLeftOffsets)
             {
-                if (!particles.TryGetValue(Vector2.Add(position, offset), out Particle? neighbor))
+                if (particles.TryGetValue(Vector2.Add(position, offset), out Particle? neighbor))
                 {
-                    continue;
+                    var tempDiff = particle.Temperature - neighbor.Temperature;
+                    if (tempDiff > _minTransferThreshold)
+                    {
+                        particle.Temperature -= _transferRatio * tempDiff;
+                        neighbor.Temperature += _transferRatio * tempDiff;
+                    }
                 }
-
-                var tempDiff = particle.Temperature - neighbor.Temperature;
-                if (tempDiff < _minTransferThreshold)
-                {
-                    continue;
-                }
-                particle.Temperature -= _transferRatio * tempDiff;
-                neighbor.Temperature += _transferRatio * tempDiff;
 
                 foreach (var transition in particle.Transitions)
                 {
@@ -39,7 +36,6 @@ public static class TemperatureManager
                         particles[position] = ParticlesPool.GetParticle(transition.ResultKind);
                         particles[position].Temperature = particle.Temperature;
                     }
-
                 }
             }
         }

@@ -53,9 +53,9 @@ public class ParticleUtilsTest
     [Fact]
     public void Should_GetNeighborOfKindIfPresent()
     {
-        var neighbor = ParticleUtils.GetNeighborOfKind(new Vector2(100, 100), _particles, ParticleKind.Lava);
+        var neighbor = ParticleUtils.GetNeighborOfKind(new Vector2(100, 100), _particles, ParticleKind.Water);
 
-        Assert.Equal(_particles[new Vector2(99, 99)], neighbor?.Item2);
+        Assert.Equal(_particles[new Vector2(101, 100)], neighbor?.Item2);
     }
 
     [Fact]
