@@ -5,7 +5,7 @@ namespace SimulatorUI.Components;
 
 public partial class DownloadPage : ContentPage
 {
-    public List<Simulation> Simulations { get; private set; } = [];
+    private bool _loaded = false;
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
 
@@ -14,34 +14,46 @@ public partial class DownloadPage : ContentPage
         InitializeComponent();
         _apiManager = apiManager;
         _particlesManager = particlesManager;
-        FetchSimulations();
     }
 
-    private async void FetchSimulations()
+    protected override void OnAppearing()
     {
-        LoadingIndicator.IsVisible = true;
-      
-        await Task.Delay(6000);
-        Simulations =
-        [
-            new Simulation
+        base.OnAppearing();
+        Task.Run(async () =>
+        {
+            try
             {
-                Id = "test-1",
-                Name = "Test",
-                FileName = "test.json",
-                Downloads = 100
-            },
-            new Simulation
+                if (!_loaded)
+                {
+                    MainThread.BeginInvokeOnMainThread(() => LoadingIndicator.IsVisible = true);
+                    await FetchSimulations();
+                }
+            }
+            catch (HttpRequestException ex)
             {
-                Id = "test-2",
-                Name = "Dummy",
-                FileName = "dummy.json",
-                Downloads = 20234
-            },
-        ];
+                MainThread.BeginInvokeOnMainThread(async () => await DisplayAlert("Error", ex.Message, "Close"));
+            }
+            catch
+            {
+                MainThread.BeginInvokeOnMainThread(async () => 
+                    await DisplayAlert("Error", "Unable to download simulations, please try again later.", "Close"));
+            }
+            finally
+            {
+                MainThread.BeginInvokeOnMainThread(() => LoadingIndicator.IsVisible = false);
+            }
+        });
+    }
 
-        SimulationList.ItemsSource = Simulations;
-        LoadingIndicator.IsVisible = false;
+    private async Task FetchSimulations()
+    {
+        var simulations = await _apiManager.DownloadSimulationsPreview();
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            SimulationList.ItemsSource = simulations;
+            _loaded = true;
+        });
     }
 
     private void OnDownload(object sender, EventArgs e)

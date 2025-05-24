@@ -6,6 +6,7 @@ namespace SimulatorUI.Api;
 
 public interface IApiManager
 {
+    Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview();
     Task UploadSimulation(string simulationName, string simulationData);
 }
 
@@ -20,6 +21,24 @@ public class ApiManager : IApiManager
         _apiUrl = configuration["ApiUrl"] ?? throw new InvalidDataException("ApiUrl missing");
         var apiKey = configuration["ApiKey"] ?? throw new InvalidDataException("ApiKey missing");
         _httpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
+    }
+
+    public async Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview()
+    {
+        var response = await _httpClient.GetAsync($"{_apiUrl}/v1/preview");
+        var data = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = JsonSerializer.Deserialize<ApiError>(data);
+            throw new HttpRequestException(error?.Message);
+        }
+
+        var simulationsResponse = 
+            JsonSerializer.Deserialize<SimulationsPreviewResponse>(data)
+            ?? throw new HttpRequestException("Invalid data format");
+
+        return simulationsResponse.Simulations;
     }
 
     public async Task UploadSimulation(string simulationName, string simulationData)
@@ -40,9 +59,9 @@ public class ApiManager : IApiManager
             throw new HttpRequestException(error?.Message);
         }
 
-        var simulationUploadResponse = 
-            JsonSerializer.Deserialize<SimulationUploadResponse>(data) 
-            ?? throw new HttpRequestException("Invalid lambda response");
+        var simulationUploadResponse =
+            JsonSerializer.Deserialize<SimulationUploadResponse>(data)
+            ?? throw new HttpRequestException("Invalid data format");
 
         await UploadSimulationData(simulationUploadResponse.UploadUrl, simulationData);
     }
