@@ -20,29 +20,28 @@ public partial class DownloadPage : ContentPage
     private async void FetchSimulations()
     {
         LoadingIndicator.IsVisible = true;
-        await Task.Run(async() =>
-        {
-            await Task.Delay(3000);
-            Simulations =
-            [
-                new Simulation
-                {
-                    Id = "test-1",
-                    Name = "Test",
-                    FileName = "test.json",
-                    Downloads = 100
-                },
-                new Simulation
-                {
-                    Id = "test-2",
-                    Name = "Dummy",
-                    FileName = "dummy.json",
-                    Downloads = 20234
-                },
-            ];
-            SimulationList.ItemsSource = Simulations;
-            LoadingIndicator.IsVisible = false;
-        });
+      
+        await Task.Delay(6000);
+        Simulations =
+        [
+            new Simulation
+            {
+                Id = "test-1",
+                Name = "Test",
+                FileName = "test.json",
+                Downloads = 100
+            },
+            new Simulation
+            {
+                Id = "test-2",
+                Name = "Dummy",
+                FileName = "dummy.json",
+                Downloads = 20234
+            },
+        ];
+
+        SimulationList.ItemsSource = Simulations;
+        LoadingIndicator.IsVisible = false;
     }
 
     private void OnDownload(object sender, EventArgs e)
