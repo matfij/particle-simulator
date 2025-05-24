@@ -33,10 +33,10 @@ public partial class DownloadPage : ContentPage
             {
                 MainThread.BeginInvokeOnMainThread(async () => await DisplayAlert("Error", ex.Message, "Close"));
             }
-            catch (Exception ex)
+            catch
             {
                 MainThread.BeginInvokeOnMainThread(async () => 
-                    await DisplayAlert("Error", $"{ex} Unable to download simulations, please try again later.", "Close"));
+                    await DisplayAlert("Error", "Unable to download simulations, please try again later.", "Close"));
             }
             finally
             {
