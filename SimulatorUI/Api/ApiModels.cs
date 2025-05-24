@@ -1,17 +1,17 @@
 ﻿namespace SimulatorUI.Api;
 
-public class SimulationPreview
+public class SimulationsPreviewResponse
 {
-    public required IReadOnlyList<Simulation> Simulations { get; init; }
-    public required string PaginationToken { get; init; }
+    public required IEnumerable<SimulationPreview> Simulations { get; init; }
+    public string? PaginationToken { get; init; }
 }
 
-public class Simulation
+public class SimulationPreview
 {
-    public required string Id { get; set; }
-    public required string Name { get; set; }
-    public required string FileName { get; set; }
-    public required int Downloads { get; set; }
+    public required string Id { get; init; }
+    public required string Name { get; init; }
+    public required string FileName { get; init; }
+    public required int Downloads { get; init; }
 }
 
 public class SimulationUploadRequest

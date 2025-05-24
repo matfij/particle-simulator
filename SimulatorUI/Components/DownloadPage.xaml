@@ -5,7 +5,7 @@
              Title="DownloadPage"
              BackgroundColor="{StaticResource Secondary}">
     
-    <VerticalStackLayout Margin="100" Spacing="10"  WidthRequest="400">
+    <VerticalStackLayout Margin="50" Spacing="10"  WidthRequest="400">
         <Label 
             Text="Download Simulation"
             HorizontalOptions="Center"
@@ -17,45 +17,53 @@
             IsRunning="True" 
             IsVisible="False"
             Color="{StaticResource Primary}"
+            Margin="0,20,0,0"
             HorizontalOptions="Center" />
-        <ListView
-            x:Name="SimulationList"
-            HasUnevenRows="True">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid 
-                            ColumnDefinitions="Auto,*" 
-                            VerticalOptions="Center"
-                            Background="{StaticResource Light}"
-                            Opacity="0.8"
-                            Margin="0,5,0,5"
-                            Padding="10">
-                            <ImageButton 
-                                Grid.Column="0"
-                                Style="{StaticResource IconButton}" 
-                                Source="download.png"
-                                Clicked="OnDownload"
-                                VerticalOptions="Center"/>
-                            <StackLayout Grid.Column="1" 
-                                Orientation="Vertical" 
-                                Margin="15,0,0,0"
-                                VerticalOptions="Center">
-                                <Label Text="{Binding Name}" 
-                                    FontAttributes="Bold"
-                                    FontSize="16"
-                                    TextColor="{StaticResource Black}"
-                                    LineBreakMode="TailTruncation" />
-                                <Label Text="{Binding Downloads, StringFormat='Downloads: {0:N0}'}"
-                                    FontSize="12"
-                                    TextColor="{StaticResource Black}"
-                                    Opacity="0.7" />
-                            </StackLayout>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Frame BackgroundColor="Transparent" 
+            HasShadow="False" 
+            Padding="0"
+            HeightRequest="400"
+            BorderColor="Transparent">
+                <ListView
+                x:Name="SimulationList"
+                HasUnevenRows="True"
+                VerticalScrollBarVisibility="Default">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid 
+                                ColumnDefinitions="Auto,*" 
+                                VerticalOptions="Center"
+                                Background="{StaticResource Light}"
+                                Opacity="0.8"
+                                Margin="0,5,0,5"
+                                Padding="10">
+                                <ImageButton 
+                                    Grid.Column="0"
+                                    Style="{StaticResource IconButton}" 
+                                    Source="download.png"
+                                    Clicked="OnDownload"
+                                    VerticalOptions="Center"/>
+                                <StackLayout Grid.Column="1" 
+                                    Orientation="Vertical" 
+                                    Margin="15,0,0,0"
+                                    VerticalOptions="Center">
+                                    <Label Text="{Binding Name}" 
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        TextColor="{StaticResource Black}"
+                                        LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Downloads, StringFormat='Downloads: {0:N0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Black}"
+                                        Opacity="0.7" />
+                                </StackLayout>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Frame>
         <Button 
             x:Name="CancelButton" 
             Text="Cancel" 
