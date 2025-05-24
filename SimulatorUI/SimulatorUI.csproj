@@ -72,12 +72,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Components\DownloadPage.xaml.cs">
+	    <DependentUpon>DownloadPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Components\UploadPage.xaml.cs">
 	    <DependentUpon>UploadPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Components\DownloadPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Components\UploadPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

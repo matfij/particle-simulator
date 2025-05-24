@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SimulatorUI.Components.DownloadPage"
+             Title="DownloadPage"
+             BackgroundColor="{StaticResource Secondary}">
+    
+    <VerticalStackLayout Margin="100" Spacing="10"  WidthRequest="400">
+        <Label 
+            Text="Download Simulation"
+            HorizontalOptions="Center"
+            TextColor="{StaticResource Light}" 
+            FontSize="Medium" />
+        <Line />
+        <ActivityIndicator 
+            x:Name="LoadingIndicator" 
+            IsRunning="True" 
+            IsVisible="False"
+            Color="{StaticResource Primary}"
+            HorizontalOptions="Center" />
+        <ListView
+            x:Name="SimulationList"
+            HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid 
+                            ColumnDefinitions="Auto,*" 
+                            VerticalOptions="Center"
+                            Background="{StaticResource Light}"
+                            Opacity="0.8"
+                            Margin="0,5,0,5"
+                            Padding="10">
+                            <ImageButton 
+                                Grid.Column="0"
+                                Style="{StaticResource IconButton}" 
+                                Source="download.png"
+                                Clicked="OnDownload"
+                                VerticalOptions="Center"/>
+                            <StackLayout Grid.Column="1" 
+                                Orientation="Vertical" 
+                                Margin="15,0,0,0"
+                                VerticalOptions="Center">
+                                <Label Text="{Binding Name}" 
+                                    FontAttributes="Bold"
+                                    FontSize="16"
+                                    TextColor="{StaticResource Black}"
+                                    LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Downloads, StringFormat='Downloads: {0:N0}'}"
+                                    FontSize="12"
+                                    TextColor="{StaticResource Black}"
+                                    Opacity="0.7" />
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button 
+            x:Name="CancelButton" 
+            Text="Cancel" 
+            TextColor="{StaticResource Light}"
+            BorderColor="{StaticResource Light}"
+            Background="Transparent" 
+            Margin="0,20,0,0"
+            Clicked="OnCancel"
+            AutomationId="CancelButton" 
+            SemanticProperties.Description="Cancel Download" />
+    </VerticalStackLayout>
+</ContentPage>

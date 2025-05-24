@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SimulatorEngine;
 using SimulatorUI.Api;
+using SimulatorUI.Components;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace SimulatorUI
@@ -29,6 +30,7 @@ namespace SimulatorUI
             builder.Services.AddSingleton<IConfiguration>(config);
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddTransient<UploadPage>();
+            builder.Services.AddTransient<DownloadPage>();
             builder.Services.AddSingleton<IApiManager, ApiManager>();
             builder.Services.AddSingleton<IParticlesManager, ParticlesManager>();
 

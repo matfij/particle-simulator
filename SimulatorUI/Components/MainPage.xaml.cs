@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using SimulatorEngine;
 using SimulatorEngine.Particles;
+using SimulatorUI.Components;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -27,12 +28,14 @@ public partial class MainPage : ContentPage
     private readonly Stopwatch _stopwatch = new();
     private TimeSpan _paintTime = new();
     private readonly UploadPage _uploadPage;
+    private readonly DownloadPage _downloadPage;
 
-    public MainPage(IParticlesManager particlesManager, UploadPage uploadPage)
+    public MainPage(IParticlesManager particlesManager, UploadPage uploadPage, DownloadPage downloadPage)
     {
         InitializeComponent();
         _particlesManager = particlesManager;
         _uploadPage = uploadPage;
+        _downloadPage = downloadPage;
         _paintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         _paintTimer.Start();
         _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
@@ -155,9 +158,9 @@ public partial class MainPage : ContentPage
         await Navigation.PushModalAsync(_uploadPage);
     }
 
-    private void OnOpenDownloadPage(object sender, EventArgs e)
+    private async void OnOpenDownloadPage(object sender, EventArgs e)
     {
-        throw new NotImplementedException("TODO - download page");
+        await Navigation.PushModalAsync(_downloadPage);
     }
 
     private void InvalidateCanvas()
