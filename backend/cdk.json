@@ -1,5 +1,5 @@
 {
-  "app": "dotnet run --project src/Backend/Backend.csproj",
+  "app": "dotnet run --project src/CfnStack/CfnStack.csproj",
   "watch": {
     "include": ["**"],
     "exclude": [

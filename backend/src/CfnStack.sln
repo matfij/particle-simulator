@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{C1E324D5-B497-4BF3-B06A-94B792834A5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CfnStack", "CfnStack\CfnStack.csproj", "{C1E324D5-B497-4BF3-B06A-94B792834A5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UploadLambda", "UploadLambda\UploadLambda.csproj", "{1C5B279A-AA15-4F3B-983C-460DB54B921B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PreviewLambda", "PreviewLambda\PreviewLambda.csproj", "{49DDFA39-B669-473B-A791-7FC032E65187}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibrary", "SharedLibrary\SharedLibrary.csproj", "{998604FE-5BC2-427F-98C2-CC5CBADFD3A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadLambda", "DownloadLambda\DownloadLambda.csproj", "{5BA3D072-E2CD-4030-9962-9D658740EB9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,18 @@ Global
 		{998604FE-5BC2-427F-98C2-CC5CBADFD3A0}.Release|x64.Build.0 = Release|Any CPU
 		{998604FE-5BC2-427F-98C2-CC5CBADFD3A0}.Release|x86.ActiveCfg = Release|Any CPU
 		{998604FE-5BC2-427F-98C2-CC5CBADFD3A0}.Release|x86.Build.0 = Release|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Debug|x64.Build.0 = Debug|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Debug|x86.Build.0 = Debug|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Release|x64.ActiveCfg = Release|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Release|x64.Build.0 = Release|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Release|x86.ActiveCfg = Release|Any CPU
+		{5BA3D072-E2CD-4030-9962-9D658740EB9A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

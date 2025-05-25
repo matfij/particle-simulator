@@ -1,14 +1,14 @@
+using System.Net;
 using System.Text.Json;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.RuntimeSupport;
 using Amazon.Lambda.Serialization.SystemTextJson;
-using Amazon.Lambda.APIGatewayEvents;
-using System.Net;
+using Amazon.S3;
 using SharedLibrary;
+using Amazon.Lambda.APIGatewayEvents;
+using Amazon.S3.Model;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2;
 
 var bucketName = "particle-simulation-bucket";
 var s3Client = new AmazonS3Client();
@@ -25,14 +25,14 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
 {
     try
     {
-        FileUploadRequest input;
+        SimulationDownloadRequest input;
         try
         {
-            input = JsonSerializer.Deserialize<FileUploadRequest>(request.Body);
+            input = JsonSerializer.Deserialize<SimulationDownloadRequest>(request.Body);
         }
         catch (Exception ex) when (ex is JsonException || ex is ArgumentNullException)
         {
-            context.Logger.LogError($"Error processing request: {ex}");
+            context.Logger.LogError($"Invalid request body: {ex}");
             var error = new ApiError { Message = $"Invalid request body" };
             return new APIGatewayProxyResponse
             {
@@ -42,33 +42,36 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
             };
         }
 
-        var fileName = $"{input.Name.ToLower().Replace(" ", "-")}-{Guid.NewGuid()}.json";
+        var simulation = await dbContext.LoadAsync<Simulation>(input.SimulationId);
 
-        var simulation = new Simulation()
+        if (simulation == null)
         {
-            Id = Guid.NewGuid().ToString(),
-            Name = input.Name,
-            FileName = fileName,
-            Downloads = 0,
-        };
+            context.Logger.LogError($"Simulation not found: {input.SimulationId}");
+            var error = new ApiError { Message = $"Simulation not found: {input.SimulationId}" };
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = (int)HttpStatusCode.NotFound,
+                Body = JsonSerializer.Serialize(error),
+                Headers = httpHeaders,
+            };
+        }
 
+        simulation.Downloads += 1;
         await dbContext.SaveAsync(simulation);
 
         var s3Request = new GetPreSignedUrlRequest
         {
             BucketName = bucketName,
-            Key = fileName,
-            Verb = HttpVerb.PUT,
+            Key = simulation.FileName,
+            Verb = HttpVerb.GET,
             Expires = DateTime.UtcNow.AddMinutes(5),
-            ContentType = input.ContentType,
         };
 
         var url = s3Client.GetPreSignedURL(s3Request);
 
-        var response = new FileUploadResponse
+        var response = new SimulationDownloadResponse
         {
-            UploadUrl = url,
-            FileKey = fileName,
+            DownloadUrl = url,
         };
 
         return new APIGatewayProxyResponse
@@ -89,7 +92,6 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
             Headers = httpHeaders,
         };
     }
-    
 };
 
 await LambdaBootstrapBuilder.Create(handler, new DefaultLambdaJsonSerializer())

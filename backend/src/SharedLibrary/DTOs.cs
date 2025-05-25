@@ -1,5 +1,15 @@
 ﻿namespace SharedLibrary;
 
+public readonly struct SimulationDownloadRequest
+{
+    public required string SimulationId { get; init; }
+}
+
+public readonly struct SimulationDownloadResponse
+{
+    public required string DownloadUrl { get; init; }
+}
+
 public readonly struct SimulationPreview
 {
     public IReadOnlyList<Simulation> Simulations { get; init; }
