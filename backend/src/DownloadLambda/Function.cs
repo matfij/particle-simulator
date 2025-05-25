@@ -50,7 +50,7 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
             var error = new ApiError { Message = $"Simulation not found: {input.SimulationId}" };
             return new APIGatewayProxyResponse
             {
-                StatusCode = (int)HttpStatusCode.BadRequest,
+                StatusCode = (int)HttpStatusCode.NotFound,
                 Body = JsonSerializer.Serialize(error),
                 Headers = httpHeaders,
             };
@@ -87,7 +87,7 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
         var error = new ApiError { Message = $"Unexpected error occurred" };
         return new APIGatewayProxyResponse
         {
-            StatusCode = (int)HttpStatusCode.BadRequest,
+            StatusCode = (int)HttpStatusCode.InternalServerError,
             Body = JsonSerializer.Serialize(error),
             Headers = httpHeaders,
         };

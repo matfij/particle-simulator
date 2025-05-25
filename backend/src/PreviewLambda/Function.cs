@@ -53,7 +53,7 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
         var error = new ApiError { Message = $"Unexpected error occurred" };
         return new APIGatewayProxyResponse
         {
-            StatusCode = (int)HttpStatusCode.BadRequest,
+            StatusCode = (int)HttpStatusCode.InternalServerError,
             Body = JsonSerializer.Serialize(error),
             Headers = httpHeaders,
         };
