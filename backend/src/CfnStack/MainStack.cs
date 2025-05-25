@@ -71,14 +71,7 @@ public class MainStack : Stack
         var simulationBucket = new Bucket(this, "particle-simulation-bucket", simulationBucketProps);
 
         simulationBucket.GrantWrite(uploadLambda);
-        simulationBucket.GrantReadWrite(downloadLambda);
-
-        downloadLambda.AddToRolePolicy(new PolicyStatement(new PolicyStatementProps
-        {
-            Effect = Effect.ALLOW,
-            Actions = ["s3:GetObject"],
-            Resources = [$"{simulationBucket.BucketArn}/*"],
-        }));
+        simulationBucket.GrantRead(downloadLambda);
         #endregion
 
         #region API Gateway

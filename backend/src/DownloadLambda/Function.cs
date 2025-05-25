@@ -9,7 +9,6 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.S3.Model;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DocumentModel;
 
 var bucketName = "particle-simulation-bucket";
 var s3Client = new AmazonS3Client();
@@ -33,7 +32,7 @@ var handler = async (APIGatewayProxyRequest request, ILambdaContext context) =>
         }
         catch (Exception ex) when (ex is JsonException || ex is ArgumentNullException)
         {
-            context.Logger.LogError($"Error processing request: {ex}");
+            context.Logger.LogError($"Invalid request body: {ex}");
             var error = new ApiError { Message = $"Invalid request body" };
             return new APIGatewayProxyResponse
             {
