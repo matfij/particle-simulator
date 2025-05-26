@@ -65,30 +65,4 @@ public class ParticleUtilsTest
 
         Assert.Null(neighbor);
     }
-
-    [Fact]
-    public void Should_SerializeSimulation()
-    {
-        var data = ParticleUtils.SerializeSimulation(_particles);
-
-        var lines = data.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
-
-        Assert.Equal(8, lines.Length);
-        Assert.Contains("99|100|Iron|20", lines);
-        Assert.Contains("101|100|Water|20", lines);
-        Assert.Contains("100|99|Water|20", lines);
-        Assert.Contains("100|101|Iron|20", lines);
-        Assert.Contains("99|99|Lava|1600", lines);
-        Assert.Contains("25|5|Acid|300", lines);
-        Assert.Contains("45|5|Iron|20", lines);
-        Assert.Contains("55|5|Salt|20", lines);
-    }
-
-    [Fact]
-    public void Should_SerializeEmptySimulation()
-    {
-        var data = ParticleUtils.SerializeSimulation(new Dictionary<Vector2, Particle>());
-
-        Assert.Equal("", data);
-    }
 }

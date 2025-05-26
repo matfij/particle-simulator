@@ -86,18 +86,4 @@ public static class ParticleUtils
         }
         return null;
     }
-
-    public static string SerializeSimulation(IReadOnlyDictionary<Vector2, Particle> particles)
-    {
-        var simulationData = new StringBuilder();
-
-        foreach (var (position, particle) in particles)
-        {
-            simulationData.AppendLine(
-                $"{position.X}|{position.Y}|" +
-                $"{particle.GetKind()}|{particle.Temperature}");
-        }
-
-        return simulationData.ToString();
-    }
 }

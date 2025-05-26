@@ -8,6 +8,7 @@ public interface IApiManager
 {
     Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview();
     Task UploadSimulation(string simulationName, string simulationData);
+    Task<Stream> DownloadSimulation(string simulationId);
 }
 
 public class ApiManager : IApiManager
@@ -34,7 +35,7 @@ public class ApiManager : IApiManager
             throw new HttpRequestException(error?.Message);
         }
 
-        var simulationsResponse = 
+        var simulationsResponse =
             JsonSerializer.Deserialize<SimulationsPreviewResponse>(data)
             ?? throw new HttpRequestException("Invalid data format");
 
@@ -80,5 +81,39 @@ public class ApiManager : IApiManager
             var error = await response.Content.ReadAsStringAsync();
             throw new HttpRequestException($"S3 upload failed: {response.StatusCode}, Error: {error}");
         }
+    }
+
+    public async Task<Stream> DownloadSimulation(string simulationId)
+    {
+        var simulationDownloadRequest = new SimulationDownloadRequest { SimulationId = simulationId };
+        var body = new StringContent(JsonSerializer.Serialize(simulationDownloadRequest));
+
+        var response = await _httpClient.PostAsync($"{_apiUrl}/v1/download", body);
+        var data = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = JsonSerializer.Deserialize<ApiError>(data);
+            throw new HttpRequestException(error?.Message);
+        }
+
+        var downloadResponse =
+            JsonSerializer.Deserialize<SimulationDownloadResponse>(data)
+            ?? throw new HttpRequestException("Invalid data format");
+
+        return await DownloadSimulationData(downloadResponse.DownloadUrl);
+    }
+
+    private async Task<Stream> DownloadSimulationData(string targetUrl)
+    {
+        var response = await _httpClient.GetAsync(targetUrl);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"S3 download failed: {response.StatusCode}, Error: {error}");
+        }
+
+        return await response.Content.ReadAsStreamAsync();
     }
 }

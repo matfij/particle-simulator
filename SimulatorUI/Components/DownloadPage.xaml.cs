@@ -1,4 +1,5 @@
 using SimulatorEngine;
+using SimulatorEngine.Particles;
 using SimulatorUI.Api;
 
 namespace SimulatorUI.Components;
@@ -56,9 +57,27 @@ public partial class DownloadPage : ContentPage
         });
     }
 
-    private void OnDownload(object sender, EventArgs e)
+    private async void OnDownload(object sender, EventArgs e)
     {
-        Console.WriteLine("TODO - download from S3");
+        if (sender is ImageButton downloadButton && downloadButton.CommandParameter is string id)
+        {
+            try
+            {
+                LoadingIndicator.IsVisible = true;
+                SimulationList.IsVisible = false;
+                var data = await _apiManager.DownloadSimulation(id);
+                var simulation = await SimulationSerializer.Deserialize(data);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Close");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                SimulationList.IsVisible = true;
+            }
+        }
     }
 
     private async void OnCancel(object sender, EventArgs e)

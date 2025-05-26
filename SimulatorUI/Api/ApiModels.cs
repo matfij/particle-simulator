@@ -1,5 +1,15 @@
 ﻿namespace SimulatorUI.Api;
 
+public class SimulationDownloadRequest
+{
+    public required string SimulationId;
+}
+
+public class SimulationDownloadResponse
+{
+    public required string DownloadUrl;
+}
+
 public class SimulationsPreviewResponse
 {
     public required IEnumerable<SimulationPreview> Simulations { get; init; }
