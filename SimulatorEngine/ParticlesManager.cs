@@ -16,6 +16,7 @@ public interface IParticlesManager
     void AddParticles(Vector2 center, int radius, ParticleKind kind);
     void RemoveParticles(Vector2 center, int radius);
     void TogglePlayPause(bool play);
+    void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles);
 }
 
 public class ParticlesManager : IParticlesManager
@@ -116,6 +117,12 @@ public class ParticlesManager : IParticlesManager
         {
             _simulationTimer.Stop();
         }
+    }
+
+    public void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles)
+    {
+        _simulationTimer.Stop();
+        _particles = new Dictionary<Vector2, Particle>(particles);
     }
 
     private void Tick()

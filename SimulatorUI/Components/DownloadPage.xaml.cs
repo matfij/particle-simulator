@@ -67,10 +67,15 @@ public partial class DownloadPage : ContentPage
                 SimulationList.IsVisible = false;
                 var data = await _apiManager.DownloadSimulation(id);
                 var simulation = await SimulationSerializer.Deserialize(data);
+                _particlesManager.OverrideSimulation(simulation);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is FormatException || ex is HttpRequestException) 
             {
                 await DisplayAlert("Error", ex.Message, "Close");
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Unknown error, please try again later", "Close");
             }
             finally
             {
