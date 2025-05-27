@@ -112,7 +112,7 @@ public class ParticlesManagerTest
     {
         var manager = new ParticlesManager();
 
-        manager.TogglePlayPause(false);
+        manager.TogglePlaySimulation(false);
 
         manager.AddParticles(new(200, 200), 100, ParticleKind.Lava);
 
@@ -120,7 +120,7 @@ public class ParticlesManagerTest
         Assert.Equal(0, manager.InteractionTime.TotalMilliseconds);
         Assert.Equal(0, manager.HeatTransferTime.TotalMilliseconds);
 
-        manager.TogglePlayPause(true);
+        manager.TogglePlaySimulation(true);
 
         await Task.Delay(100);
 
@@ -134,13 +134,13 @@ public class ParticlesManagerTest
     {
         var manager = new ParticlesManager();
 
-        manager.TogglePlayPause(false);
+        manager.TogglePlaySimulation(false);
 
         manager.AddParticles(new(200, 200), 100, ParticleKind.Lava);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Sand);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Oxygen);
 
-        manager.TogglePlayPause(true);
+        manager.TogglePlaySimulation(true);
 
         await Task.Delay(100);
 
@@ -152,13 +152,13 @@ public class ParticlesManagerTest
     {
         var manager = new ParticlesManager();
 
-        manager.TogglePlayPause(false);
+        manager.TogglePlaySimulation(false);
 
         manager.AddParticles(new(200, 200), 100, ParticleKind.Water);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Iron);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Oxygen);
 
-        manager.TogglePlayPause(true);
+        manager.TogglePlaySimulation(true);
 
         await Task.Delay(100);
 
@@ -170,13 +170,13 @@ public class ParticlesManagerTest
     {
         var manager = new ParticlesManager();
 
-        manager.TogglePlayPause(false);
+        manager.TogglePlaySimulation(false);
 
         manager.AddParticles(new(200, 200), 100, ParticleKind.Water);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Iron);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Steam);
 
-        manager.TogglePlayPause(true);
+        manager.TogglePlaySimulation(true);
 
         await Task.Delay(100);
 

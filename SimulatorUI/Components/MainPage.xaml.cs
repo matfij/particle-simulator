@@ -139,10 +139,15 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void OnTogglePlayPage(object sender, EventArgs e)
+    private void OnTogglePlaySimulation(object sender, EventArgs e)
     {
-        _isPlaying = !_isPlaying;
-        _particlesManager.TogglePlayPause(_isPlaying);
+        TogglePlaySimulation(!_isPlaying);
+    }
+
+    private void TogglePlaySimulation(bool play)
+    {
+        _isPlaying = play;
+        _particlesManager.TogglePlaySimulation(_isPlaying);
         if (_isPlaying)
         {
             PlayPauseButton.Source = "pause.png";
@@ -155,11 +160,13 @@ public partial class MainPage : ContentPage
 
     private async void OnOpenUploadPage(object sender, EventArgs e)
     {
+        TogglePlaySimulation(false);
         await Navigation.PushModalAsync(_uploadPage);
     }
 
     private async void OnOpenDownloadPage(object sender, EventArgs e)
     {
+        TogglePlaySimulation(false);
         await Navigation.PushModalAsync(_downloadPage);
     }
 

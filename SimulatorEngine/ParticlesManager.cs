@@ -15,7 +15,7 @@ public interface IParticlesManager
 
     void AddParticles(Vector2 center, int radius, ParticleKind kind);
     void RemoveParticles(Vector2 center, int radius);
-    void TogglePlayPause(bool play);
+    void TogglePlaySimulation(bool play);
     void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles);
 }
 
@@ -107,7 +107,7 @@ public class ParticlesManager : IParticlesManager
         _particlesLock = false;
     }
 
-    public void TogglePlayPause(bool play)
+    public void TogglePlaySimulation(bool play)
     {
         if (play)
         {
@@ -121,8 +121,15 @@ public class ParticlesManager : IParticlesManager
 
     public void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles)
     {
-        _simulationTimer.Stop();
+        if (_particlesLock)
+        {
+            return;
+        }
+        _particlesLock = true;
+
         _particles = new Dictionary<Vector2, Particle>(particles);
+
+        _particlesLock = false;
     }
 
     private void Tick()

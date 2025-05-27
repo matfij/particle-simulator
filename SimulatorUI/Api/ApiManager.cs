@@ -86,7 +86,10 @@ public class ApiManager : IApiManager
     public async Task<Stream> DownloadSimulation(string simulationId)
     {
         var simulationDownloadRequest = new SimulationDownloadRequest { SimulationId = simulationId };
-        var body = new StringContent(JsonSerializer.Serialize(simulationDownloadRequest));
+        var body = new StringContent(
+            JsonSerializer.Serialize(simulationDownloadRequest), 
+            Encoding.UTF8,
+            "application/json");
 
         var response = await _httpClient.PostAsync($"{_apiUrl}/v1/download", body);
         var data = await response.Content.ReadAsStringAsync();

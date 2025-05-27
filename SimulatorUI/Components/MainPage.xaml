@@ -142,7 +142,7 @@
                     x:Name="PlayPauseButton"
                     Style="{StaticResource IconButton}" 
                     Source="play.png"
-                    Clicked="OnTogglePlayPage"/>
+                    Clicked="OnTogglePlaySimulation"/>
                 <ImageButton 
                     Style="{StaticResource IconButton}" 
                     Source="upload.png"

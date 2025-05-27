@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using SimulatorEngine;
 using SimulatorEngine.Particles;
 using SimulatorUI.Api;
@@ -65,9 +66,15 @@ public partial class DownloadPage : ContentPage
             {
                 LoadingIndicator.IsVisible = true;
                 SimulationList.IsVisible = false;
+
                 var data = await _apiManager.DownloadSimulation(id);
                 var simulation = await SimulationSerializer.Deserialize(data);
+
                 _particlesManager.OverrideSimulation(simulation);
+
+                var name = SimulationList.ItemsSource.Cast<SimulationPreview>().First(preview => preview.Id == id).Name;
+                await DisplayAlert("Success", $"{name} was downloaded.", "Close");
+                await Navigation.PopModalAsync();
             }
             catch (Exception ex) when (ex is FormatException || ex is HttpRequestException) 
             {

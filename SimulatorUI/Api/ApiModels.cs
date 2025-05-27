@@ -2,12 +2,12 @@
 
 public class SimulationDownloadRequest
 {
-    public required string SimulationId;
+    public required string SimulationId { get; init; }
 }
 
 public class SimulationDownloadResponse
 {
-    public required string DownloadUrl;
+    public required string DownloadUrl { get; init; }
 }
 
 public class SimulationsPreviewResponse
