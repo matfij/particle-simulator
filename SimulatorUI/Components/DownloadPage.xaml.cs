@@ -1,4 +1,6 @@
+using System.Xml.Linq;
 using SimulatorEngine;
+using SimulatorEngine.Particles;
 using SimulatorUI.Api;
 
 namespace SimulatorUI.Components;
@@ -56,9 +58,38 @@ public partial class DownloadPage : ContentPage
         });
     }
 
-    private void OnDownload(object sender, EventArgs e)
+    private async void OnDownload(object sender, EventArgs e)
     {
-        Console.WriteLine("TODO - download from S3");
+        if (sender is ImageButton downloadButton && downloadButton.CommandParameter is string id)
+        {
+            try
+            {
+                LoadingIndicator.IsVisible = true;
+                SimulationList.IsVisible = false;
+
+                var data = await _apiManager.DownloadSimulation(id);
+                var simulation = await SimulationSerializer.Deserialize(data);
+
+                _particlesManager.OverrideSimulation(simulation);
+
+                var name = SimulationList.ItemsSource.Cast<SimulationPreview>().First(preview => preview.Id == id).Name;
+                await DisplayAlert("Success", $"{name} was downloaded.", "Close");
+                await Navigation.PopModalAsync();
+            }
+            catch (Exception ex) when (ex is FormatException || ex is HttpRequestException) 
+            {
+                await DisplayAlert("Error", ex.Message, "Close");
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Unknown error, please try again later", "Close");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                SimulationList.IsVisible = true;
+            }
+        }
     }
 
     private async void OnCancel(object sender, EventArgs e)

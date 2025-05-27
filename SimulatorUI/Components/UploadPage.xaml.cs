@@ -25,7 +25,7 @@ public partial class UploadPage : ContentPage
         try
         {
             ToggleLoading(true);
-            var simulationData = ParticleUtils.SerializeSimulation(_particlesManager.Particles);
+            var simulationData = SimulationSerializer.Serialize(_particlesManager.Particles);
             await _apiManager.UploadSimulation(name, simulationData);
             ToggleLoading(false);
             await DisplayAlert("Success", $"{name} was shared.", "Close");
