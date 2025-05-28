@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:locales="clr-namespace:SimulatorUI.Resources.Locales"
              x:Class="SimulatorUI.UploadPage"
              Title="UploadPage"
              BackgroundColor="{StaticResource Secondary}">
 
     <VerticalStackLayout Margin="100" Spacing="10"  WidthRequest="400">
         <Label 
-            Text="Share Simulation" 
+            Text="{x:Static locales:AppStrings.ShareSimulation}" 
             TextColor="{StaticResource Light}" 
             FontSize="Medium" />
         <Frame 
@@ -21,12 +22,12 @@
             <Entry 
                 x:Name="NameEntry" 
                 TextColor="{StaticResource Light}" 
-                Placeholder="Name"
+                Placeholder="{x:Static locales:AppStrings.Name}"
                 MaxLength="20" />
         </Frame>
         <Label 
             x:Name="NameError" 
-            Text="Name must be between 4 and 20 characters" 
+            Text="{x:Static locales:AppStrings.NameError}" 
             IsVisible="False"
             TextColor="{StaticResource Error}" />
         <Line />
@@ -34,24 +35,24 @@
         <HorizontalStackLayout x:Name="ActionsLayout" Spacing="10">
             <Button 
                 x:Name="ShareButton" 
-                Text="Share" 
+                Text="{x:Static locales:AppStrings.Share}" 
                 WidthRequest="195" 
                 TextColor="{StaticResource Primary}"
                 BorderColor="{StaticResource Primary}"
                 Background="Transparent" 
                 Clicked="OnShare"
                 AutomationId="ShareButton"
-                SemanticProperties.Description="Share Simulation" />
+                SemanticProperties.Description="{x:Static locales:AppStrings.Share}" />
             <Button 
                 x:Name="CancelButton" 
-                Text="Cancel" 
+                Text="{x:Static locales:AppStrings.Cancel}" 
                 WidthRequest="195"
                 TextColor="{StaticResource Light}"
                 BorderColor="{StaticResource Light}"
                 Background="Transparent" 
                 Clicked="OnCancel"
                 AutomationId="CancelButton" 
-                SemanticProperties.Description="Cancel Sharing" />
+                SemanticProperties.Description="{x:Static locales:AppStrings.Cancel}" />
         </HorizontalStackLayout>
 
         <ActivityIndicator 

@@ -1,7 +1,6 @@
-using System.Xml.Linq;
 using SimulatorEngine;
-using SimulatorEngine.Particles;
 using SimulatorUI.Api;
+using SimulatorUI.Resources.Locales;
 
 namespace SimulatorUI.Components;
 
@@ -33,12 +32,13 @@ public partial class DownloadPage : ContentPage
             }
             catch (HttpRequestException ex)
             {
-                MainThread.BeginInvokeOnMainThread(async () => await DisplayAlert("Error", ex.Message, "Close"));
+                MainThread.BeginInvokeOnMainThread(async () => 
+                    await DisplayAlert(AppStrings.Error, ex.Message, AppStrings.Close));
             }
             catch
             {
                 MainThread.BeginInvokeOnMainThread(async () => 
-                    await DisplayAlert("Error", "Unable to download simulations, please try again later.", "Close"));
+                    await DisplayAlert(AppStrings.Error, AppStrings.DownloadGenericError, AppStrings.Close));
             }
             finally
             {
@@ -53,7 +53,8 @@ public partial class DownloadPage : ContentPage
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            SimulationList.ItemsSource = simulations;
+            SimulationList.ItemsSource = simulations.Select(s => 
+                new { s.Id, s.Name, Downloads = string.Format(AppStrings.Downloads, s.Downloads)});
             _loaded = true;
         });
     }
@@ -73,16 +74,16 @@ public partial class DownloadPage : ContentPage
                 _particlesManager.OverrideSimulation(simulation);
 
                 var name = SimulationList.ItemsSource.Cast<SimulationPreview>().First(preview => preview.Id == id).Name;
-                await DisplayAlert("Success", $"{name} was downloaded.", "Close");
+                await DisplayAlert(AppStrings.Success, string.Format(AppStrings.SimulationDownloaded, name), AppStrings.Close);
                 await Navigation.PopModalAsync();
             }
             catch (Exception ex) when (ex is FormatException || ex is HttpRequestException) 
             {
-                await DisplayAlert("Error", ex.Message, "Close");
+                await DisplayAlert(AppStrings.Error, ex.Message, AppStrings.Close);
             }
             catch
             {
-                await DisplayAlert("Error", "Unknown error, please try again later", "Close");
+                await DisplayAlert(AppStrings.Error, AppStrings.UnknownError, AppStrings.Close);
             }
             finally
             {

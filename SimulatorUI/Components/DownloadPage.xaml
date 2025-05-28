@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:locales="clr-namespace:SimulatorUI.Resources.Locales"
              x:Class="SimulatorUI.Components.DownloadPage"
              Title="DownloadPage"
              BackgroundColor="{StaticResource Secondary}">
     
     <VerticalStackLayout Margin="50" Spacing="10"  WidthRequest="400">
         <Label 
-            Text="Download Simulation"
+            Text="{x:Static locales:AppStrings.DownloadSimulation}"
             HorizontalOptions="Center"
             TextColor="{StaticResource Light}" 
             FontSize="Medium" />
@@ -25,7 +26,7 @@
             Padding="0"
             HeightRequest="400"
             BorderColor="Transparent">
-                <ListView
+            <ListView
                 x:Name="SimulationList"
                 HasUnevenRows="True"
                 VerticalScrollBarVisibility="Default">
@@ -57,7 +58,7 @@
                                         TextColor="{StaticResource Black}"
                                         LineBreakMode="TailTruncation" />
                                     <Label 
-                                        Text="{Binding Downloads, StringFormat='Downloads: {0:N0}'}"
+                                        Text="{Binding Downloads}"
                                         FontSize="12"
                                         TextColor="{StaticResource Black}"
                                         Opacity="0.7" />
@@ -70,7 +71,7 @@
         </Frame>
         <Button 
             x:Name="CancelButton" 
-            Text="Cancel" 
+            Text="{x:Static locales:AppStrings.Cancel}" 
             TextColor="{StaticResource Light}"
             BorderColor="{StaticResource Light}"
             Background="Transparent" 
