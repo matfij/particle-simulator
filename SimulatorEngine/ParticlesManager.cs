@@ -17,6 +17,7 @@ public interface IParticlesManager
     void RemoveParticles(Vector2 center, int radius);
     void TogglePlaySimulation(bool play);
     void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles);
+    void ClearSimulation();
 }
 
 public class ParticlesManager : IParticlesManager
@@ -49,10 +50,7 @@ public class ParticlesManager : IParticlesManager
 
     public void AddParticles(Vector2 center, int radius, ParticleKind kind)
     {
-        if (_particlesLock)
-        {
-            return;
-        }
+        while (_particlesLock) { }
         _particlesLock = true;
 
         int radiusSquare = radius * radius;
@@ -81,10 +79,7 @@ public class ParticlesManager : IParticlesManager
 
     public void RemoveParticles(Vector2 center, int radius)
     {
-        if (_particlesLock)
-        {
-            return;
-        }
+        while (_particlesLock) { }
         _particlesLock = true;
 
         List<Vector2> positionsToRemove = [];
@@ -117,6 +112,12 @@ public class ParticlesManager : IParticlesManager
         {
             _simulationTimer.Stop();
         }
+    }
+
+    public void ClearSimulation()
+    {
+        while (_particlesLock) { }
+        _particles = [];
     }
 
     public void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles)

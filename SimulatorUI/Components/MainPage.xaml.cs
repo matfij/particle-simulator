@@ -163,6 +163,11 @@ public partial class MainPage : ContentPage
             PlayPauseButton.Source = "play.png";
         }
     }
+    
+    private void OnClearSimulation(object sender, EventArgs e)
+    {
+        _particlesManager.ClearSimulation();
+    }
 
     private async void OnOpenUploadPage(object sender, EventArgs e)
     {
