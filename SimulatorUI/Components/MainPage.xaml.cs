@@ -2,6 +2,7 @@
 using SimulatorEngine;
 using SimulatorEngine.Particles;
 using SimulatorUI.Components;
+using SimulatorUI.Resources.Locales;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -66,11 +67,16 @@ public partial class MainPage : ContentPage
 
     private void PrintPerformanceInfo()
     {
-        ParticleCountLabel.Text = $"Particles: {_particlesManager.ParticlesCount}";
-        MoveTimeLabel.Text = $"Move time: {(int)_particlesManager.MoveTime.TotalMilliseconds} [ms]";
-        InteractionTimeLabel.Text = $"Interaction time: {(int)_particlesManager.InteractionTime.TotalMilliseconds} [ms]";
-        HeatTransferTimeLabel.Text = $"Heat transfer time: {(int)_particlesManager.HeatTransferTime.TotalMilliseconds} [ms]";
-        PaintTimeLabel.Text = $"Paint time: {(int)_paintTime.TotalMilliseconds} [ms]";
+        ParticleCountLabel.Text 
+            = $"{AppStrings.Particles}: {_particlesManager.ParticlesCount}";
+        MoveTimeLabel.Text 
+            = $"{AppStrings.MoveTime}: {(int)_particlesManager.MoveTime.TotalMilliseconds} {AppStrings.MS}";
+        InteractionTimeLabel.Text 
+            = $"{AppStrings.InteractionTime}: {(int)_particlesManager.InteractionTime.TotalMilliseconds} {AppStrings.MS}";
+        HeatTransferTimeLabel.Text 
+            = $"{AppStrings.HeatTransferTime}: {(int)_particlesManager.HeatTransferTime.TotalMilliseconds} {AppStrings.MS}";
+        PaintTimeLabel.Text 
+            = $"{AppStrings.PaintTime}: {(int)_paintTime.TotalMilliseconds} {AppStrings.MS}";
     }
 
     private unsafe void UpdateBitmap()

@@ -1,5 +1,6 @@
 using SimulatorEngine;
 using SimulatorUI.Api;
+using SimulatorUI.Resources.Locales;
 
 namespace SimulatorUI;
 
@@ -7,6 +8,7 @@ public partial class UploadPage : ContentPage
 {
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
+    private readonly (int minLength, int maxLength) _nameConfig = (minLength: 4, maxLength: 12);
 
     public UploadPage(IApiManager apiManager, IParticlesManager particlesManager)
     {
@@ -28,16 +30,16 @@ public partial class UploadPage : ContentPage
             var simulationData = SimulationSerializer.Serialize(_particlesManager.Particles);
             await _apiManager.UploadSimulation(name, simulationData);
             ToggleLoading(false);
-            await DisplayAlert("Success", $"{name} was shared.", "Close");
+            await DisplayAlert(AppStrings.Success, string.Format(AppStrings.SimulationShared, name), AppStrings.Close);
             await Navigation.PopModalAsync();
         }
         catch (HttpRequestException ex)
         {
-            await DisplayAlert("Error", ex.Message, "Close");
+            await DisplayAlert(AppStrings.Error, ex.Message, AppStrings.Close);
         }
         catch
         {
-            await DisplayAlert("Error", "Unknown error, please try again later", "Close");
+            await DisplayAlert(AppStrings.Error, AppStrings.UnknownError, AppStrings.Close);
         }
         finally
         {
@@ -50,8 +52,8 @@ public partial class UploadPage : ContentPage
         NameError.IsVisible = false;
         if (
             string.IsNullOrEmpty(name)
-            || name.Length < 4
-            || name.Length > 20
+            || name.Length < _nameConfig.minLength
+            || name.Length > _nameConfig.maxLength
             || name.Any(c => Path.GetInvalidFileNameChars().Contains(c)))
         {
             NameError.IsVisible = true;
