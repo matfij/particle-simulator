@@ -1,5 +1,7 @@
+using System.Collections.ObjectModel;
 using SimulatorEngine;
 using SimulatorUI.Api;
+using SimulatorUI.Definitions;
 using SimulatorUI.Resources.Locales;
 
 namespace SimulatorUI.Components;
@@ -9,6 +11,7 @@ public partial class DownloadPage : ContentPage
     private bool _loaded = false;
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
+    private ObservableCollection<SimulationTile> _simulationTiles = [];
 
     public DownloadPage(IApiManager apiManager, IParticlesManager particlesManager)
     {
@@ -53,8 +56,14 @@ public partial class DownloadPage : ContentPage
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            SimulationList.ItemsSource = simulations.Select(s => 
-                new { s.Id, s.Name, Downloads = string.Format(AppStrings.Downloads, s.Downloads)});
+            _simulationTiles = new ObservableCollection<SimulationTile>(simulations.Select(s => 
+                new SimulationTile 
+                { 
+                    Id = s.Id, 
+                    Name = s.Name, 
+                    Downloads = s.Downloads,
+                }));
+            SimulationList.ItemsSource = _simulationTiles;
             _loaded = true;
         });
     }
@@ -73,8 +82,11 @@ public partial class DownloadPage : ContentPage
 
                 _particlesManager.OverrideSimulation(simulation);
 
-                var name = SimulationList.ItemsSource.Cast<SimulationPreview>().First(preview => preview.Id == id).Name;
-                await DisplayAlert(AppStrings.Success, string.Format(AppStrings.SimulationDownloaded, name), AppStrings.Close);
+                var simulationTile = _simulationTiles.First(preview => preview.Id == id);
+                simulationTile.Downloads += 1;
+
+                await DisplayAlert(
+                    AppStrings.Success, string.Format(AppStrings.SimulationDownloaded, simulationTile.Name), AppStrings.Close);
                 await Navigation.PopModalAsync();
             }
             catch (Exception ex) when (ex is FormatException || ex is HttpRequestException) 
