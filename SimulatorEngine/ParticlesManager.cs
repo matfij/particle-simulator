@@ -17,6 +17,7 @@ public interface IParticlesManager
     void RemoveParticles(Vector2 center, int radius);
     void TogglePlaySimulation(bool play);
     void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles);
+    void ClearSimulation();
 }
 
 public class ParticlesManager : IParticlesManager
@@ -49,10 +50,7 @@ public class ParticlesManager : IParticlesManager
 
     public void AddParticles(Vector2 center, int radius, ParticleKind kind)
     {
-        if (_particlesLock)
-        {
-            return;
-        }
+        while (_particlesLock) { Thread.Yield(); }
         _particlesLock = true;
 
         int radiusSquare = radius * radius;
@@ -81,10 +79,7 @@ public class ParticlesManager : IParticlesManager
 
     public void RemoveParticles(Vector2 center, int radius)
     {
-        if (_particlesLock)
-        {
-            return;
-        }
+        while (_particlesLock) { Thread.Yield(); }
         _particlesLock = true;
 
         List<Vector2> positionsToRemove = [];
@@ -119,12 +114,19 @@ public class ParticlesManager : IParticlesManager
         }
     }
 
+    public void ClearSimulation()
+    {
+        while (_particlesLock) { Thread.Yield(); }
+        _particlesLock = true;
+
+        _particles = [];
+
+        _particlesLock = false;
+    }
+
     public void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles)
     {
-        if (_particlesLock)
-        {
-            return;
-        }
+        while (_particlesLock) { Thread.Yield(); }
         _particlesLock = true;
 
         _particles = new Dictionary<Vector2, Particle>(particles);
@@ -134,10 +136,7 @@ public class ParticlesManager : IParticlesManager
 
     private void Tick()
     {
-        if (_particlesLock)
-        {
-            return;
-        }
+        while (_particlesLock) { Thread.Yield(); }
         _particlesLock = true;
 
         _stopwatch.Restart();

@@ -139,6 +139,11 @@
                     Source="play.png"
                     Clicked="OnTogglePlaySimulation"/>
                 <ImageButton 
+                    x:Name="ClearButton"
+                    Style="{StaticResource IconButton}" 
+                    Source="clear.png"
+                    Clicked="OnClearSimulation"/>
+                <ImageButton 
                     Style="{StaticResource IconButton}" 
                     Source="upload.png"
                     Clicked="OnOpenUploadPage"/>

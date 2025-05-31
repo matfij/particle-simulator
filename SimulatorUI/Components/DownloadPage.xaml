@@ -58,7 +58,7 @@
                                         TextColor="{StaticResource Black}"
                                         LineBreakMode="TailTruncation" />
                                     <Label 
-                                        Text="{Binding Downloads}"
+                                        Text="{Binding DownloadsLabel}"
                                         FontSize="12"
                                         TextColor="{StaticResource Black}"
                                         Opacity="0.7" />
