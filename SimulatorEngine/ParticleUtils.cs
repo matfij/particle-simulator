@@ -25,7 +25,7 @@ public static class ParticleUtils
         Dictionary<Vector2, Particle> particles,
         Vector2 newPositionCandidate)
     {
-        if (collidingParticle.GetDensity() >= particle.GetDensity())
+        if (collidingParticle.Density >= particle.Density)
         {
             return false;
         }
@@ -79,7 +79,7 @@ public static class ParticleUtils
         foreach (var offset in _strictNeighborOffsets)
         {
             var neighborPosition = Vector2.Add(position, offset);
-            if (particles.TryGetValue(neighborPosition, out Particle? neighbor) && neighbor.GetKind() == kind)
+            if (particles.TryGetValue(neighborPosition, out Particle? neighbor) && neighbor.Kind == kind)
             {
                 return (neighborPosition, neighbor);
             }

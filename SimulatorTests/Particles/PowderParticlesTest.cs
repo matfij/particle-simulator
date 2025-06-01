@@ -12,9 +12,9 @@ public class PowderParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(20, particle.Temperature);
         Assert.Equal(ParticleBody.Powder, particle.Body);
-        Assert.Equal(1600, particle.GetDensity());
-        Assert.Equal(0xF6D7B0, (float)particle.GetColor());
-        Assert.Equal(ParticleKind.Sand, particle.GetKind());
+        Assert.Equal(1600, particle.Density);
+        Assert.Equal(0xF6D7B0, (float)particle.Color);
+        Assert.Equal(ParticleKind.Sand, particle.Kind);
     }
 
     [Fact]
@@ -25,9 +25,9 @@ public class PowderParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(20, particle.Temperature);
         Assert.Equal(ParticleBody.Powder, particle.Body);
-        Assert.Equal(2100, particle.GetDensity());
-        Assert.Equal(0xFCF9F3, (float)particle.GetColor());
-        Assert.Equal(ParticleKind.Salt, particle.GetKind());
+        Assert.Equal(2100, particle.Density);
+        Assert.Equal(0xFCF9F3, (float)particle.Color);
+        Assert.Equal(ParticleKind.Salt, particle.Kind);
     }
 
     [Fact]
@@ -38,8 +38,8 @@ public class PowderParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(20, particle.Temperature);
         Assert.Equal(ParticleBody.Powder, particle.Body);
-        Assert.Equal(2500, particle.GetDensity());
-        Assert.Equal(0x787A79, (float)particle.GetColor());
-        Assert.Equal(ParticleKind.Stone, particle.GetKind());
+        Assert.Equal(2500, particle.Density);
+        Assert.Equal(0x787A79, (float)particle.Color);
+        Assert.Equal(ParticleKind.Stone, particle.Kind);
     }
 }

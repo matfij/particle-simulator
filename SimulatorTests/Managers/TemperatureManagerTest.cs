@@ -91,8 +91,8 @@ public class TemperatureManagerTest
         TemperatureManager.TransferHeat(particles);
         TemperatureManager.TransferHeat(particles);
 
-        Assert.Equal(ParticleKind.Water, waterParticle.GetKind());
-        Assert.Equal(ParticleKind.Sand, sandParticle.GetKind());
+        Assert.Equal(ParticleKind.Water, waterParticle.Kind);
+        Assert.Equal(ParticleKind.Sand, sandParticle.Kind);
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class TemperatureManagerTest
             TemperatureManager.TransferHeat(particles);
         }
 
-        Assert.Equal(ParticleKind.Steam, particles[new Vector2(100, 101)].GetKind());
+        Assert.Equal(ParticleKind.Steam, particles[new Vector2(100, 101)].Kind);
     }
 
     [Fact]
@@ -132,6 +132,6 @@ public class TemperatureManagerTest
             TemperatureManager.TransferHeat(particles);
         }
 
-        Assert.Equal(ParticleKind.Water, particles[new Vector2(100, 100)].GetKind());
+        Assert.Equal(ParticleKind.Water, particles[new Vector2(100, 100)].Kind);
     }
 }

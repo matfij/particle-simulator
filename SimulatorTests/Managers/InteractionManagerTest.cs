@@ -19,8 +19,8 @@ public class InteractionManagerTest
         var updatedParticle = InteractionManager.DoInteractions(position, particle, particles);
 
         Assert.NotNull(updatedParticle);
-        Assert.Equal(ParticleKind.Water, particles[new Vector2(100, 99)].GetKind());
-        Assert.Equal(ParticleKind.Salt, particle.GetKind());
+        Assert.Equal(ParticleKind.Water, particles[new Vector2(100, 99)].Kind);
+        Assert.Equal(ParticleKind.Salt, particle.Kind);
 
         var waterInteractionTicks = updatedParticle.Interactions.First(i => i.NeighborKind == ParticleKind.Water).Ticks;
         for (var i = 0; i <= waterInteractionTicks; i++)
@@ -29,7 +29,7 @@ public class InteractionManagerTest
         }
 
         Assert.False(particles.TryGetValue(new Vector2(100, 99), out _));
-        Assert.Equal(ParticleKind.SaltyWater, updatedParticle?.GetKind());
+        Assert.Equal(ParticleKind.SaltyWater, updatedParticle?.Kind);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class InteractionManagerTest
         var updatedParticle = InteractionManager.DoInteractions(position, particle, particles);
 
         Assert.NotNull(updatedParticle);
-        Assert.Equal(particle.GetKind(), updatedParticle.GetKind());
+        Assert.Equal(particle.Kind, updatedParticle.Kind);
 
         var acidInteractionTicks = updatedParticle.Interactions.First(i => i.NeighborKind == ParticleKind.Acid).Ticks;
         for (var i = 0; i <= acidInteractionTicks; i++)
@@ -59,6 +59,6 @@ public class InteractionManagerTest
 
         Assert.Null(updatedParticle);
         Assert.True(particles.TryGetValue(new Vector2(255, 256), out var acidParticle));
-        Assert.Equal(ParticleKind.Acid, acidParticle.GetKind());
+        Assert.Equal(ParticleKind.Acid, acidParticle.Kind);
     }
 }

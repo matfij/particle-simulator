@@ -15,7 +15,7 @@ public class PowderManager(float dt, float gravity)
         var initialPosition = position;
         var newPosition = initialPosition;
 
-        var gravityDisplacement = (int)(_dt * particle.GetDensity() * _gravity);
+        var gravityDisplacement = (int)(_dt * particle.Density * _gravity);
 
         for (int dy = 1; dy <= gravityDisplacement; dy++)
         {

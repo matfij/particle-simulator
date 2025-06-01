@@ -136,12 +136,12 @@ public class ParticlesManager : IParticlesManager
 
     private void Tick()
     {
-        while (_particlesLock) { Thread.Yield(); }
+        if (_particlesLock) { return; }
         _particlesLock = true;
 
         _stopwatch.Restart();
         var particlesToMove = new Dictionary<Vector2, Particle>(_particles);
-        foreach (var (position, particle) in _particles)
+        foreach (var (position, particle) in _particles.OrderBy(p => p.Value.Density))
         {
             var newPosition = position;
             switch (particle.Body)

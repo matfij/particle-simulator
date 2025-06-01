@@ -25,21 +25,11 @@ public enum ParticleBody
 
 public abstract class Particle
 {
-    public float Temperature { get; set; }
-    public ParticleBody Body { get; init; }
-    public List<PhaseTransition> Transitions { get; init; }
-    public List<ParticleInteraction> Interactions { get; init; }
-
-    protected Particle()
-    {
-        Temperature = 20;
-        Transitions = [];
-        Interactions = [];
-    }
-
-    public abstract ParticleKind GetKind();
-
-    public abstract uint GetColor();
-
-    public abstract float GetDensity();
+    public float Temperature { get; set; } = 20;
+    public abstract float Density { get; }
+    public abstract uint Color { get; }
+    public abstract ParticleKind Kind { get; }
+    public abstract ParticleBody Body { get; }
+    public abstract PhaseTransition[] Transitions { get; }
+    public abstract ParticleInteraction[] Interactions { get; set; }
 }

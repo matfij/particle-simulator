@@ -25,10 +25,10 @@ public class ParticlesManagerTest
         manager.AddParticles(new(5, 5), 10, ParticleKind.Oxygen);
 
         Assert.Equal(1008, manager.ParticlesCount);
-        Assert.Equal(5, manager.Particles.Where(p => p.Value.GetKind() == ParticleKind.Sand).Count());
-        Assert.Equal(81, manager.Particles.Where(p => p.Value.GetKind() == ParticleKind.Water).Count());
-        Assert.Equal(709, manager.Particles.Where(p => p.Value.GetKind() == ParticleKind.Iron).Count());
-        Assert.Equal(213, manager.Particles.Where(p => p.Value.GetKind() == ParticleKind.Oxygen).Count());
+        Assert.Equal(5, manager.Particles.Where(p => p.Value.Kind == ParticleKind.Sand).Count());
+        Assert.Equal(81, manager.Particles.Where(p => p.Value.Kind == ParticleKind.Water).Count());
+        Assert.Equal(709, manager.Particles.Where(p => p.Value.Kind == ParticleKind.Iron).Count());
+        Assert.Equal(213, manager.Particles.Where(p => p.Value.Kind == ParticleKind.Oxygen).Count());
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class ParticlesManagerTest
 
         manager.TogglePlaySimulation(true);
 
-        await Task.Delay(100);
+        await Task.Delay(200);
 
         Assert.InRange(manager.MoveTime.TotalMilliseconds, 10, 75);
     }

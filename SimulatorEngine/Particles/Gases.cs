@@ -2,46 +2,44 @@
 
 public class OxygenParticle : Particle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Oxygen;
-    private static readonly float Density = 1.4f;
-    private static readonly uint Color = 0x99E2FA;
+    public override float Density => 1.4f;
 
-    public OxygenParticle() : base()
-    {
-        Body = ParticleBody.Gas;
-    }
+    public override uint Color => 0x99E2FA;
 
-    public override uint GetColor() => Color;
+    public override ParticleKind Kind => ParticleKind.Oxygen;
 
-    public override float GetDensity() => Density;
+    public override ParticleBody Body => ParticleBody.Gas;
 
-    public override ParticleKind GetKind() => Kind;
+    public override PhaseTransition[] Transitions => [];
+
+    public override ParticleInteraction[] Interactions { get; set; } = [];
 }
 
 public class SteamParticle : Particle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Steam;
-    private static readonly float Density = 15f;
-    private static readonly uint Color = 0xC7D5E0;
+    public override float Density => 15f;
 
-    public SteamParticle() : base()
+    public override uint Color => 0xC7D5E0;
+
+    public override ParticleKind Kind => ParticleKind.Steam;
+
+    public override ParticleBody Body => ParticleBody.Gas;
+
+    private static readonly PhaseTransition[] _transitions =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Down,
+            ResultKind = ParticleKind.Water,
+            Temperature = 99,
+        }
+    ];
+    public override PhaseTransition[] Transitions => _transitions;
+
+    public override ParticleInteraction[] Interactions { get; set; } = [];
+
+    public SteamParticle()
     {
-        Body = ParticleBody.Gas;
         Temperature = 128;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Down,
-                ResultKind = ParticleKind.Water,
-                Temperature = 99,
-            }
-        ];
     }
-
-    public override uint GetColor() => Color;
-
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
 }

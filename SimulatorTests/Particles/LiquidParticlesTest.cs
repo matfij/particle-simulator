@@ -12,9 +12,9 @@ public class LiquidParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(20, particle.Temperature);
         Assert.Equal(ParticleBody.Liquid, particle.Body);
-        Assert.Equal(1000, particle.GetDensity());
-        Assert.Equal(0x1CA3EC, (float)particle.GetColor());
-        Assert.Equal(ParticleKind.Water, particle.GetKind());
+        Assert.Equal(1000, particle.Density);
+        Assert.Equal(0x1CA3EC, (float)particle.Color);
+        Assert.Equal(ParticleKind.Water, particle.Kind);
     }
 
     [Fact]
@@ -25,9 +25,9 @@ public class LiquidParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(20, particle.Temperature);
         Assert.Equal(ParticleBody.Liquid, particle.Body);
-        Assert.Equal(1025, particle.GetDensity());
-        Assert.Equal(0x90AEBD, (float)particle.GetColor());
-        Assert.Equal(ParticleKind.SaltyWater, particle.GetKind());
+        Assert.Equal(1025, particle.Density);
+        Assert.Equal(0x90AEBD, (float)particle.Color);
+        Assert.Equal(ParticleKind.SaltyWater, particle.Kind);
     }
 
     [Fact]
@@ -38,9 +38,9 @@ public class LiquidParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(300, particle.Temperature);
         Assert.Equal(ParticleBody.Liquid, particle.Body);
-        Assert.Equal(1100, particle.GetDensity());
-        Assert.Equal(0x89FF00, (float)particle.GetColor());
-        Assert.Equal(ParticleKind.Acid, particle.GetKind());
+        Assert.Equal(1100, particle.Density);
+        Assert.Equal(0x89FF00, (float)particle.Color);
+        Assert.Equal(ParticleKind.Acid, particle.Kind);
     }
 
     [Fact]
@@ -51,8 +51,8 @@ public class LiquidParticlesTest
         Assert.NotNull(particle);
         Assert.Equal(1600, particle.Temperature);
         Assert.Equal(ParticleBody.Liquid, particle.Body);
-        Assert.Equal(2200, particle.GetDensity());
-        Assert.Equal(0xCF1020, (float)particle.GetColor());
-        Assert.Equal(ParticleKind.Lava, particle.GetKind());
+        Assert.Equal(2200, particle.Density);
+        Assert.Equal(0xCF1020, (float)particle.Color);
+        Assert.Equal(ParticleKind.Lava, particle.Kind);
     }
 }

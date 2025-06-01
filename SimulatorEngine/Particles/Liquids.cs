@@ -2,101 +2,97 @@
 
 public class WaterParticle : Particle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Water;
-    private static readonly float Density = 1000f;
-    private static readonly uint Color = 0x1CA3EC;
+    public override float Density => 1000f;
 
-    public WaterParticle() : base()
-    {
-        Body = ParticleBody.Liquid;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Up,
-                ResultKind = ParticleKind.Steam,
-                Temperature = 100,
-            }
-        ];
-    }
+    public override uint Color => 0x1CA3EC;
 
-    public override uint GetColor() => Color;
+    public override ParticleKind Kind => ParticleKind.Water;
 
-    public override float GetDensity() => Density;
+    public override ParticleBody Body => ParticleBody.Liquid;
 
-    public override ParticleKind GetKind() => Kind;
+    private static readonly PhaseTransition[] _transitions = 
+    [
+        new ()
+        {
+            Direction = PhaseTransitionDirection.Up,
+            ResultKind = ParticleKind.Steam,
+            Temperature = 100,
+        }
+    ];
+    public override PhaseTransition[] Transitions => _transitions;
+
+    public override ParticleInteraction[] Interactions { get; set; } = [];
 }
 
 public class SaltyWaterParticle : Particle
 {
-    private static readonly ParticleKind Kind = ParticleKind.SaltyWater;
-    private static readonly float Density = 1025f;
-    private static readonly uint Color = 0x90AEBD;
+    public override float Density => 1025f;
 
-    public SaltyWaterParticle() : base()
-    {
-        Body = ParticleBody.Liquid;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Up,
-                ResultKind = ParticleKind.Steam,
-                Temperature = 102,
-            }
-        ];
-    }
+    public override uint Color => 0x90AEBD;
 
-    public override uint GetColor() => Color;
+    public override ParticleKind Kind => ParticleKind.SaltyWater;
 
-    public override float GetDensity() => Density;
+    public override ParticleBody Body => ParticleBody.Liquid;
 
-    public override ParticleKind GetKind() => Kind;
+    private static readonly PhaseTransition[] _transitions =
+    [
+        new ()
+        {
+            Direction = PhaseTransitionDirection.Up,
+            ResultKind = ParticleKind.Steam,
+            Temperature = 102,
+        }
+    ];
+    public override PhaseTransition[] Transitions => _transitions;
+
+    public override ParticleInteraction[] Interactions { get; set; } = [];
 }
 
 public class AcidParticle : Particle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Acid;
-    private static readonly float Density = 1100f;
-    private static readonly uint Color = 0x89FF00;
+    public override float Density => 1100f;
 
-    public AcidParticle() : base()
+    public override uint Color => 0x89FF00;
+
+    public override ParticleKind Kind => ParticleKind.Acid;
+
+    public override ParticleBody Body => ParticleBody.Liquid;
+
+    public override PhaseTransition[] Transitions => [];
+
+    public override ParticleInteraction[] Interactions { get; set; } = [];
+
+    public AcidParticle()
     {
-        Body = ParticleBody.Liquid;
         Temperature = 300;
     }
-
-    public override uint GetColor() => Color;
-
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
 }
 
 public class LavaParticle : Particle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Lava;
-    private static readonly float Density = 2200f;
-    private static readonly uint Color = 0xCF1020;
+    public override float Density => 2200f;
 
-    public LavaParticle() : base()
+    public override uint Color => 0xCF1020;
+
+    public override ParticleKind Kind => ParticleKind.Lava;
+
+    public override ParticleBody Body => ParticleBody.Liquid;
+
+    private static readonly PhaseTransition[] _transitions =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Down,
+            ResultKind = ParticleKind.Stone,
+            Temperature = 1000,
+        }
+    ];
+    public override PhaseTransition[] Transitions => _transitions;
+
+    public override ParticleInteraction[] Interactions { get; set; } = [];
+
+    public LavaParticle()
     {
-        Body = ParticleBody.Liquid;
         Temperature = 1600;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Down,
-                ResultKind = ParticleKind.Stone,
-                Temperature = 1000,
-            }
-        ];
     }
-
-    public override uint GetColor() => Color;
-
-    public override float GetDensity() => Density;
-
-    public override ParticleKind GetKind() => Kind;
 }
