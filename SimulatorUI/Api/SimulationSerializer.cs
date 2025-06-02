@@ -19,7 +19,7 @@ public static class SimulationSerializer
         {
             simulationData.AppendLine(
                 $"{position.X}{_attributeSeparator}{position.Y}{_attributeSeparator}" +
-                $"{particle.GetKind()}{_attributeSeparator}{particle.Temperature}");
+                $"{particle.Kind}{_attributeSeparator}{particle.Temperature}");
         }
 
         return simulationData.ToString();

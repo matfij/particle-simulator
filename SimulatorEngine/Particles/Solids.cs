@@ -2,36 +2,32 @@
 
 public class IronParticle : Particle
 {
-    private static readonly ParticleKind Kind = ParticleKind.Iron;
-    private static readonly float Density = 7800f;
-    private static readonly uint Color = 0xA19D94;
+    public override float Density => 7800f;
 
-    public IronParticle() : base()
-    {
-        Body = ParticleBody.Solid;
-        Transitions =
-        [
-            new()
-            {
-                Direction = PhaseTransitionDirection.Up,
-                ResultKind = ParticleKind.Lava,
-                Temperature = 1500,
-            }
-        ];
-        Interactions =
-        [
-            new()
-            {
-                Result = InteractionResult.RemoveSelf,
-                NeighborKind = ParticleKind.Acid,
-                Ticks = 8,
-            },
-        ];
-    }
+    public override uint Color => 0xA19D94;
 
-    public override uint GetColor() => Color;
+    public override ParticleKind Kind => ParticleKind.Iron;
 
-    public override float GetDensity() => Density;
+    public override ParticleBody Body => ParticleBody.Solid;
 
-    public override ParticleKind GetKind() => Kind;
+    private static readonly PhaseTransition[] _transitions =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Up,
+            ResultKind = ParticleKind.Lava,
+            Temperature = 1500,
+        }
+    ];
+    public override PhaseTransition[] Transitions => _transitions;
+
+    public override ParticleInteraction[] Interactions { get; set; } =
+    [
+        new()
+        {
+            Result = InteractionResult.RemoveSelf,
+            NeighborKind = ParticleKind.Acid,
+            Ticks = 8,
+        },
+    ];
 }

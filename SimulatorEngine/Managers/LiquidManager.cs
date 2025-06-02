@@ -16,7 +16,7 @@ public class LiquidManager(float dt, float gravity)
         var initialPosition = position;
         var newPosition = initialPosition;
 
-        var dyMax = (int)(_dt * _gravity * particle.GetDensity());
+        var dyMax = (int)(_dt * _gravity * particle.Density);
         for (var dy = 1; dy <= dyMax; dy++)
         {
             var xNudge = _randomFactory.Next(-1, 2);
@@ -46,7 +46,7 @@ public class LiquidManager(float dt, float gravity)
 
         foreach (var direction in _sideDisplacementDirections)
         {
-            var dxMax = (int)(_dt * _sideDisplacementFactor / particle.GetDensity());
+            var dxMax = (int)(_dt * _sideDisplacementFactor / particle.Density);
 
             for (var dx = 1; dx <= dxMax; dx++)
             {

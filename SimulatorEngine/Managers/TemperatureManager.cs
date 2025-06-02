@@ -7,9 +7,9 @@ public static class TemperatureManager
 {
     private static readonly float _transferRatio = 0.05f;
     private static readonly float _minTransferThreshold = 0.1f;
-    private static readonly List<Vector2> _topLeftOffsets =
+    private static readonly Vector2[] _topLeftOffsets =
     [
-        new(0, 1), new(-1, 0),
+        new(0, 1), new(-1, 0), new (0, -1),
     ];
 
     public static void TransferHeat(Dictionary<Vector2, Particle> particles)
