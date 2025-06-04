@@ -4,19 +4,7 @@ public class IronParticle : Particle
 {
     public override float Density => 7800f;
 
-    public override uint Color // 0xA19D94
-    {
-        get
-        {
-            int baseRed = 0xA1;
-            int redShift = (int)(Temperature / 6);
-
-            int red = baseRed + redShift;
-            if (red > 255) red = 255;
-
-            return (uint)((red << 16) | (0x9D << 8) | 0x94);
-        }
-    }
+    public override uint Color => ComputeTemperatureAdjustedColor(0xA1, 0x9D, 0x94, 6f);
 
     public override ParticleKind Kind => ParticleKind.Iron;
 

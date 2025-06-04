@@ -32,4 +32,17 @@ public abstract class Particle
     public abstract ParticleBody Body { get; }
     public abstract PhaseTransition[] Transitions { get; }
     public abstract ParticleInteraction[] Interactions { get; set; }
+
+    protected uint ComputeTemperatureAdjustedColor(int baseRed, int green, int blue, float shiftFactor)
+    {
+        int redShift = (int)(Temperature / shiftFactor);
+        int red = baseRed + redShift;
+
+        if (red > 255)
+        {
+            red = 255;
+        }
+
+        return (uint)((red << 16) | (green << 8) | blue);
+    }
 }

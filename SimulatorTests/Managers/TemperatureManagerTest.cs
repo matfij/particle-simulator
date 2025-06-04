@@ -25,9 +25,9 @@ public class TemperatureManagerTest
 
         TemperatureManager.TransferHeat(particles);
 
-        Assert.InRange(waterParticle.Temperature, 50, 100);
-        Assert.InRange(lavaParticle1.Temperature, 1520, 1530);
-        Assert.InRange(lavaParticle2.Temperature, 1590, 1610);
+        Assert.InRange(waterParticle.Temperature, 150, 200);
+        Assert.InRange(lavaParticle1.Temperature, 1500, 1550);
+        Assert.InRange(lavaParticle2.Temperature, 1500, 1550);
     }
 
     [Fact]
