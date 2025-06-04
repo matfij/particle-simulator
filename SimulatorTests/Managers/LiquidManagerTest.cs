@@ -58,7 +58,7 @@ public class LiquidManagerTest
 
         var newPosition = manager.MoveLiquid(position, particle, particles);
 
-        Assert.Equal(new Vector2(100, 100), position);
+        Assert.Equal(new Vector2(100, 100), newPosition);
     }
 
     [Fact]

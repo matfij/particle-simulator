@@ -4,7 +4,7 @@ public class SandParticle : Particle
 {
     public override float Density => 1600f;
 
-    public override uint Color => 0xF6D7B0;
+    public override uint Color => ComputeTemperatureAdjustedColor(0xF6, 0xD7, 0xB0, 8f);
 
     public override ParticleKind Kind => ParticleKind.Sand;
 
@@ -36,7 +36,7 @@ public class SaltParticle : Particle
 {
     public override float Density => 2100f;
 
-    public override uint Color => 0xFCF9F3;
+    public override uint Color => ComputeTemperatureAdjustedColor(0xFC, 0xF9, 0xF3, 8f);
 
     public override ParticleKind Kind => ParticleKind.Salt;
 
@@ -75,7 +75,7 @@ public class StoneParticle : Particle
 {
     public override float Density => 2500f;
 
-    public override uint Color => 0x787A79;
+    public override uint Color => ComputeTemperatureAdjustedColor(0x78, 0x7A, 0x79, 6f);
 
     public override ParticleKind Kind => ParticleKind.Stone;
 

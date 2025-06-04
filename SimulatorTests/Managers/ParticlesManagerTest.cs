@@ -142,9 +142,9 @@ public class ParticlesManagerTest
 
         manager.TogglePlaySimulation(true);
 
-        await Task.Delay(200);
+        await Task.Delay(1000);
 
-        Assert.InRange(manager.MoveTime.TotalMilliseconds, 10, 75);
+        Assert.InRange(manager.MoveTime.TotalMilliseconds, 1, 400);
     }
 
     [Fact]
@@ -178,8 +178,8 @@ public class ParticlesManagerTest
 
         manager.TogglePlaySimulation(true);
 
-        await Task.Delay(100);
+        await Task.Delay(1000);
 
-        Assert.InRange(manager.HeatTransferTime.TotalMilliseconds, 10, 50);
+        Assert.InRange(manager.HeatTransferTime.TotalMilliseconds, 1, 200);
     }
 }

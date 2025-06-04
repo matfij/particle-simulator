@@ -4,7 +4,7 @@ public class IronParticle : Particle
 {
     public override float Density => 7800f;
 
-    public override uint Color => 0xA19D94;
+    public override uint Color => ComputeTemperatureAdjustedColor(0xA1, 0x9D, 0x94, 6f);
 
     public override ParticleKind Kind => ParticleKind.Iron;
 
