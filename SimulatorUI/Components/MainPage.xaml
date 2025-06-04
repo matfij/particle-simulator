@@ -124,6 +124,12 @@
                     Clicked="SetParticleKind"
                     CommandParameter="{x:Static local:ParticleKind.Steam}" 
                     BackgroundColor="#C7D5E0"/>
+                <Button 
+                    Style="{StaticResource ParticleButton}"
+                    ToolTipProperties.Text="Plant"
+                    Clicked="SetParticleKind"
+                    CommandParameter="{x:Static local:ParticleKind.Plant}" 
+                    BackgroundColor="#4CD038"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout 

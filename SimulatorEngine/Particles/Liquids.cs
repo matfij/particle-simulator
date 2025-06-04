@@ -10,7 +10,7 @@ public class WaterParticle : Particle
 
     public override ParticleBody Body => ParticleBody.Liquid;
 
-    private static readonly PhaseTransition[] _transitions = 
+    private static readonly PhaseTransition[] _transitions =
     [
         new ()
         {
@@ -21,7 +21,16 @@ public class WaterParticle : Particle
     ];
     public override PhaseTransition[] Transitions => _transitions;
 
-    public override ParticleInteraction[] Interactions { get; set; } = [];
+    public override ParticleInteraction[] Interactions { get; set; } =
+    [
+        new()
+        {
+            Result = InteractionResult.Merge,
+            NeighborKind = ParticleKind.Plant,
+            ResultKind = ParticleKind.Plant,
+            Ticks = 16,
+        },
+    ];
 }
 
 public class SaltyWaterParticle : Particle
