@@ -147,6 +147,7 @@ public class ParticlesManager : IParticlesManager
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
+                case ParticleBody.Plasma:
                     newPosition = _gasManager.MoveGas(position, particle, particlesToMove);
                     break;
                 case ParticleBody.Liquid:

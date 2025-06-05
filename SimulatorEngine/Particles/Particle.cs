@@ -14,6 +14,7 @@ public enum ParticleKind
     Stone,
     Steam,
     Plant,
+    Fire,
 }
 
 public enum ParticleBody
@@ -22,6 +23,7 @@ public enum ParticleBody
     Powder,
     Liquid,
     Gas,
+    Plasma,
 }
 
 public abstract class Particle

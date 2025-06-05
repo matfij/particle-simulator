@@ -58,5 +58,12 @@ public class PlantParticle : Particle
             NeighborKind = ParticleKind.Acid,
             Ticks = 3,
         },
+        new()
+        {
+            Result = InteractionResult.Merge,
+            NeighborKind = ParticleKind.Fire,
+            ResultKind = ParticleKind.Fire,
+            Ticks = 3,
+        },
     ];
 }
