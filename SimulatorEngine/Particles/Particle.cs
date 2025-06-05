@@ -13,6 +13,7 @@ public enum ParticleKind
     Lava,
     Stone,
     Steam,
+    Plant,
 }
 
 public enum ParticleBody
@@ -37,12 +38,14 @@ public abstract class Particle
     {
         int redShift = (int)(Temperature / shiftFactor);
         int red = baseRed + redShift;
-
         if (red > 255)
         {
             red = 255;
         }
-
+        else if (red < 0)
+        {
+            red = 0;
+        }
         return (uint)((red << 16) | (green << 8) | blue);
     }
 }

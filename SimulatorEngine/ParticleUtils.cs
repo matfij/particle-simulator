@@ -25,7 +25,7 @@ public static class ParticleUtils
         Dictionary<Vector2, Particle> particles,
         Vector2 newPositionCandidate)
     {
-        if (collidingParticle.Density >= particle.Density)
+        if (collidingParticle.Body == ParticleBody.Solid || collidingParticle.Density >= particle.Density)
         {
             return false;
         }

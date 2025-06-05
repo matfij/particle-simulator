@@ -28,4 +28,17 @@ public class SolidParticlesTest
 
         Assert.Equal(0xFF9D94, (float)particle.Color);
     }
+
+    [Fact]
+    public void Should_CreatePlantParticle()
+    {
+        var particle = new PlantParticle();
+
+        Assert.NotNull(particle);
+        Assert.Equal(20, particle.Temperature);
+        Assert.Equal(ParticleBody.Solid, particle.Body);
+        Assert.Equal(400, particle.Density);
+        Assert.Equal(0x4CD038, (float)particle.Color);
+        Assert.Equal(ParticleKind.Plant, particle.Kind);
+    }
 }

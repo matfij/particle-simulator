@@ -31,3 +31,32 @@ public class IronParticle : Particle
         },
     ];
 }
+
+public class PlantParticle : Particle
+{
+    public override float Density => 400f;
+
+    public override uint Color => 0x4CD038;
+
+    public override ParticleKind Kind => ParticleKind.Plant;
+
+    public override ParticleBody Body => ParticleBody.Solid;
+
+    public override PhaseTransition[] Transitions => [];
+
+    public override ParticleInteraction[] Interactions { get; set; } =
+    [
+        new()
+        {
+            Result = InteractionResult.RemoveSelf,
+            NeighborKind = ParticleKind.SaltyWater,
+            Ticks = 15,
+        },
+        new()
+        {
+            Result = InteractionResult.RemoveSelf,
+            NeighborKind = ParticleKind.Acid,
+            Ticks = 3,
+        },
+    ];
+}
