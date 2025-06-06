@@ -12,7 +12,16 @@ public class OxygenParticle : Particle
 
     public override PhaseTransition[] Transitions => [];
 
-    public override ParticleInteraction[] Interactions { get; set; } = [];
+    public override ParticleInteraction[] Interactions { get; set; } =
+    [
+        new()
+        {
+            Result = InteractionResult.Merge,
+            NeighborKind = ParticleKind.Fire,
+            ResultKind = ParticleKind.Fire,
+            Ticks = 2,
+        },
+    ];
 }
 
 public class SteamParticle : Particle
