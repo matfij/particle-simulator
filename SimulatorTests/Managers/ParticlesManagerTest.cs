@@ -139,12 +139,13 @@ public class ParticlesManagerTest
         manager.AddParticles(new(200, 200), 100, ParticleKind.Lava);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Sand);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Oxygen);
+        manager.AddParticles(new(600, 200), 100, ParticleKind.Fire);
 
         manager.TogglePlaySimulation(true);
 
         await Task.Delay(1000);
 
-        Assert.InRange(manager.MoveTime.TotalMilliseconds, 1, 400);
+        Assert.InRange(manager.MoveTime.TotalMilliseconds, 1, 500);
     }
 
     [Fact]
@@ -157,12 +158,13 @@ public class ParticlesManagerTest
         manager.AddParticles(new(200, 200), 100, ParticleKind.Water);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Iron);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Oxygen);
+        manager.AddParticles(new(600, 200), 100, ParticleKind.Fire);
 
         manager.TogglePlaySimulation(true);
 
-        await Task.Delay(100);
+        await Task.Delay(1000);
 
-        Assert.InRange(manager.InteractionTime.TotalMilliseconds, 10, 50);
+        Assert.InRange(manager.InteractionTime.TotalMilliseconds, 10, 100);
     }
 
     [Fact]
@@ -175,11 +177,12 @@ public class ParticlesManagerTest
         manager.AddParticles(new(200, 200), 100, ParticleKind.Water);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Iron);
         manager.AddParticles(new(400, 200), 100, ParticleKind.Steam);
+        manager.AddParticles(new(600, 200), 100, ParticleKind.Fire);
 
         manager.TogglePlaySimulation(true);
 
         await Task.Delay(1000);
 
-        Assert.InRange(manager.HeatTransferTime.TotalMilliseconds, 1, 200);
+        Assert.InRange(manager.HeatTransferTime.TotalMilliseconds, 1, 250);
     }
 }

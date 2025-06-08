@@ -7,8 +7,8 @@ public class LiquidManager(float dt, float gravity)
 {
     private readonly float _dt = dt;
     private readonly float _gravity = gravity;
-    private readonly float _sideDisplacementFactor = 100_000;
-    private readonly int[] _sideDisplacementDirections = [-1, 1];
+    private readonly float _dxFactor = 100_000;
+    private readonly int[] _dxDirections = [-1, 1];
     private readonly Random _randomFactory = new();
 
     public Vector2 MoveLiquid(Vector2 position, Particle particle, Dictionary<Vector2, Particle> particles)
@@ -42,11 +42,11 @@ public class LiquidManager(float dt, float gravity)
             return newPosition;
         }
 
-        _randomFactory.Shuffle(_sideDisplacementDirections);
+        _randomFactory.Shuffle(_dxDirections);
 
-        foreach (var direction in _sideDisplacementDirections)
+        foreach (var direction in _dxDirections)
         {
-            var dxMax = (int)(_dt * _sideDisplacementFactor / particle.Density);
+            var dxMax = (int)(_dt * _dxFactor / particle.Density);
 
             for (var dx = 1; dx <= dxMax; dx++)
             {

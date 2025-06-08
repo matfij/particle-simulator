@@ -33,6 +33,7 @@ public class ParticlesManager : IParticlesManager
     private readonly LiquidManager _liquidManager;
     private readonly PowderManager _powderManager;
     private readonly GasManager _gasManager;
+    private readonly PlasmaManager _plasmaManager;
     private readonly Stopwatch _stopwatch = new();
     private bool _particlesLock = false;
 
@@ -41,6 +42,7 @@ public class ParticlesManager : IParticlesManager
         _liquidManager = new(_dt, _gravity);
         _powderManager = new(_dt, _gravity);
         _gasManager = new(_dt, _gravity);
+        _plasmaManager = new(_dt, _gravity);
         _simulationTimer.Elapsed += (sender, args) => Tick();
     }
 
@@ -147,7 +149,6 @@ public class ParticlesManager : IParticlesManager
             switch (particle.Body)
             {
                 case ParticleBody.Gas:
-                case ParticleBody.Plasma:
                     newPosition = _gasManager.MoveGas(position, particle, particlesToMove);
                     break;
                 case ParticleBody.Liquid:
@@ -155,6 +156,9 @@ public class ParticlesManager : IParticlesManager
                     break;
                 case ParticleBody.Powder:
                     newPosition = _powderManager.MovePowder(position, particle, particlesToMove);
+                    break;
+                case ParticleBody.Plasma:
+                    newPosition = _plasmaManager.MovePlasma(position, particle, particlesToMove);
                     break;
             }
             if (newPosition != position)

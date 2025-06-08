@@ -26,6 +26,12 @@ public class FireParticle : Particle
             NeighborKind = ParticleKind.SaltyWater,
             Ticks = 2,
         },
+        new ()
+        {
+            Result = InteractionResult.RemoveSelf,
+            NeighborKind = ParticleKind.Steam,
+            Ticks = 4,
+        },
     ];
 
     public FireParticle()
