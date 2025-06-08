@@ -4,7 +4,7 @@ using SimulatorEngine.Particles;
 
 namespace SimulatorTests.Managers;
 
-public class PlasmaMangerTest
+public class PlasmaManagerTest
 {
     private readonly float _dt = 1;
     private readonly float _gravity = 0.005f;
@@ -13,11 +13,11 @@ public class PlasmaMangerTest
     public void Should_MoveParticleWhenNotBlocked()
     {
         var position = new Vector2(100, 100);
-        var particle = new WaterParticle();
+        var particle = new FireParticle();
         Dictionary<Vector2, Particle> particles = [];
-        var manager = new LiquidManager(_dt, _gravity);
+        var manager = new PlasmaManager(_dt, _gravity);
 
-        var newPosition = manager.MoveLiquid(position, particle, particles);
+        var newPosition = manager.MovePlasma(position, particle, particles);
 
         Assert.NotEqual(new Vector2(100, 100), newPosition);
     }
@@ -26,7 +26,7 @@ public class PlasmaMangerTest
     public void Should_NotMoveParticleWhenBlocked()
     {
         var position = new Vector2(100, 100);
-        var particle = new WaterParticle();
+        var particle = new FireParticle();
         Dictionary<Vector2, Particle> particles = new()
         {
             { new Vector2(99, 100), new IronParticle() },
@@ -35,9 +35,9 @@ public class PlasmaMangerTest
             { new Vector2(100, 101), new IronParticle() },
             { new Vector2(101, 100), new IronParticle() },
         };
-        var manager = new LiquidManager(_dt, _gravity);
+        var manager = new PlasmaManager(_dt, _gravity);
 
-        var newPosition = manager.MoveLiquid(position, particle, particles);
+        var newPosition = manager.MovePlasma(position, particle, particles);
 
         Assert.Equal(new Vector2(100, 100), newPosition);
     }

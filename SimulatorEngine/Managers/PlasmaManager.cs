@@ -27,11 +27,9 @@ public class PlasmaManager(float dt, float gravity)
             {
                 newPosition = newPositionCandidate;
             }
-            else if (collidingParticle.Body != ParticleBody.Gas || collidingParticle.Body != ParticleBody.Plasma)
-            {
-                continue;
-            }
-            else
+            else if (collidingParticle.Body == ParticleBody.Solid
+                || collidingParticle.Body == ParticleBody.Powder
+                || collidingParticle.Body == ParticleBody.Liquid)
             {
                 break;
             }
