@@ -15,6 +15,7 @@ public enum ParticleKind
     Steam,
     Plant,
     Fire,
+    Smoke,
 }
 
 public enum ParticleBody
