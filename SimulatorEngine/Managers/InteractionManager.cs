@@ -9,6 +9,16 @@ public static class InteractionManager
     {
         foreach (var interaction in particle.Interactions)
         {
+            if (interaction.Result == InteractionResult.ExipreTransform
+                && ParticleUtils.GetNeighborOfKind(position, particles, particle.Kind) is not { })
+            {
+                interaction.Ticks--;
+                if (interaction.Ticks <= 0)
+                {
+                    return ParticlesPool.GetParticle(interaction.ResultKind ?? ParticleKind.None);
+                }
+                continue;
+            }
             if (ParticleUtils.GetNeighborOfKind(position, particles, interaction.NeighborKind) is not { } neighbor)
             {
                 continue;

@@ -74,7 +74,7 @@ public static class ParticleUtils
     public static (Vector2, Particle)? GetNeighborOfKind(
         Vector2 position,
         Dictionary<Vector2, Particle> particles,
-        ParticleKind kind)
+        ParticleKind? kind)
     {
         foreach (var offset in _strictNeighborOffsets)
         {

@@ -12,7 +12,7 @@ public class FireParticle : Particle
 
     public override PhaseTransition[] Transitions => [];
 
-    public override ParticleInteraction[] Interactions { get; set; } = 
+    public override ParticleInteraction[] Interactions { get; set; } =
     [
         new ()
         {
@@ -37,6 +37,12 @@ public class FireParticle : Particle
             Result = InteractionResult.RemoveSelf,
             NeighborKind = ParticleKind.Smoke,
             Ticks = 5,
+        },
+        new ()
+        {
+            Result = InteractionResult.ExipreTransform,
+            ResultKind = ParticleKind.Smoke,
+            Ticks = 40,
         },
     ];
 
