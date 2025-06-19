@@ -6,7 +6,7 @@ public enum InteractionResult
     RemoveNeighbor,
     RemoveSelf,
     RemoveBoth,
-    ExipreTransform,
+    ExpireTransform,
 }
 
 public class ParticleInteraction

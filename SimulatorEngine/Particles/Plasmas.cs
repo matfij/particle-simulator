@@ -40,7 +40,7 @@ public class FireParticle : Particle
         },
         new ()
         {
-            Result = InteractionResult.ExipreTransform,
+            Result = InteractionResult.ExpireTransform,
             ResultKind = ParticleKind.Smoke,
             Ticks = 40,
         },

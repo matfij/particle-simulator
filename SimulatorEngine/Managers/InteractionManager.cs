@@ -9,7 +9,7 @@ public static class InteractionManager
     {
         foreach (var interaction in particle.Interactions)
         {
-            if (interaction.Result == InteractionResult.ExipreTransform
+            if (interaction.Result == InteractionResult.ExpireTransform
                 && ParticleUtils.GetNeighborOfKind(position, particles, particle.Kind) is not { })
             {
                 interaction.Ticks--;
