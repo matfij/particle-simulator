@@ -61,4 +61,30 @@ public class InteractionManagerTest
         Assert.True(particles.TryGetValue(new Vector2(255, 256), out var acidParticle));
         Assert.Equal(ParticleKind.Acid, acidParticle.Kind);
     }
+
+    [Fact]
+    public void Should_DoExpireTransformInteraction()
+    {
+        var position = new Vector2(128, 128);
+        var particle = new FireParticle();
+        Dictionary<Vector2, Particle> particles = new()
+        {
+            { position,  particle },
+        };
+
+        var updatedParticle = InteractionManager.DoInteractions(position, particle, particles);
+
+        Assert.Equal(ParticleKind.Fire, updatedParticle?.Kind);
+        
+        for (var i = 0; i <= 100; i++)
+        {
+            if (updatedParticle is null)
+            {
+                break;
+            }
+            updatedParticle = InteractionManager.DoInteractions(position, updatedParticle, particles);
+        }
+
+        Assert.Equal(ParticleKind.Smoke, updatedParticle?.Kind);
+    }
 }
