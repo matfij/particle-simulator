@@ -11,6 +11,7 @@ public partial class DownloadPage : ContentPage
     private bool _loaded = false;
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
+    private readonly CancellationTokenSource _cancellationTokenSource;
     private ObservableCollection<SimulationTile> _simulationTiles = [];
 
     public DownloadPage(IApiManager apiManager, IParticlesManager particlesManager)
@@ -18,6 +19,7 @@ public partial class DownloadPage : ContentPage
         InitializeComponent();
         _apiManager = apiManager;
         _particlesManager = particlesManager;
+        _cancellationTokenSource = new CancellationTokenSource();
     }
 
     protected override void OnAppearing()
@@ -52,7 +54,7 @@ public partial class DownloadPage : ContentPage
 
     private async Task FetchSimulations()
     {
-        var simulations = await _apiManager.DownloadSimulationsPreview();
+        var simulations = await _apiManager.DownloadSimulationsPreview(_cancellationTokenSource.Token);
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
@@ -77,7 +79,7 @@ public partial class DownloadPage : ContentPage
                 LoadingIndicator.IsVisible = true;
                 SimulationList.IsVisible = false;
 
-                var data = await _apiManager.DownloadSimulation(id);
+                var data = await _apiManager.DownloadSimulation(id, _cancellationTokenSource.Token);
                 var simulation = await SimulationSerializer.Deserialize(data);
 
                 _particlesManager.OverrideSimulation(simulation);
@@ -107,6 +109,8 @@ public partial class DownloadPage : ContentPage
 
     private async void OnCancel(object sender, EventArgs e)
     {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
         await Navigation.PopModalAsync();
     }
 }
