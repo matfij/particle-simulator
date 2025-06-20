@@ -41,12 +41,12 @@ public partial class DownloadPage : ContentPage
             }
             catch (HttpRequestException ex)
             {
-                MainThread.BeginInvokeOnMainThread(async () => 
+                MainThread.BeginInvokeOnMainThread(async () =>
                     await DisplayAlert(AppStrings.Error, ex.Message, AppStrings.Close));
             }
             catch
             {
-                MainThread.BeginInvokeOnMainThread(async () => 
+                MainThread.BeginInvokeOnMainThread(async () =>
                     await DisplayAlert(AppStrings.Error, AppStrings.DownloadGenericError, AppStrings.Close));
             }
             finally
@@ -62,11 +62,11 @@ public partial class DownloadPage : ContentPage
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            _simulationTiles = new ObservableCollection<SimulationTile>(simulations.Select(s => 
-                new SimulationTile 
-                { 
-                    Id = s.Id, 
-                    Name = s.Name, 
+            _simulationTiles = new ObservableCollection<SimulationTile>(simulations.Select(s =>
+                new SimulationTile
+                {
+                    Id = s.Id,
+                    Name = s.Name,
                     Downloads = s.Downloads,
                 }));
             SimulationList.ItemsSource = _simulationTiles;
@@ -98,7 +98,7 @@ public partial class DownloadPage : ContentPage
                     AppStrings.Success, string.Format(AppStrings.SimulationDownloaded, simulationTile.Name), AppStrings.Close);
                 await Navigation.PopModalAsync();
             }
-            catch (Exception ex) when (ex is FormatException || ex is HttpRequestException) 
+            catch (Exception ex) when (ex is FormatException || ex is HttpRequestException)
             {
                 await DisplayAlert(AppStrings.Error, ex.Message, AppStrings.Close);
             }
@@ -118,8 +118,17 @@ public partial class DownloadPage : ContentPage
     {
         LoadingIndicator.IsVisible = false;
         SimulationList.IsVisible = true;
-        _previewCancellationTokenSource?.Cancel();
-        _downloadCancellationTokenSource?.Cancel();
+
+        if (_previewCancellationTokenSource is not null)
+        {
+            await _previewCancellationTokenSource.CancelAsync();
+        }
+
+        if (_downloadCancellationTokenSource is not null)
+        {
+            await _downloadCancellationTokenSource.CancelAsync();
+        }
+
         await Navigation.PopModalAsync();
     }
 }
