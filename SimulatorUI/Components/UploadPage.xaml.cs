@@ -9,6 +9,7 @@ public partial class UploadPage : ContentPage
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
     private readonly (int minLength, int maxLength) _nameConfig = (minLength: 4, maxLength: 12);
+    private CancellationTokenSource? _cancellationTokenSource;
 
     public UploadPage(IApiManager apiManager, IParticlesManager particlesManager)
     {
@@ -26,10 +27,16 @@ public partial class UploadPage : ContentPage
         }
         try
         {
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
+
             ToggleLoading(true);
+
             var simulationData = SimulationSerializer.Serialize(_particlesManager.Particles);
-            await _apiManager.UploadSimulation(name, simulationData);
+            await _apiManager.UploadSimulation(name, simulationData, _cancellationTokenSource.Token);
+
             ToggleLoading(false);
+
             await DisplayAlert(AppStrings.Success, string.Format(AppStrings.SimulationShared, name), AppStrings.Close);
             await Navigation.PopModalAsync();
         }
@@ -72,6 +79,11 @@ public partial class UploadPage : ContentPage
 
     private async void OnCancel(object sender, EventArgs e)
     {
+        if (_cancellationTokenSource is not null)
+        {
+            await _cancellationTokenSource.CancelAsync();
+        }
+
         await Navigation.PopModalAsync();
     }
 }

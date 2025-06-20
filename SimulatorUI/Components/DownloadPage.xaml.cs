@@ -11,6 +11,8 @@ public partial class DownloadPage : ContentPage
     private bool _loaded = false;
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
+    private CancellationTokenSource? _previewCancellationTokenSource;
+    private CancellationTokenSource? _downloadCancellationTokenSource;
     private ObservableCollection<SimulationTile> _simulationTiles = [];
 
     public DownloadPage(IApiManager apiManager, IParticlesManager particlesManager)
@@ -23,6 +25,7 @@ public partial class DownloadPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
         Task.Run(async () =>
         {
             try
@@ -35,12 +38,12 @@ public partial class DownloadPage : ContentPage
             }
             catch (HttpRequestException ex)
             {
-                MainThread.BeginInvokeOnMainThread(async () => 
+                MainThread.BeginInvokeOnMainThread(async () =>
                     await DisplayAlert(AppStrings.Error, ex.Message, AppStrings.Close));
             }
             catch
             {
-                MainThread.BeginInvokeOnMainThread(async () => 
+                MainThread.BeginInvokeOnMainThread(async () =>
                     await DisplayAlert(AppStrings.Error, AppStrings.DownloadGenericError, AppStrings.Close));
             }
             finally
@@ -52,15 +55,18 @@ public partial class DownloadPage : ContentPage
 
     private async Task FetchSimulations()
     {
-        var simulations = await _apiManager.DownloadSimulationsPreview();
+        _previewCancellationTokenSource?.Dispose();
+        _previewCancellationTokenSource = new CancellationTokenSource();
+
+        var simulations = await _apiManager.DownloadSimulationsPreview(_previewCancellationTokenSource.Token);
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            _simulationTiles = new ObservableCollection<SimulationTile>(simulations.Select(s => 
-                new SimulationTile 
-                { 
-                    Id = s.Id, 
-                    Name = s.Name, 
+            _simulationTiles = new ObservableCollection<SimulationTile>(simulations.Select(s =>
+                new SimulationTile
+                {
+                    Id = s.Id,
+                    Name = s.Name,
                     Downloads = s.Downloads,
                 }));
             SimulationList.ItemsSource = _simulationTiles;
@@ -77,7 +83,10 @@ public partial class DownloadPage : ContentPage
                 LoadingIndicator.IsVisible = true;
                 SimulationList.IsVisible = false;
 
-                var data = await _apiManager.DownloadSimulation(id);
+                _downloadCancellationTokenSource?.Dispose();
+                _downloadCancellationTokenSource = new CancellationTokenSource();
+
+                var data = await _apiManager.DownloadSimulation(id, _downloadCancellationTokenSource.Token);
                 var simulation = await SimulationSerializer.Deserialize(data);
 
                 _particlesManager.OverrideSimulation(simulation);
@@ -89,7 +98,7 @@ public partial class DownloadPage : ContentPage
                     AppStrings.Success, string.Format(AppStrings.SimulationDownloaded, simulationTile.Name), AppStrings.Close);
                 await Navigation.PopModalAsync();
             }
-            catch (Exception ex) when (ex is FormatException || ex is HttpRequestException) 
+            catch (Exception ex) when (ex is FormatException || ex is HttpRequestException)
             {
                 await DisplayAlert(AppStrings.Error, ex.Message, AppStrings.Close);
             }
@@ -107,6 +116,19 @@ public partial class DownloadPage : ContentPage
 
     private async void OnCancel(object sender, EventArgs e)
     {
+        LoadingIndicator.IsVisible = false;
+        SimulationList.IsVisible = true;
+
+        if (_previewCancellationTokenSource is not null)
+        {
+            await _previewCancellationTokenSource.CancelAsync();
+        }
+
+        if (_downloadCancellationTokenSource is not null)
+        {
+            await _downloadCancellationTokenSource.CancelAsync();
+        }
+
         await Navigation.PopModalAsync();
     }
 }
