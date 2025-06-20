@@ -11,7 +11,8 @@ public partial class DownloadPage : ContentPage
     private bool _loaded = false;
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
-    private readonly CancellationTokenSource _cancellationTokenSource;
+    private CancellationTokenSource? _previewCancellationTokenSource;
+    private CancellationTokenSource? _downloadCancellationTokenSource;
     private ObservableCollection<SimulationTile> _simulationTiles = [];
 
     public DownloadPage(IApiManager apiManager, IParticlesManager particlesManager)
@@ -19,12 +20,15 @@ public partial class DownloadPage : ContentPage
         InitializeComponent();
         _apiManager = apiManager;
         _particlesManager = particlesManager;
-        _cancellationTokenSource = new CancellationTokenSource();
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        _previewCancellationTokenSource?.Dispose();
+        _previewCancellationTokenSource = new CancellationTokenSource();
+
         Task.Run(async () =>
         {
             try
@@ -54,7 +58,7 @@ public partial class DownloadPage : ContentPage
 
     private async Task FetchSimulations()
     {
-        var simulations = await _apiManager.DownloadSimulationsPreview(_cancellationTokenSource.Token);
+        var simulations = await _apiManager.DownloadSimulationsPreview(_previewCancellationTokenSource.Token);
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
@@ -79,7 +83,10 @@ public partial class DownloadPage : ContentPage
                 LoadingIndicator.IsVisible = true;
                 SimulationList.IsVisible = false;
 
-                var data = await _apiManager.DownloadSimulation(id, _cancellationTokenSource.Token);
+                _downloadCancellationTokenSource?.Dispose();
+                _downloadCancellationTokenSource = new CancellationTokenSource();
+
+                var data = await _apiManager.DownloadSimulation(id, _downloadCancellationTokenSource.Token);
                 var simulation = await SimulationSerializer.Deserialize(data);
 
                 _particlesManager.OverrideSimulation(simulation);
@@ -109,8 +116,10 @@ public partial class DownloadPage : ContentPage
 
     private async void OnCancel(object sender, EventArgs e)
     {
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
+        LoadingIndicator.IsVisible = false;
+        SimulationList.IsVisible = true;
+        _previewCancellationTokenSource?.Cancel();
+        _downloadCancellationTokenSource?.Cancel();
         await Navigation.PopModalAsync();
     }
 }

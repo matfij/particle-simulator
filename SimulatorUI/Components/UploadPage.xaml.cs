@@ -8,7 +8,7 @@ public partial class UploadPage : ContentPage
 {
     private readonly IApiManager _apiManager;
     private readonly IParticlesManager _particlesManager;
-    private readonly CancellationTokenSource _cancellationTokenSource;
+    private CancellationTokenSource _cancellationTokenSource;
     private readonly (int minLength, int maxLength) _nameConfig = (minLength: 4, maxLength: 12);
 
     public UploadPage(IApiManager apiManager, IParticlesManager particlesManager)
@@ -16,6 +16,10 @@ public partial class UploadPage : ContentPage
         InitializeComponent();
         _apiManager = apiManager;
         _particlesManager = particlesManager;
+        _cancellationTokenSource = new CancellationTokenSource();
+    }
+    protected override void OnAppearing()
+    {
         _cancellationTokenSource = new CancellationTokenSource();
     }
 
@@ -75,7 +79,6 @@ public partial class UploadPage : ContentPage
     private async void OnCancel(object sender, EventArgs e)
     {
         _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
         await Navigation.PopModalAsync();
     }
 }

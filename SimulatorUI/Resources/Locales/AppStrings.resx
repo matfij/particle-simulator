@@ -153,6 +153,9 @@
   <data name="NameError" xml:space="preserve">
     <value>Name must be between 4 and 20 characters</value>
   </data>
+  <data name="OperationCancelled" xml:space="preserve">
+    <value>Operation was cancelled</value>
+  </data>
   <data name="PaintTime" xml:space="preserve">
     <value>Paint time</value>
   </data>

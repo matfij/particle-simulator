@@ -169,6 +169,15 @@ namespace SimulatorUI.Resources.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operation was cancelled.
+        /// </summary>
+        internal static string OperationCancelled {
+            get {
+                return ResourceManager.GetString("OperationCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paint time.
         /// </summary>
         internal static string PaintTime {

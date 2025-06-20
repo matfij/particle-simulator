@@ -6,9 +6,9 @@ namespace SimulatorUI.Api;
 
 public interface IApiManager
 {
-    Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview(CancellationToken token);
-    Task UploadSimulation(string simulationName, string simulationData, CancellationToken token);
-    Task<Stream> DownloadSimulation(string simulationId, CancellationToken token);
+    Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview(CancellationToken token = default);
+    Task UploadSimulation(string simulationName, string simulationData, CancellationToken token = default);
+    Task<Stream> DownloadSimulation(string simulationId, CancellationToken token = default);
 }
 
 public class ApiManager : IApiManager
@@ -24,7 +24,7 @@ public class ApiManager : IApiManager
         _httpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
     }
 
-    public async Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview(CancellationToken token)
+    public async Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview(CancellationToken token = default)
     {
         var response = await _httpClient.GetAsync($"{_apiUrl}/v1/preview", token);
         var data = await response.Content.ReadAsStringAsync(token);
@@ -42,7 +42,7 @@ public class ApiManager : IApiManager
         return simulationsResponse.Simulations;
     }
 
-    public async Task UploadSimulation(string simulationName, string simulationData, CancellationToken token)
+    public async Task UploadSimulation(string simulationName, string simulationData, CancellationToken token = default)
     {
         var simulationUploadRequest = new SimulationUploadRequest
         {
@@ -83,7 +83,7 @@ public class ApiManager : IApiManager
         }
     }
 
-    public async Task<Stream> DownloadSimulation(string simulationId, CancellationToken token)
+    public async Task<Stream> DownloadSimulation(string simulationId, CancellationToken token = default)
     {
         var simulationDownloadRequest = new SimulationDownloadRequest { SimulationId = simulationId };
         var body = new StringContent(
