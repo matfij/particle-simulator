@@ -162,12 +162,16 @@
                     Source="clear.png"
                     Clicked="OnClearSimulation"/>
                 <ImageButton 
+                    x:Name="CloudShareButton"
                     Style="{StaticResource IconButton}" 
                     Source="upload.png"
+                    IsVisible="False"
                     Clicked="OnOpenUploadPage"/>
                 <ImageButton 
+                    x:Name="CloudDownloadButton"
                     Style="{StaticResource IconButton}" 
                     Source="download.png"
+                    IsVisible="False"
                     Clicked="OnOpenDownloadPage"/>
             </HorizontalStackLayout>
         </Grid>

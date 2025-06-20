@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using SimulatorEngine;
 using SimulatorEngine.Particles;
 using SimulatorUI.Components;
+using SimulatorUI.Definitions;
 using SimulatorUI.Resources.Locales;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
@@ -30,17 +32,56 @@ public partial class MainPage : ContentPage
     private TimeSpan _paintTime = new();
     private readonly UploadPage _uploadPage;
     private readonly DownloadPage _downloadPage;
+    private readonly DebugLevel _debugLevel;
+    private readonly SharingMethod _sharingMethod;
 
-    public MainPage(IParticlesManager particlesManager, UploadPage uploadPage, DownloadPage downloadPage)
+    public MainPage(
+        IParticlesManager particlesManager,
+        UploadPage uploadPage,
+        DownloadPage downloadPage,
+        IConfiguration configuration)
     {
         InitializeComponent();
+
         _particlesManager = particlesManager;
         _uploadPage = uploadPage;
         _downloadPage = downloadPage;
+
+        _debugLevel = Enum.TryParse(configuration["DebugLevel"], out DebugLevel level) 
+            ? level 
+            : DebugLevel.None;
+        _sharingMethod = Enum.TryParse(configuration["SharingMethod"], out SharingMethod method) 
+            ? method 
+            : SharingMethod.None;
+
         _paintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
         _paintTimer.Start();
-        _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
-        _printTimer.Start();
+
+        ConfigureLayout();
+    }
+
+    private void ConfigureLayout()
+    {
+        switch (_debugLevel)
+        {
+            case DebugLevel.Full:
+                _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintParticleInfo);
+                _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
+                _printTimer.Start();
+                break;
+            case DebugLevel.Basic:
+                _printTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(PrintParticleInfo);
+                _printTimer.Start();
+                break;
+        }
+
+        switch (_sharingMethod)
+        {
+            case SharingMethod.Cloud:
+                CloudShareButton.IsVisible = true;
+                CloudDownloadButton.IsVisible = true;
+                break;
+        }
     }
 
     private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
@@ -65,17 +106,20 @@ public partial class MainPage : ContentPage
         _paintTime = _stopwatch.Elapsed;
     }
 
+    private void PrintParticleInfo()
+    {
+        ParticleCountLabel.Text = $"{AppStrings.Particles}: {_particlesManager.ParticlesCount}";
+    }
+
     private void PrintPerformanceInfo()
     {
-        ParticleCountLabel.Text 
-            = $"{AppStrings.Particles}: {_particlesManager.ParticlesCount}";
-        MoveTimeLabel.Text 
+        MoveTimeLabel.Text
             = $"{AppStrings.MoveTime}: {(int)_particlesManager.MoveTime.TotalMilliseconds} {AppStrings.MS}";
-        InteractionTimeLabel.Text 
+        InteractionTimeLabel.Text
             = $"{AppStrings.InteractionTime}: {(int)_particlesManager.InteractionTime.TotalMilliseconds} {AppStrings.MS}";
-        HeatTransferTimeLabel.Text 
+        HeatTransferTimeLabel.Text
             = $"{AppStrings.HeatTransferTime}: {(int)_particlesManager.HeatTransferTime.TotalMilliseconds} {AppStrings.MS}";
-        PaintTimeLabel.Text 
+        PaintTimeLabel.Text
             = $"{AppStrings.PaintTime}: {(int)_paintTime.TotalMilliseconds} {AppStrings.MS}";
     }
 
@@ -163,7 +207,7 @@ public partial class MainPage : ContentPage
             PlayPauseButton.Source = "play.png";
         }
     }
-    
+
     private void OnClearSimulation(object sender, EventArgs e)
     {
         _particlesManager.ClearSimulation();
