@@ -26,9 +26,6 @@ public partial class DownloadPage : ContentPage
     {
         base.OnAppearing();
 
-        _previewCancellationTokenSource?.Dispose();
-        _previewCancellationTokenSource = new CancellationTokenSource();
-
         Task.Run(async () =>
         {
             try
@@ -58,6 +55,9 @@ public partial class DownloadPage : ContentPage
 
     private async Task FetchSimulations()
     {
+        _previewCancellationTokenSource?.Dispose();
+        _previewCancellationTokenSource = new CancellationTokenSource();
+
         var simulations = await _apiManager.DownloadSimulationsPreview(_previewCancellationTokenSource.Token);
 
         MainThread.BeginInvokeOnMainThread(() =>
