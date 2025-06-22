@@ -62,6 +62,10 @@ public partial class MainPage : ContentPage
 
     private void ConfigureLayout()
     {
+        _printTimer.Elapsed -= (_, _) => MainThread.BeginInvokeOnMainThread(PrintParticleInfo);
+        _printTimer.Elapsed -= (_, _) => MainThread.BeginInvokeOnMainThread(PrintPerformanceInfo);
+        _printTimer.Stop();
+
         switch (_debugLevel)
         {
             case DebugLevel.Full:
