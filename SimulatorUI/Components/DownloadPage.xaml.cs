@@ -1,24 +1,24 @@
 using System.Collections.ObjectModel;
 using SimulatorEngine;
-using SimulatorUI.Api;
 using SimulatorUI.Definitions;
 using SimulatorUI.Resources.Locales;
+using SimulatorUI.Sharing;
 
 namespace SimulatorUI.Components;
 
 public partial class DownloadPage : ContentPage
 {
     private bool _loaded = false;
-    private readonly IApiManager _apiManager;
+    private readonly IShareManager _shareManager;
     private readonly IParticlesManager _particlesManager;
     private CancellationTokenSource? _previewCancellationTokenSource;
     private CancellationTokenSource? _downloadCancellationTokenSource;
     private ObservableCollection<SimulationTile> _simulationTiles = [];
 
-    public DownloadPage(IApiManager apiManager, IParticlesManager particlesManager)
+    public DownloadPage(IShareManager shareManager, IParticlesManager particlesManager)
     {
         InitializeComponent();
-        _apiManager = apiManager;
+        _shareManager = shareManager;
         _particlesManager = particlesManager;
     }
 
@@ -58,7 +58,7 @@ public partial class DownloadPage : ContentPage
         _previewCancellationTokenSource?.Dispose();
         _previewCancellationTokenSource = new CancellationTokenSource();
 
-        var simulations = await _apiManager.DownloadSimulationsPreview(_previewCancellationTokenSource.Token);
+        var simulations = await _shareManager.LoadSimulationsPreview(_previewCancellationTokenSource.Token);
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
@@ -86,7 +86,7 @@ public partial class DownloadPage : ContentPage
                 _downloadCancellationTokenSource?.Dispose();
                 _downloadCancellationTokenSource = new CancellationTokenSource();
 
-                var data = await _apiManager.DownloadSimulation(id, _downloadCancellationTokenSource.Token);
+                var data = await _shareManager.LoadSimulation(id, _downloadCancellationTokenSource.Token);
                 var simulation = await SimulationSerializer.Deserialize(data);
 
                 _particlesManager.OverrideSimulation(simulation);

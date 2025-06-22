@@ -3,7 +3,7 @@ using SimulatorEngine.Particles;
 using System.Numerics;
 using System.Text;
 
-namespace SimulatorUI.Api;
+namespace SimulatorUI.Sharing;
 
 public static class SimulationSerializer
 {
