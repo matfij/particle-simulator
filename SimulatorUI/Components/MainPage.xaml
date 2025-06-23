@@ -173,6 +173,18 @@
                     Source="download.png"
                     IsVisible="False"
                     Clicked="OnOpenDownloadPage"/>
+                <ImageButton 
+                    x:Name="FileSaveButton"
+                    Style="{StaticResource IconButton}" 
+                    Source="save.png"
+                    IsVisible="False"
+                    Clicked="OnFileSave"/>
+                <ImageButton 
+                    x:Name="FileLoadButton"
+                    Style="{StaticResource IconButton}" 
+                    Source="load.png"
+                    IsVisible="False"
+                    Clicked="OnFileLoad"/>
             </HorizontalStackLayout>
         </Grid>
     </VerticalStackLayout>
