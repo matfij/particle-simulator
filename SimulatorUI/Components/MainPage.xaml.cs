@@ -5,6 +5,7 @@ using SimulatorEngine.Particles;
 using SimulatorUI.Components;
 using SimulatorUI.Definitions;
 using SimulatorUI.Resources.Locales;
+using SimulatorUI.Sharing;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -47,11 +48,11 @@ public partial class MainPage : ContentPage
         _uploadPage = uploadPage;
         _downloadPage = downloadPage;
 
-        _debugLevel = Enum.TryParse(configuration["DebugLevel"], out DebugLevel level) 
-            ? level 
+        _debugLevel = Enum.TryParse(configuration["DebugLevel"], out DebugLevel level)
+            ? level
             : DebugLevel.None;
-        _sharingMethod = Enum.TryParse(configuration["SharingMethod"], out SharingMethod method) 
-            ? method 
+        _sharingMethod = Enum.TryParse(configuration["SharingMethod"], out SharingMethod method)
+            ? method
             : SharingMethod.None;
 
         _paintTimer.Elapsed += (_, _) => MainThread.BeginInvokeOnMainThread(InvalidateCanvas);
@@ -83,6 +84,7 @@ public partial class MainPage : ContentPage
                 break;
         }
     }
+
 
     private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
     {

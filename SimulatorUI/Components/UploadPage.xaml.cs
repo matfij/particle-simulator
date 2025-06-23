@@ -1,20 +1,20 @@
 using SimulatorEngine;
-using SimulatorUI.Api;
 using SimulatorUI.Resources.Locales;
+using SimulatorUI.Sharing;
 
 namespace SimulatorUI;
 
 public partial class UploadPage : ContentPage
 {
-    private readonly IApiManager _apiManager;
+    private readonly IShareManager _shareManager;
     private readonly IParticlesManager _particlesManager;
     private readonly (int minLength, int maxLength) _nameConfig = (minLength: 4, maxLength: 12);
     private CancellationTokenSource? _cancellationTokenSource;
 
-    public UploadPage(IApiManager apiManager, IParticlesManager particlesManager)
+    public UploadPage(IShareManager shareManager, IParticlesManager particlesManager)
     {
         InitializeComponent();
-        _apiManager = apiManager;
+        _shareManager = shareManager;
         _particlesManager = particlesManager;
     }
 
@@ -33,7 +33,7 @@ public partial class UploadPage : ContentPage
             ToggleLoading(true);
 
             var simulationData = SimulationSerializer.Serialize(_particlesManager.Particles);
-            await _apiManager.UploadSimulation(name, simulationData, _cancellationTokenSource.Token);
+            await _shareManager.ShareSimulation(name, simulationData, _cancellationTokenSource.Token);
 
             ToggleLoading(false);
 

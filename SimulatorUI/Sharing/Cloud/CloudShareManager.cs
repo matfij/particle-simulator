@@ -1,30 +1,24 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using SimulatorUI.Api;
 
-namespace SimulatorUI.Api;
+namespace SimulatorUI.Sharing.Cloud;
 
-public interface IApiManager
-{
-    Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview(CancellationToken token = default);
-    Task UploadSimulation(string simulationName, string simulationData, CancellationToken token = default);
-    Task<Stream> DownloadSimulation(string simulationId, CancellationToken token = default);
-}
-
-public class ApiManager : IApiManager
+internal class CloudShareManager : IShareManager
 {
     private readonly string _apiUrl;
     private readonly string _contentType = "text/plain";
     private readonly HttpClient _httpClient = new();
 
-    public ApiManager(IConfiguration configuration)
+    public CloudShareManager(IConfiguration configuration)
     {
         _apiUrl = configuration["ApiUrl"] ?? throw new InvalidDataException("ApiUrl missing");
         var apiKey = configuration["ApiKey"] ?? throw new InvalidDataException("ApiKey missing");
         _httpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
     }
 
-    public async Task<IEnumerable<SimulationPreview>> DownloadSimulationsPreview(CancellationToken token = default)
+    public async Task<IEnumerable<SimulationPreview>> LoadSimulationsPreview(CancellationToken token = default)
     {
         var response = await _httpClient.GetAsync($"{_apiUrl}/v1/preview", token);
         var data = await response.Content.ReadAsStringAsync(token);
@@ -42,7 +36,7 @@ public class ApiManager : IApiManager
         return simulationsResponse.Simulations;
     }
 
-    public async Task UploadSimulation(string simulationName, string simulationData, CancellationToken token = default)
+    public async Task ShareSimulation(string simulationName, string simulationData, CancellationToken token = default)
     {
         var simulationUploadRequest = new SimulationUploadRequest
         {
@@ -83,11 +77,11 @@ public class ApiManager : IApiManager
         }
     }
 
-    public async Task<Stream> DownloadSimulation(string simulationId, CancellationToken token = default)
+    public async Task<Stream> LoadSimulation(string simulationId, CancellationToken token = default)
     {
         var simulationDownloadRequest = new SimulationDownloadRequest { SimulationId = simulationId };
         var body = new StringContent(
-            JsonSerializer.Serialize(simulationDownloadRequest), 
+            JsonSerializer.Serialize(simulationDownloadRequest),
             Encoding.UTF8,
             "application/json");
 
