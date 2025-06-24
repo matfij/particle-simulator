@@ -5,6 +5,7 @@ using SimulatorEngine.Particles;
 using SimulatorUI.Components;
 using SimulatorUI.Definitions;
 using SimulatorUI.Resources.Locales;
+using SimulatorUI.Sharing;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -34,11 +35,13 @@ public partial class MainPage : ContentPage
     private readonly DownloadPage _downloadPage;
     private readonly DebugLevel _debugLevel;
     private readonly SharingMethod _sharingMethod;
+    private readonly IShareManager _shareManager;
 
     public MainPage(
         IParticlesManager particlesManager,
         UploadPage uploadPage,
         DownloadPage downloadPage,
+        IShareManager shareManager,
         IConfiguration configuration)
     {
         InitializeComponent();
@@ -46,6 +49,7 @@ public partial class MainPage : ContentPage
         _particlesManager = particlesManager;
         _uploadPage = uploadPage;
         _downloadPage = downloadPage;
+        _shareManager = shareManager;
 
         _debugLevel = Enum.TryParse(configuration["DebugLevel"], out DebugLevel level)
             ? level
@@ -230,14 +234,14 @@ public partial class MainPage : ContentPage
         await Navigation.PushModalAsync(_downloadPage);
     }
 
-    private void OnFileSave(object sender, EventArgs e)
+    private async void OnFileSave(object sender, EventArgs e)
     {
-
+        TogglePlaySimulation(false);
+        await _shareManager.ShareSimulation(String.Empty, String.Empty);
     }
 
     private void OnFileLoad(object sender, EventArgs e)
     {
-
     }
 
     private void InvalidateCanvas()

@@ -115,6 +115,24 @@ namespace SimulatorUI.Resources.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file was not saved successfully with error: {0}.
+        /// </summary>
+        internal static string FileSaveError {
+            get {
+                return ResourceManager.GetString("FileSaveError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file was saved successfully to location: {0}.
+        /// </summary>
+        internal static string FileSaveSuccess {
+            get {
+                return ResourceManager.GetString("FileSaveSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Heat transfer time.
         /// </summary>
         internal static string HeatTransferTime {
@@ -219,6 +237,15 @@ namespace SimulatorUI.Resources.Locales {
         internal static string SimulationDownloaded {
             get {
                 return ResourceManager.GetString("SimulationDownloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simulation {0}.
+        /// </summary>
+        internal static string SimulationName {
+            get {
+                return ResourceManager.GetString("SimulationName", resourceCulture);
             }
         }
         
