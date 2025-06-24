@@ -5,7 +5,6 @@ using SimulatorEngine.Particles;
 using SimulatorUI.Components;
 using SimulatorUI.Definitions;
 using SimulatorUI.Resources.Locales;
-using SimulatorUI.Sharing;
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 
@@ -81,6 +80,10 @@ public partial class MainPage : ContentPage
             case SharingMethod.Cloud:
                 CloudShareButton.IsVisible = true;
                 CloudDownloadButton.IsVisible = true;
+                break;
+            case SharingMethod.File:
+                FileSaveButton.IsVisible = true;
+                FileLoadButton.IsVisible = true;
                 break;
         }
     }
@@ -225,6 +228,16 @@ public partial class MainPage : ContentPage
     {
         TogglePlaySimulation(false);
         await Navigation.PushModalAsync(_downloadPage);
+    }
+
+    private void OnFileSave(object sender, EventArgs e)
+    {
+
+    }
+
+    private void OnFileLoad(object sender, EventArgs e)
+    {
+
     }
 
     private void InvalidateCanvas()

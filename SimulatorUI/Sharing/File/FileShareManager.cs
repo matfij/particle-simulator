@@ -8,7 +8,7 @@ public class FileShareManager : IShareManager
     {
         throw new NotImplementedException();
     }
-    
+
     public Task ShareSimulation(string simulationName, string simulationData, CancellationToken token = default)
     {
         throw new NotImplementedException();
