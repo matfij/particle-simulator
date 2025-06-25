@@ -9,31 +9,31 @@ namespace SimulatorUI.Sharing.File;
 
 public class FileShareManager(IParticlesManager particlesManager) : IShareManager
 {
-    private IParticlesManager _particlesManager = particlesManager;
+    private readonly string _format = ".sim";
+    private readonly IParticlesManager _particlesManager = particlesManager;
 
     public Task<Stream> LoadSimulation(string simulationId, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
-    public async Task ShareSimulation(
-        string? simulationName = default,
-        string? simulationData = default,
-        CancellationToken token = default)
+    public async Task ShareSimulation(string simulationName = "", string simulationData = "", CancellationToken token = default)
     {
-        var name = String.Format(AppStrings.SimulationName, DateTime.Now.ToString("yyyy-MM-dd"));
+        var name = String.Format(AppStrings.SimulationName, DateTime.Now.ToString("yyyy-MM-dd")) + _format;
         var data = SimulationSerializer.Serialize(_particlesManager.Particles);
 
-        using var stream = new MemoryStream(Encoding.Default.GetBytes(data));
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(data));
         var fileSaverResult = await FileSaver.Default.SaveAsync(name, stream, token);
 
         if (fileSaverResult.IsSuccessful)
         {
-            await Toast.Make(String.Format(AppStrings.FileSaveSuccess, fileSaverResult.FilePath)).Show(token);
+            await Toast.Make(String.Format(AppStrings.FileSaveSuccess, fileSaverResult.FilePath))
+                .Show(token);
         }
         else
         {
-            await Toast.Make(String.Format(AppStrings.FileSaveError, fileSaverResult.Exception.Message)).Show(token);
+            await Toast.Make(String.Format(AppStrings.FileSaveError, fileSaverResult.Exception.Message ?? AppStrings.UnknownError))
+                .Show(token);
         }
     }
 
