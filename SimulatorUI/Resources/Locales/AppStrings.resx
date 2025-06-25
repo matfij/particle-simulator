@@ -135,6 +135,12 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="FileSaveError" xml:space="preserve">
+    <value>The file was not saved successfully with error: {0}</value>
+  </data>
+  <data name="FileSaveSuccess" xml:space="preserve">
+    <value>The file was saved successfully to location: {0}</value>
+  </data>
   <data name="HeatTransferTime" xml:space="preserve">
     <value>Heat transfer time</value>
   </data>
@@ -170,6 +176,9 @@
   </data>
   <data name="SimulationDownloaded" xml:space="preserve">
     <value>{0} was downloaded.</value>
+  </data>
+  <data name="SimulationName" xml:space="preserve">
+    <value>Simulation {0}</value>
   </data>
   <data name="SimulationShared" xml:space="preserve">
     <value>{0} was shared.</value>
