@@ -240,8 +240,10 @@ public partial class MainPage : ContentPage
         await _shareManager.ShareSimulation(String.Empty, String.Empty);
     }
 
-    private void OnFileLoad(object sender, EventArgs e)
+    private async void OnFileLoad(object sender, EventArgs e)
     {
+        TogglePlaySimulation(false);
+        await _shareManager.LoadSimulation(String.Empty);
     }
 
     private void InvalidateCanvas()

@@ -151,6 +151,15 @@ namespace SimulatorUI.Resources.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to load simulation data.
+        /// </summary>
+        internal static string LoadSimulationError {
+            get {
+                return ResourceManager.GetString("LoadSimulationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move time.
         /// </summary>
         internal static string MoveTime {

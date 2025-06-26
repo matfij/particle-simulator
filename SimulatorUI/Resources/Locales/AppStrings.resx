@@ -147,6 +147,9 @@
   <data name="InteractionTime" xml:space="preserve">
     <value>Interaction time</value>
   </data>
+  <data name="LoadSimulationError" xml:space="preserve">
+    <value>Unable to load simulation data</value>
+  </data>
   <data name="MoveTime" xml:space="preserve">
     <value>Move time</value>
   </data>
