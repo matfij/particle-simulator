@@ -9,12 +9,12 @@ namespace SimulatorUI.Sharing.File;
 
 public class FileShareManager(IParticlesManager particlesManager) : IShareManager
 {
-    private readonly string _format = ".sim";
+    private const string _format = ".sim";
     private readonly FilePickerFileType _fileType = new
     (
         new Dictionary<DevicePlatform, IEnumerable<string>> 
         {
-            { DevicePlatform.WinUI, new[] { ".sim" } } 
+            { DevicePlatform.WinUI, new[] { _format } } 
         }
     );
     private readonly IParticlesManager _particlesManager = particlesManager;
@@ -35,7 +35,7 @@ public class FileShareManager(IParticlesManager particlesManager) : IShareManage
         {
             await Toast.Make(AppStrings.LoadSimulationError).Show(token);
         }
-        return new MemoryStream();
+        return Stream.Null;
     }
 
     public async Task ShareSimulation(string? simulationName, string? simulationData, CancellationToken token = default)

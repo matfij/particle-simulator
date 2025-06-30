@@ -7,8 +7,8 @@ namespace SimulatorUI.Sharing.Cloud;
 
 internal class CloudShareManager : IShareManager
 {
+    private const string _contentType = "text/plain";
     private readonly string _apiUrl;
-    private readonly string _contentType = "text/plain";
     private readonly HttpClient _httpClient = new();
 
     public CloudShareManager(IConfiguration configuration)
