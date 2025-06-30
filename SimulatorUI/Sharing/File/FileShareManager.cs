@@ -9,15 +9,36 @@ namespace SimulatorUI.Sharing.File;
 
 public class FileShareManager(IParticlesManager particlesManager) : IShareManager
 {
-    private readonly string _format = ".sim";
+    private const string _format = ".sim";
+    private readonly FilePickerFileType _fileType = new
+    (
+        new Dictionary<DevicePlatform, IEnumerable<string>> 
+        {
+            { DevicePlatform.WinUI, new[] { _format } } 
+        }
+    );
     private readonly IParticlesManager _particlesManager = particlesManager;
 
-    public Task<Stream> LoadSimulation(string simulationId, CancellationToken token = default)
+    public async Task<Stream> LoadSimulation(string? simulationId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var file = await FilePicker.Default.PickAsync(new PickOptions() { FileTypes = _fileType });
+            if (file is not null)
+            {
+                using var data = await file.OpenReadAsync();
+                var simulation = await SimulationSerializer.Deserialize(data);
+                _particlesManager.OverrideSimulation(simulation);
+            }
+        }
+        catch
+        {
+            await Toast.Make(AppStrings.LoadSimulationError).Show(token);
+        }
+        return Stream.Null;
     }
 
-    public async Task ShareSimulation(string simulationName = "", string simulationData = "", CancellationToken token = default)
+    public async Task ShareSimulation(string? simulationName, string? simulationData, CancellationToken token = default)
     {
         var name = String.Format(AppStrings.SimulationName, DateTime.Now.ToString("yyyy-MM-dd")) + _format;
         var data = SimulationSerializer.Serialize(_particlesManager.Particles);

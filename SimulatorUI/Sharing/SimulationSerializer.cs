@@ -47,7 +47,7 @@ public static class SimulationSerializer
                 string[] parts = line!.Split(_attributeSeparator);
                 var x = float.Parse(parts[0]);
                 var y = float.Parse(parts[1]);
-                var kind = (ParticleKind)Enum.Parse(typeof(ParticleKind), parts[2]);
+                var kind = Enum.Parse<ParticleKind>(parts[2]);
                 var temperature = float.Parse(parts[3]);
 
                 var position = new Vector2(x, y);
