@@ -12,15 +12,22 @@ internal static class CanvasUtils
     {
         StrokeWidth = 2,
         IsAntialias = true,
-        Color = 0x99F8F8FF,
+        Color = SKColors.GhostWhite.WithAlpha(150),
         Style = SKPaintStyle.Stroke,
     };
     public static readonly SKPaint _fontPaint = new()
     {
         StrokeWidth = 1,
         IsAntialias = true,
-        Color = 0xDDF8F8FF,
+        Color = SKColors.GhostWhite.WithAlpha(225),
         Style = SKPaintStyle.StrokeAndFill,
+        ImageFilter = SKImageFilter.CreateDropShadow(
+            dx: 1,
+            dy: 1, 
+            sigmaX: 2,
+            sigmaY: 2,
+            color: SKColors.Black
+        )
     };
     public static readonly SKFont _font = new()
     {
@@ -28,9 +35,9 @@ internal static class CanvasUtils
     };
 
     public static (float, float) GetScale(float width, float height)
-        => (width / (float)CanvasUtils._canvasSize.Width, height / (float)CanvasUtils._canvasSize.Height);
+        => (width / _canvasSize.Width, height / _canvasSize.Height);
 
-    public static (string label, Vector2 postion, SKTextAlign align) GetMarkedParticleInfo(Vector2 basePosition, Particle? particle)
+    public static (string label, Vector2 position, SKTextAlign align) GetMarkedParticleInfo(Vector2 basePosition, Particle? particle)
     {
         var label =
             particle is not null
@@ -54,7 +61,7 @@ internal static class CanvasUtils
         return new ()
         {
             label = label,
-            postion = new Vector2(x, y),
+            position = new Vector2(x, y),
             align = align,
         };
     }

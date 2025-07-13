@@ -102,7 +102,7 @@ public partial class MainPage : ContentPage
             canvas.DrawCircle(_cursor.X, _cursor.Y, _cursor.R, CanvasUtils._cursorPaint);
 
             var (label, position, align) = CanvasUtils.GetMarkedParticleInfo(new(_cursor.X, _cursor.Y), _markedParticle);
-            canvas.DrawText(label, position.X, position.Y, CanvasUtils._font, CanvasUtils._fontPaint);
+            canvas.DrawText(label, position.X, position.Y, align, CanvasUtils._font, CanvasUtils._fontPaint);
         }
         catch (Exception ex)
         {
