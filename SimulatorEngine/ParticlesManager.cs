@@ -14,6 +14,7 @@ public interface IParticlesManager
     TimeSpan HeatTransferTime { get; }
 
     void AddParticles(Vector2 center, int radius, ParticleKind kind);
+    Particle? GetParticleAt(Vector2 position);
     void RemoveParticles(Vector2 center, int radius);
     void TogglePlaySimulation(bool play);
     void OverrideSimulation(IReadOnlyDictionary<Vector2, Particle> particles);
@@ -78,6 +79,9 @@ public class ParticlesManager : IParticlesManager
 
         _particlesLock = false;
     }
+
+    public Particle? GetParticleAt(Vector2 position) 
+        => _particles.TryGetValue(position, out Particle? particle) ? particle : null;
 
     public void RemoveParticles(Vector2 center, int radius)
     {
