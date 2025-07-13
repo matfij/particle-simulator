@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Configuration;
 using SimulatorEngine;
 using SimulatorEngine.Particles;
@@ -11,21 +12,14 @@ using SkiaSharp.Views.Maui;
 
 namespace SimulatorUI;
 
+
 public partial class MainPage : ContentPage
 {
-    private static readonly (int Width, int Height) _canvasSize = (1200, 600);
-    private static readonly SKPaint _cursorPaint = new()
-    {
-        StrokeWidth = 2,
-        IsAntialias = true,
-        Color = SKColors.GhostWhite,
-        Style = SKPaintStyle.Stroke,
-    };
     private readonly IParticlesManager _particlesManager;
     private bool _isPlaying = false;
     private readonly System.Timers.Timer _paintTimer = new(20);
     private readonly System.Timers.Timer _printTimer = new(200);
-    private readonly SKBitmap _particlesBitmap = new(_canvasSize.Width, _canvasSize.Height);
+    private readonly SKBitmap _particlesBitmap = new(CanvasUtils._canvasSize.Width, CanvasUtils._canvasSize.Height);
     private (float X, float Y) _canvasScale = (1, 1);
     private (float X, float Y, float R) _cursor = (0, 0, 10);
     private ParticleKind _currentParticleKind = ParticleKind.Water;
@@ -36,6 +30,7 @@ public partial class MainPage : ContentPage
     private readonly DebugLevel _debugLevel;
     private readonly SharingMethod _sharingMethod;
     private readonly IShareManager _shareManager;
+    private Particle? _markedParticle;
 
     public MainPage(
         IParticlesManager particlesManager,
@@ -92,20 +87,22 @@ public partial class MainPage : ContentPage
         }
     }
 
-
     private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs args)
     {
         _stopwatch.Restart();
         try
         {
-            _canvasScale = (args.Info.Width / (float)_canvasSize.Width, args.Info.Height / (float)_canvasSize.Height);
+            _canvasScale = CanvasUtils.GetScale(args.Info.Width, args.Info.Height);
             UpdateBitmap();
             var canvas = args.Surface.Canvas;
             canvas.Clear(SKColors.Black);
             canvas.Scale(_canvasScale.X, _canvasScale.Y);
 
             canvas.DrawBitmap(_particlesBitmap, 0, 0);
-            canvas.DrawCircle(_cursor.X, _cursor.Y, _cursor.R, _cursorPaint);
+            canvas.DrawCircle(_cursor.X, _cursor.Y, _cursor.R, CanvasUtils._cursorPaint);
+
+            var (label, position, align) = CanvasUtils.GetMarkedParticleInfo(new(_cursor.X, _cursor.Y), _markedParticle);
+            canvas.DrawText(label, position.X, position.Y, align, CanvasUtils._font, CanvasUtils._fontPaint);
         }
         catch (Exception ex)
         {
@@ -136,11 +133,11 @@ public partial class MainPage : ContentPage
     {
         _particlesBitmap.Erase(SKColors.Black);
         var pixels = (uint*)_particlesBitmap.GetPixels();
-        var maxIndex = _canvasSize.Width * _canvasSize.Height;
+        var maxIndex = CanvasUtils._canvasSize.Width * CanvasUtils._canvasSize.Height;
 
         foreach (var (position, particle) in _particlesManager.Particles)
         {
-            int index = (int)position.X + (int)position.Y * _canvasSize.Width;
+            int index = (int)position.X + (int)position.Y * CanvasUtils._canvasSize.Width;
             if (index >= 0 && index < maxIndex)
             {
                 pixels[index] = particle.Color;
@@ -154,6 +151,7 @@ public partial class MainPage : ContentPage
         {
             _cursor.X = (int)(args.Location.X / _canvasScale.X);
             _cursor.Y = (int)(args.Location.Y / _canvasScale.Y);
+            _markedParticle = _particlesManager.GetParticleAt(new(_cursor.X, _cursor.Y));
         }
         if (args.ActionType == SKTouchAction.WheelChanged)
         {
@@ -248,6 +246,6 @@ public partial class MainPage : ContentPage
 
     private void InvalidateCanvas()
     {
-        MainThread.BeginInvokeOnMainThread(() => ParticleCanvas.InvalidateSurface());
+        MainThread.BeginInvokeOnMainThread(() => ParticleCanvas?.InvalidateSurface());
     }
 }

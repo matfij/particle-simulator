@@ -120,6 +120,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Temperature" xml:space="preserve">
+    <value>{0:N2} °C</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="DownloadSimulation" xml:space="preserve">
     <value>Download Simulation</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>Empty</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>

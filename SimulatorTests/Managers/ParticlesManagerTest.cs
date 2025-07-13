@@ -185,4 +185,27 @@ public class ParticlesManagerTest
 
         Assert.InRange(manager.HeatTransferTime.TotalMilliseconds, 1, 250);
     }
+
+    [Fact]
+    public void Should_GetParticleAtReturnEmptyWhenNoParticle()
+    {
+        var manager = new ParticlesManager();
+
+        var particle = manager.GetParticleAt(new(5, 12));
+
+        Assert.Null(particle);
+    }
+
+    [Fact]
+    public void Should_GetParticleAtReturnCorrectParticle()
+    {
+        var manager = new ParticlesManager();
+
+        manager.AddParticles(new(5, 12), 5, ParticleKind.Water);
+
+        var particle = manager.GetParticleAt(new(5, 12));
+
+        Assert.Equal(ParticleKind.Water, particle?.Kind);
+        Assert.True(TestUtils.CloseTo(20f, particle?.Temperature ?? 0f));
+    }
 }
