@@ -5,7 +5,7 @@ namespace SimulatorEngine.Managers;
 
 public static class TemperatureManager
 {
-    private static readonly float _transferRatio = 0.05f;
+    private static readonly float _transferRatio = 0.09f;
     private static readonly float _minTransferThreshold = 0.1f;
     private static readonly Vector2[] _topLeftOffsets =
     [
@@ -35,6 +35,11 @@ public static class TemperatureManager
                 if (transition.Direction == PhaseTransitionDirection.Up && particle.Temperature > transition.Temperature
                     || transition.Direction == PhaseTransitionDirection.Down && particle.Temperature < transition.Temperature)
                 {
+                    if (transition.ResultKind == ParticleKind.None)
+                    {
+                        particles.Remove(position);
+                        continue;
+                    }
                     particles[position] = ParticlesPool.GetParticle(transition.ResultKind);
                     particles[position].Temperature = particle.Temperature;
                 }

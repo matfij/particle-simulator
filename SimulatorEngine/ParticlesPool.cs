@@ -42,6 +42,7 @@ public static class ParticlesPool
             ParticleKind.Plant => new PlantParticle(),
             ParticleKind.Fire => new FireParticle(),
             ParticleKind.Smoke => new SmokeParticle(),
+            ParticleKind.Plasma => new PlasmaParticle(),
             _ => throw new InvalidEnumArgumentException("Unsupported particle kind"),
         };
     }

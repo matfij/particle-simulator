@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.Configuration;
 using SimulatorEngine;
 using SimulatorEngine.Particles;
