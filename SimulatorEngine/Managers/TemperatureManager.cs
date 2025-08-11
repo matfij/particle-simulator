@@ -38,7 +38,7 @@ public static class TemperatureManager
                     if (transition.ResultKind == ParticleKind.None)
                     {
                         particles.Remove(position);
-                        continue;
+                        break;
                     }
                     particles[position] = ParticlesPool.GetParticle(transition.ResultKind);
                     particles[position].Temperature = particle.Temperature;
