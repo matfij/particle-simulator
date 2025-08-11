@@ -71,3 +71,32 @@ public class SmokeParticle : Particle
         Temperature = 150;
     }
 }
+
+public class PlasmaParticle : Particle
+{
+    public override float Density => 0.4f;
+
+    public override uint Color => 0xFF41CA;
+
+    public override ParticleKind Kind => ParticleKind.Plasma;
+
+    public override ParticleBody Body => ParticleBody.Plasma;
+
+    private static readonly PhaseTransition[] _transitions =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Down,
+            ResultKind = ParticleKind.None,
+            Temperature = 1000,
+        }
+    ];
+    public override PhaseTransition[] Transitions => _transitions;
+
+    public override ParticleInteraction[] Interactions { get; set; } = [];
+
+    public PlasmaParticle()
+    {
+        Temperature = 6000;
+    }
+}

@@ -16,6 +16,7 @@ public enum ParticleKind
     Plant,
     Fire,
     Smoke,
+    Plasma,
 }
 
 public enum ParticleBody

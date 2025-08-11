@@ -42,7 +42,16 @@ public class PlantParticle : Particle
 
     public override ParticleBody Body => ParticleBody.Solid;
 
-    public override PhaseTransition[] Transitions => [];
+    private static readonly PhaseTransition[] _transitions =
+    [
+        new()
+        {
+            Direction = PhaseTransitionDirection.Up,
+            ResultKind = ParticleKind.Fire,
+            Temperature = 250,
+        }
+    ];
+    public override PhaseTransition[] Transitions => _transitions;
 
     public override ParticleInteraction[] Interactions { get; set; } =
     [
