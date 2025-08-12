@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:SimulatorUI"
     Shell.FlyoutBehavior="Disabled"
     Title="Particle Simulator"
-    BackgroundColor="Black">
+    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
 
     <ShellContent
         ContentTemplate="{DataTemplate local:MainPage}"
